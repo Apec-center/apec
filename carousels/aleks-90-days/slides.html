@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link href="fonts/fonts.css" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1E36;
+    --navy-deep: #08121F;
+    --gold: #D4AF37;
+    --gold-light: #F3D77A;
+    --white: #FFFFFF;
+    --muted: rgba(255,255,255,.72);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #222; font-family: 'Manrope', sans-serif; color: var(--white); }
+  .slide {
+    position: relative; width: 1080px; height: 1350px; overflow: hidden;
+    background: radial-gradient(120% 80% at 80% 0%, #1B3358 0%, var(--navy) 45%, var(--navy-deep) 100%);
+    padding: 96px 88px 0; margin-bottom: 40px;
+  }
+  .bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  .shade-top::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(8,18,31,.88) 0%, rgba(8,18,31,.55) 38%, rgba(8,18,31,0) 62%, rgba(8,18,31,.75) 100%); }
+  .shade-full::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(8,18,31,.92) 0%, rgba(8,18,31,.6) 45%, rgba(8,18,31,.85) 100%); }
+  .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+  .tag { display: inline-flex; align-self: flex-start; align-items: center; gap: 14px;
+    font: 700 26px/1 'Manrope'; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-light); }
+  .tag::before { content: ''; width: 44px; height: 3px; background: var(--gold); }
+  .pill { display: inline-block; align-self: flex-start; background: var(--gold); color: var(--navy-deep);
+    font: 800 28px/1 'Manrope'; letter-spacing: .06em; text-transform: uppercase; padding: 16px 26px; border-radius: 999px; }
+
+  h1 { font: 800 92px/1.04 'Unbounded'; letter-spacing: -.02em; margin-top: 40px; }
+  h2 { font: 800 78px/1.08 'Unbounded'; letter-spacing: -.02em; margin-top: 34px; }
+  .gold { color: var(--gold-light); }
+  .lead { font: 600 38px/1.35 'Manrope'; color: var(--muted); margin-top: 30px; }
+  .lead b { color: var(--white); font-weight: 800; }
+
+  .footer { position: absolute; left: 88px; right: 88px; bottom: 64px; z-index: 3;
+    display: flex; justify-content: space-between; align-items: center;
+    font: 700 24px/1 'Manrope'; letter-spacing: .1em; color: rgba(255,255,255,.75); }
+  .footer .count { color: var(--gold-light); }
+  .swipe { font: 800 30px/1 'Manrope'; color: var(--navy-deep); background: var(--gold-light);
+    padding: 18px 28px; border-radius: 999px; letter-spacing: .02em; }
+
+  .teaser { position: absolute; left: 88px; right: 88px; bottom: 140px; z-index: 3;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 30px 36px; border-radius: 28px; border: 2px solid rgba(243,215,122,.6);
+    background: rgba(212,175,55,.12); font: 800 34px/1.2 'Manrope'; color: var(--gold-light); }
+  .teaser span:last-child { font: 800 44px/1 'Unbounded'; }
+  .shade-card::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(8,18,31,.9) 0%, rgba(8,18,31,.55) 50%, rgba(8,18,31,.15) 75%, rgba(8,18,31,.6) 100%); }
+
+  /* slide 2 */
+  .big-change { display: flex; align-items: center; gap: 36px; margin-top: 56px; }
+  .num { font: 900 215px/0.9 'Unbounded'; letter-spacing: -.05em; }
+  .num.old { color: rgba(255,255,255,.28); position: relative; }
+  .num.old::after { content: ''; position: absolute; left: -10px; right: -10px; top: 50%; height: 16px; background: var(--gold); transform: rotate(-12deg); border-radius: 8px; }
+  .arrow { font: 800 100px/1 'Unbounded'; color: var(--gold); }
+  .days { font: 700 38px/1.2 'Manrope'; color: var(--muted); margin-top: 8px; }
+  .list { list-style: none; margin-top: 60px; display: flex; flex-direction: column; gap: 34px; }
+  .list li { display: flex; gap: 22px; font: 600 40px/1.3 'Manrope'; color: rgba(255,255,255,.9); }
+  .list li::before { content: ''; flex: none; width: 16px; height: 16px; margin-top: 15px; background: var(--gold); transform: rotate(45deg); }
+
+  /* slide 3 */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 48px; }
+  .col { border-radius: 36px; padding: 46px 40px 50px; background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.12); }
+  .col.win { background: linear-gradient(160deg, #F3D77A 0%, #D4AF37 100%); color: var(--navy-deep); border: none; }
+  .col h3 { font: 800 30px/1.15 'Unbounded'; text-transform: uppercase; letter-spacing: .02em; }
+  .row { margin-top: 30px; }
+  .row .v { white-space: nowrap; font: 900 70px/1 'Unbounded'; letter-spacing: -.03em; }
+  .row .k { font: 700 30px/1.25 'Manrope'; opacity: .78; margin-top: 8px; }
+
+  /* slide 4 */
+  .opts { margin-top: 56px; display: flex; flex-direction: column; gap: 26px; }
+  .opt { display: grid; grid-template-columns: 210px 1fr; gap: 28px; align-items: center;
+    padding: 46px 40px; border-radius: 32px; background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.12); }
+  .opt .name { font: 800 52px/1 'Unbounded'; }
+  .opt .desc { font: 600 34px/1.32 'Manrope'; color: rgba(255,255,255,.86); }
+  .opt .desc b { color: var(--white); }
+  .opt.win { background: linear-gradient(160deg, #F3D77A 0%, #D4AF37 100%); border: none; color: var(--navy-deep); }
+  .opt.win .desc, .opt.win .desc b { color: var(--navy-deep); }
+
+  /* slide 5 */
+  .huge { font: 900 360px/0.85 'Unbounded'; letter-spacing: -.06em; color: var(--gold-light); margin-top: 40px; }
+  .huge-sub { font: 800 52px/1.1 'Unbounded'; margin-top: 18px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 56px; }
+  .chip { font: 700 31px/1 'Manrope'; padding: 22px 30px; border-radius: 999px; background: rgba(8,18,31,.7); border: 2px solid rgba(243,215,122,.55); }
+
+  /* slide 6 */
+  .steps { margin-top: 60px; display: flex; flex-direction: column; gap: 44px; }
+  .step { display: grid; grid-template-columns: 96px 1fr; gap: 30px; align-items: start; }
+  .step .n { width: 96px; height: 96px; border-radius: 50%; background: var(--gold); color: var(--navy-deep);
+    display: grid; place-items: center; font: 900 42px/1 'Unbounded'; }
+  .step .t { font: 800 42px/1.2 'Manrope'; padding-top: 6px; }
+  .step .d { font: 600 33px/1.32 'Manrope'; color: var(--muted); margin-top: 8px; }
+
+  /* slide 7 */
+  .facts { margin-top: 50px; display: flex; flex-direction: column; gap: 24px; }
+  .fact { padding: 32px 40px; border-radius: 30px; background: rgba(255,255,255,.06); border-left: 8px solid var(--gold); }
+  .fact .t { font: 800 40px/1.2 'Manrope'; }
+  .fact .d { font: 600 32px/1.32 'Manrope'; color: var(--muted); margin-top: 8px; }
+
+  /* slide 8 */
+  .word { display: inline-block; margin-top: 44px; font: 900 150px/1 'Unbounded'; letter-spacing: -.03em;
+    color: var(--navy-deep); background: linear-gradient(160deg, #F3D77A 0%, #D4AF37 100%); padding: 26px 50px 34px; border-radius: 40px; }
+  .save { margin-top: auto; margin-bottom: 170px; font: 700 32px/1.3 'Manrope'; color: var(--white);
+    padding: 26px 32px; border-radius: 28px; background: rgba(8,18,31,.72); border: 2px solid rgba(255,255,255,.18); align-self: flex-start; }
+</style>
+</head>
+<body>
+
+<!-- 1. ХУК -->
+<section class="slide" id="s1">
+  <div class="bg shade-top" style="background-image:url(bg/cover.png)"></div>
+  <div class="content">
+    <span class="pill">Таиланд · с 15 сентября</span>
+    <h1>Безвиз урезали до&nbsp;30&nbsp;дней.<br><span class="gold">А&nbsp;штамп на&nbsp;90 всё ещё ставят</span></h1>
+  </div>
+  <div class="footer"><span>@ALEKS_RYKOV</span><span class="swipe">Листай, покажу как →</span></div>
+</section>
+
+<!-- 2. ЧТО ИЗМЕНИЛОСЬ -->
+<section class="slide" id="s2">
+  <div class="content">
+    <span class="tag">Что изменилось</span>
+    <div class="big-change">
+      <div><div class="num old">60</div></div>
+      <div class="arrow">→</div>
+      <div><div class="num gold">30</div></div>
+    </div>
+    <div class="days">дней без визы для россиян с 15.09.2026</div>
+    <ul class="list">
+      <li>Продлить можно ещё на 30 дней: 1&nbsp;900&nbsp;฿, и&nbsp;решает офицер</li>
+      <li>Второе продление на&nbsp;том&nbsp;же въезде не&nbsp;дают</li>
+      <li>По суше — максимум 2&nbsp;безвизовых въезда в&nbsp;год</li>
+    </ul>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">02 / 08</span></div>
+  <div class="teaser"><span>Считаем зимовку по новым правилам</span><span>→</span></div>
+</section>
+
+<!-- 3. МАТЕМАТИКА ЗИМОВКИ -->
+<section class="slide" id="s3">
+  <div class="content">
+    <span class="tag">Математика зимовки</span>
+    <h2>Зимовка <span class="gold">150&nbsp;дней</span><br>с ноября по март</h2>
+    <div class="compare">
+      <div class="col">
+        <h3>Безвиз</h3>
+        <div class="row"><div class="v">3</div><div class="k">въезда</div></div>
+        <div class="row"><div class="v">2</div><div class="k">вылета из&nbsp;страны</div></div>
+        <div class="row"><div class="v">3 800 ฿</div><div class="k">за продления — если одобрят</div></div>
+      </div>
+      <div class="col win">
+        <h3>Карта APEC</h3>
+        <div class="row"><div class="v">2</div><div class="k">въезда по 90 дней</div></div>
+        <div class="row"><div class="v">1</div><div class="k">вылет из&nbsp;страны</div></div>
+        <div class="row"><div class="v">0 ฿</div><div class="k">продлений, без очереди на&nbsp;границе</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">03 / 08</span></div>
+  <div class="teaser"><span>Где ещё взять больше 30 дней</span><span>→</span></div>
+</section>
+
+<!-- 4. ГДЕ ВЗЯТЬ 90 ДНЕЙ -->
+<section class="slide" id="s4">
+  <div class="content">
+    <span class="tag">Где взять больше 30 дней</span>
+    <h2>3 законных пути<br><span class="gold">и их цена</span></h2>
+    <div class="opts">
+      <div class="opt"><div class="name">DTV</div><div class="desc">До 180 дней, но нужно <b>от&nbsp;500&nbsp;000&nbsp;฿</b> на&nbsp;счету</div></div>
+      <div class="opt"><div class="name">ED</div><div class="desc">Учебная виза: школа, <b>посещаемость</b>, продления каждые 90&nbsp;дней</div></div>
+      <div class="opt win"><div class="name">APEC</div><div class="desc"><b>90 дней за каждый въезд</b> на&nbsp;5&nbsp;лет. Без депозита и учёбы</div></div>
+    </div>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">04 / 08</span></div>
+  <div class="teaser"><span>Что даёт карта APEC</span><span>→</span></div>
+</section>
+
+<!-- 5. КАРТА APEC -->
+<section class="slide" id="s5">
+  <div class="bg shade-card" style="background-image:url(bg/card.png)"></div>
+  <div class="content">
+    <span class="tag">Карта APEC</span>
+    <div class="huge">90</div>
+    <div class="huge-sub">дней в Таиланде<br>за каждый въезд</div>
+    <div class="chips">
+      <span class="chip">5 лет многократно</span>
+      <span class="chip">Коридор APEC Lane</span>
+      <span class="chip">До 18 стран Азии</span>
+      <span class="chip">Нужен только загранпаспорт</span>
+    </div>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">05 / 08</span></div>
+</section>
+
+<!-- 6. КАК ПОЛУЧИТЬ -->
+<section class="slide" id="s6">
+  <div class="content">
+    <span class="tag">Как получить</span>
+    <h2>Не выезжая<br><span class="gold">с&nbsp;Пхукета</span></h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><div class="t">Фото загранпаспорта</div><div class="d">Бесплатно проверяем, подходит ли он</div></div></div>
+      <div class="step"><div class="n">2</div><div><div class="t">Договор с фиксированной ценой</div><div class="d">Госпошлины и временная карта уже внутри</div></div></div>
+      <div class="step"><div class="n">3</div><div><div class="t">Подача через МИД РФ</div><div class="d">Ехать в Россию не нужно</div></div></div>
+      <div class="step"><div class="n">4</div><div><div class="t">Карта приезжает к вам</div><div class="d">Доставляем в Таиланд и любую страну</div></div></div>
+    </div>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">06 / 08</span></div>
+  <div class="teaser"><span>Что важно знать заранее</span><span>→</span></div>
+</section>
+
+<!-- 7. ЧЕСТНО -->
+<section class="slide" id="s7">
+  <div class="content">
+    <span class="tag">Честно о главном</span>
+    <h2>Что важно знать<br><span class="gold">до&nbsp;оформления</span></h2>
+    <div class="facts">
+      <div class="fact"><div class="t">Только для граждан РФ</div><div class="d">Карта на взрослого, по загранпаспорту</div></div>
+      <div class="fact"><div class="t">Начинайте заранее</div><div class="d">До карты проходит несколько месяцев — успейте к&nbsp;сезону</div></div>
+      <div class="fact"><div class="t">Отказ — возврат 100%</div><div class="d">Каждая страна решает сама. При официальном отказе деньги возвращаем по договору</div></div>
+    </div>
+  </div>
+  <div class="footer"><span>APEC.CENTER</span><span class="count">07 / 08</span></div>
+  <div class="teaser"><span>Последний шаг</span><span>→</span></div>
+</section>
+
+<!-- 8. CTA -->
+<section class="slide" id="s8">
+  <div class="bg shade-full" style="background-image:url(bg/airport.png)"></div>
+  <div class="content">
+    <span class="tag">Хочешь штамп на 90 дней?</span>
+    <h2>Напиши в&nbsp;комментариях</h2>
+    <div><span class="word">КАРТА</span></div>
+    <div class="lead">Пришлю в директ разбор: <b>условия, сроки и&nbsp;цену</b></div>
+    <div class="save">Сохрани пост, чтобы не&nbsp;потерять</div>
+  </div>
+  <div class="footer"><span>@ALEKS_RYKOV</span><span class="count">08 / 08</span></div>
+</section>
+
+</body>
+</html>
