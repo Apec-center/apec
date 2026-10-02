@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>APEC Center — Гайд по оформлению карты APEC 2026</title>
+<link href="fonts/fonts.css" rel="stylesheet">
+<style>
+  @page { size: 810pt 1434.96pt; margin: 0; }
+  :root {
+    --dark: #1C3449; --dark-2: #2E5070; --midnight: #122338;
+    --pearl: #EBEAEC; --steel: #D8DDE4; --light-2: #F7F8FA;
+    --electric: #287FF2; --electric-2: #62A4FF; --cobalt: #1F4985; --white: #fff;
+    --muted-d: rgba(255,255,255,.72); --muted-l: #4A6279;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #555; font-family: 'Montserrat', sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { position: relative; width: 1080px; height: 1913px; overflow: hidden; padding: 150px 84px 150px; page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .dark  { background: linear-gradient(160deg, var(--midnight) 0%, var(--dark) 60%, var(--dark-2) 100%); color: var(--white); }
+  .light { background: linear-gradient(160deg, var(--steel) 0%, var(--light-2) 100%); color: var(--dark); }
+
+  /* шапка и подвал */
+  .top { position: absolute; top: 64px; left: 84px; right: 84px; display: flex; justify-content: space-between; align-items: center; z-index: 5;
+    font: 700 21px/1 'Montserrat'; letter-spacing: .16em; text-transform: uppercase; }
+  .top img { height: 46px; display: block; }
+  .bottom { position: absolute; bottom: 60px; left: 84px; right: 84px; display: flex; justify-content: space-between; align-items: center; z-index: 5;
+    font: 700 19px/1 'Montserrat'; letter-spacing: .14em; text-transform: uppercase; padding-top: 22px; }
+  .dark .top, .dark .bottom { color: rgba(255,255,255,.6); }
+  .light .top, .light .bottom { color: rgba(28,52,73,.55); }
+  .dark .bottom { border-top: 1px solid rgba(255,255,255,.15); }
+  .light .bottom { border-top: 1px solid rgba(28,52,73,.15); }
+  .pn { color: var(--electric); }
+  .dark .pn { color: var(--electric-2); }
+
+  /* типографика */
+  .tag { display: inline-flex; align-items: center; gap: 14px; font: 700 22px/1 'Montserrat'; letter-spacing: .18em; text-transform: uppercase; color: var(--electric); }
+  .dark .tag { color: var(--electric-2); }
+  .tag::before { content: ''; width: 40px; height: 3px; background: currentColor; }
+  h1 { font: 700 84px/1.08 'Unbounded'; letter-spacing: -.01em; }
+  h2 { font: 600 70px/1.1 'Unbounded'; letter-spacing: -.01em; margin-top: 26px; }
+  .acc { color: var(--electric); }
+  .dark .acc { color: var(--electric-2); }
+  .lead { font: 500 32px/1.45 'Montserrat'; margin-top: 30px; }
+  .dark .lead { color: var(--muted-d); }
+  .light .lead { color: var(--muted-l); }
+  b, strong { font-weight: 700; }
+
+  .photo { margin-top: 44px; height: 560px; border-radius: 36px; background-size: cover; background-position: center; }
+  .photo.sm { height: 470px; }
+
+  .card { border-radius: 28px; padding: 34px 38px; }
+  .light .card { background: var(--white); box-shadow: 0 10px 30px rgba(28,52,73,.07); }
+  .dark .card { background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12); }
+  .card.hl { background: linear-gradient(135deg, var(--electric), var(--electric-2)) !important; color: var(--white); border: none; box-shadow: none; }
+  .card.navy { background: linear-gradient(135deg, var(--dark), var(--cobalt)) !important; color: var(--white); border: none; }
+  .kicker { font: 700 19px/1 'Montserrat'; letter-spacing: .16em; text-transform: uppercase; color: var(--electric); margin-bottom: 14px; }
+  .dark .kicker, .card.navy .kicker { color: var(--electric-2); }
+  .card.hl .kicker { color: rgba(255,255,255,.85); }
+  .ct { font: 700 34px/1.25 'Montserrat'; }
+  .cd { font: 500 27px/1.42 'Montserrat'; margin-top: 10px; }
+  .light .cd { color: var(--muted-l); }
+  .dark .cd, .card.navy .cd { color: var(--muted-d); }
+  .card.hl .cd { color: rgba(255,255,255,.9); }
+  .stack { display: flex; flex-direction: column; gap: 20px; margin-top: 40px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 30px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+
+  /* 1. обложка */
+  .cover { padding-top: 0; }
+  .cover .bgimg { position: absolute; inset: 0; background-size: cover; background-position: center top; }
+  .cover .bgimg::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,35,56,.35) 0%, rgba(18,35,56,.05) 25%, rgba(18,35,56,.55) 48%, rgba(18,35,56,.95) 66%, var(--midnight) 100%); }
+  .cover .inner { position: absolute; left: 84px; right: 84px; bottom: 150px; z-index: 3; }
+  .cover h1 { margin-top: 26px; font-size: 80px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 46px; }
+  .stat { border-radius: 26px; padding: 30px 28px; background: rgba(255,255,255,.07); border: 1.5px solid rgba(98,164,255,.35); }
+  .stat .n { font: 700 54px/1 'Unbounded'; color: var(--electric-2); white-space: nowrap; }
+  .stat .l { font: 700 23px/1.3 'Montserrat'; margin-top: 14px; }
+  .stat .s { font: 500 19px/1.35 'Montserrat'; color: var(--muted-d); margin-top: 8px; }
+  .badge { display: inline-block; font: 700 21px/1 'Montserrat'; letter-spacing: .12em; text-transform: uppercase; padding: 14px 22px; border-radius: 999px;
+    color: var(--white); background: linear-gradient(90deg, var(--electric), var(--electric-2)); }
+
+  /* списки с номерами */
+  .num-list { display: flex; flex-direction: column; gap: 30px; margin-top: 44px; }
+  .ni { display: grid; grid-template-columns: 84px 1fr; gap: 26px; }
+  .ni .k { font: 600 40px/1 'Unbounded'; color: var(--electric); padding-top: 4px; }
+  .dark .ni .k { color: var(--electric-2); }
+  .ni .t { font: 700 36px/1.25 'Montserrat'; }
+  .ni .d { font: 500 28px/1.42 'Montserrat'; margin-top: 8px; }
+  .light .ni .d { color: var(--muted-l); }
+  .dark .ni .d { color: var(--muted-d); }
+  .banner { margin-top: 44px; display: flex; justify-content: space-between; align-items: center; border-radius: 28px; padding: 34px 40px;
+    background: linear-gradient(135deg, var(--dark), var(--cobalt)); color: var(--white); font: 700 31px/1.3 'Montserrat'; }
+  .banner .arr { font: 600 26px/1.2 'Montserrat'; color: var(--electric-2); text-align: right; }
+
+  /* 3. страны */
+  .group-h { display: flex; justify-content: space-between; align-items: baseline; margin-top: 52px; padding-bottom: 16px; border-bottom: 2px solid rgba(98,164,255,.4);
+    font: 700 24px/1 'Montserrat'; letter-spacing: .14em; text-transform: uppercase; color: var(--electric-2); }
+  .group-h span:last-child { font: 700 44px/1 'Unbounded'; letter-spacing: 0; color: var(--white); }
+  .countries { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+  .countries.three { grid-template-columns: 1fr 1fr 1fr; }
+  .cn { display: flex; align-items: center; gap: 16px; padding: 22px 24px; border-radius: 20px; background: rgba(255,255,255,.06); font: 600 27px/1.2 'Montserrat'; }
+  .cn i { font-style: normal; flex: none; width: 58px; height: 38px; border-radius: 8px; display: grid; place-items: center;
+    font: 700 17px/1 'Montserrat'; letter-spacing: .05em; color: var(--white); background: var(--electric); }
+  .note { margin-top: 40px; border-radius: 26px; padding: 30px 36px; font: 500 26px/1.45 'Montserrat'; }
+  .dark .note { background: rgba(98,164,255,.12); border-left: 6px solid var(--electric-2); color: rgba(255,255,255,.88); }
+  .light .note { background: rgba(40,127,242,.08); border-left: 6px solid var(--electric); color: var(--dark); }
+
+  /* 4. сравнение */
+  table.cmp { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 40px; font: 500 24px/1.36 'Montserrat'; }
+  table.cmp th { font: 700 24px/1.2 'Montserrat'; text-align: left; padding: 20px 16px; color: var(--muted-l); }
+  table.cmp th.win { color: var(--white); background: linear-gradient(135deg, var(--electric), var(--electric-2)); border-radius: 22px 22px 0 0; }
+  table.cmp td { padding: 22px 16px; border-top: 1px solid rgba(28,52,73,.12); vertical-align: top; color: var(--dark); }
+  table.cmp td.rowh { font: 700 19px/1.3 'Montserrat'; letter-spacing: .1em; text-transform: uppercase; color: var(--electric); width: 150px; }
+  table.cmp td.win { background: var(--dark); color: var(--white); font-weight: 700; border-top-color: rgba(255,255,255,.12); }
+  table.cmp tr:last-child td.win { border-radius: 0 0 22px 22px; }
+
+  /* 5. шаги МИД */
+  .steps { margin-top: 40px; display: flex; flex-direction: column; gap: 18px; position: relative; }
+  .st { display: grid; grid-template-columns: 90px 1fr; gap: 24px; align-items: start; }
+  .st .c { width: 90px; height: 90px; border-radius: 50%; display: grid; place-items: center; font: 600 32px/1 'Unbounded'; color: var(--white);
+    background: linear-gradient(135deg, var(--electric), var(--electric-2)); }
+  .st .card { padding: 26px 32px; }
+
+  /* 6. цена */
+  .big { font: 700 64px/1 'Unbounded'; margin-top: 6px; white-space: nowrap; }
+  .strike { text-decoration: line-through; text-decoration-color: var(--electric); text-decoration-thickness: 5px; color: rgba(28,52,73,.45); }
+  .row-stat { display: grid; grid-template-columns: 200px 1fr; gap: 26px; align-items: center; margin-top: 20px; }
+  .row-stat .big { color: var(--electric); }
+
+  /* 8. цепочка */
+  .chain { display: flex; flex-direction: column; gap: 0; margin-top: 30px; }
+  .chain .card { padding: 24px 34px; }
+  .chain .cd { font-size: 25px; }
+  .chain .card { position: relative; margin-left: 40px; }
+  .chain .card::before { content: ''; position: absolute; left: -40px; top: 44px; width: 18px; height: 18px; border-radius: 50%; background: var(--electric); }
+  .chain .card + .card { margin-top: 14px; }
+  .chain .card.navy::before { background: var(--electric-2); box-shadow: 0 0 0 8px rgba(40,127,242,.2); }
+  .checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+  .chk { border-radius: 24px; padding: 22px 24px; font: 700 24px/1.35 'Montserrat'; background: var(--white); box-shadow: 0 10px 30px rgba(28,52,73,.07); }
+  .chk::before { content: '✓'; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; margin-bottom: 16px; color: var(--white);
+    background: linear-gradient(135deg, var(--electric), var(--electric-2)); font: 700 26px/1 'Montserrat'; }
+
+  /* 9. оплата */
+  .pay { border-radius: 22px; padding: 24px 22px; background: rgba(255,255,255,.06); border: 1.5px solid rgba(255,255,255,.12); }
+  .pay .t { font: 700 26px/1.2 'Montserrat'; color: var(--electric-2); }
+  .pay .d { font: 500 21px/1.35 'Montserrat'; color: var(--muted-d); margin-top: 8px; }
+  .dl { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 22px; }
+  .dl .arrow { font: 600 52px/1 'Unbounded'; }
+
+  /* 10. таймлайн */
+  .tl { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 56px; position: relative; }
+  .tl::before { content: ''; position: absolute; left: 12%; right: 12%; top: 62px; height: 4px; background: linear-gradient(90deg, var(--steel), var(--electric)); }
+  .tp { text-align: center; position: relative; }
+  .tp .o { width: 124px; height: 124px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; font: 700 34px/1 'Unbounded';
+    background: var(--white); color: var(--dark); border: 4px solid var(--electric); }
+  .tp.on .o { background: linear-gradient(135deg, var(--electric), var(--electric-2)); color: var(--white); border: none; }
+  .tp .l { font: 600 22px/1.35 'Montserrat'; color: var(--muted-l); margin-top: 18px; }
+
+  /* 11. тарифы */
+  table.price { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 90px; font: 600 23px/1.3 'Montserrat'; }
+  table.price th { padding: 24px 10px 20px; text-align: center; font: 700 25px/1.2 'Montserrat'; color: var(--dark); }
+  table.price th small { display: block; font: 600 17px/1 'Montserrat'; color: var(--muted-l); margin-top: 6px; letter-spacing: .06em; }
+  table.price td { padding: 18px 10px; text-align: center; border-top: 1px solid rgba(28,52,73,.12); color: var(--dark); }
+  table.price td:first-child { text-align: left; font: 600 22px/1.3 'Montserrat'; color: var(--muted-l); width: 230px; }
+  table.price .pr { background: var(--dark); color: var(--white); border-top-color: rgba(255,255,255,.12); }
+  table.price th.pr { border-radius: 24px 24px 0 0; color: var(--white); position: relative; }
+  table.price th.pr small { color: var(--electric-2); }
+  table.price tr:last-child td.pr { border-radius: 0 0 24px 24px; }
+  table.price .price-row td { font: 700 25px/1.15 'Unbounded'; white-space: nowrap; }
+  table.price .price-row td:first-child { font: 600 22px/1.3 'Montserrat'; }
+  .yes { color: var(--electric); font-weight: 800; font-size: 30px; }
+  .pr .yes { color: var(--electric-2); }
+  .no { color: rgba(28,52,73,.3); }
+  .popular { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 700 15px/1 'Montserrat'; letter-spacing: .12em;
+    text-transform: uppercase; padding: 10px 16px; border-radius: 999px; color: var(--white); background: linear-gradient(90deg, var(--electric), var(--electric-2)); }
+
+  /* 12. кейс */
+  .case-photo { margin-top: 40px; height: 720px; border-radius: 36px; background: url(img/case.jpg) center 30%/cover; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+  .kpi { border-radius: 24px; padding: 26px 18px; text-align: center; background: rgba(255,255,255,.06); border: 1.5px solid rgba(98,164,255,.35); }
+  .kpi .n { font: 700 50px/1 'Unbounded'; color: var(--electric-2); }
+  .kpi .l { font: 600 19px/1.3 'Montserrat'; color: var(--muted-d); margin-top: 10px; }
+
+  /* 13. финал */
+  .final .bgimg { position: absolute; inset: 0; background: url(img/final.jpg) center/cover; }
+  .final .bgimg::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,35,56,.2) 0%, rgba(18,35,56,.1) 22%, rgba(18,35,56,.75) 42%, rgba(18,35,56,.97) 58%, var(--midnight) 100%); }
+  .final .inner { position: absolute; left: 84px; right: 84px; bottom: 150px; z-index: 3; }
+  .tg { display: grid; grid-template-columns: 230px 1fr; gap: 30px; align-items: center; margin-top: 40px; border-radius: 32px; padding: 30px;
+    background: linear-gradient(135deg, var(--electric), var(--electric-2)); }
+  .tg img { width: 230px; height: 230px; border-radius: 18px; background: #fff; padding: 12px; display: block; }
+  .tg .k { font: 700 21px/1 'Montserrat'; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.85); }
+  .tg .h { font: 700 46px/1.1 'Unbounded'; margin-top: 14px; }
+  .tg .s { font: 600 26px/1.3 'Montserrat'; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- 01 ОБЛОЖКА -->
+<section class="page dark cover">
+  <div class="bgimg" style="background-image:url(img/cover.jpg)"></div>
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>Экспертное руководство 2026</span></div>
+  <div class="inner">
+    <span class="badge">Премиальный статус и свобода</span>
+    <h1>Карта APEC: полная механика и <span class="acc">честный разбор</span> вариантов 2026</h1>
+    <p class="lead">Как открыть безвизовый доступ до 18 стран Азии на 5 лет: самостоятельный путь или пакеты APEC Center.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">18</div><div class="l">стран без виз</div><div class="s">Таиланд, Китай, Корея, Сингапур</div></div>
+      <div class="stat"><div class="n">60–80</div><div class="l">дней до карты</div><div class="s">на тарифе «Приоритет»</div></div>
+      <div class="stat"><div class="n">5 лет</div><div class="l">многократно</div><div class="s">и свой коридор APEC Lane</div></div>
+    </div>
+  </div>
+  <div class="bottom"><span>apec.center</span><span>Листайте ↓ &nbsp;<span class="pn">01 / 13</span></span></div>
+</section>
+
+<!-- 02 ЧТО ЭТО -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Что это за документ</span></div>
+  <span class="tag">ABTC · APEC Business Travel Card</span>
+  <h2>Карта APEC — один документ <span class="acc">на&nbsp;5&nbsp;лет</span></h2>
+  <div class="photo" style="background-image:url(img/doc.jpg)"></div>
+  <div class="num-list">
+    <div class="ni"><div class="k">01</div><div><div class="t">5 лет многократных въездов</div><div class="d">Вместо консульских виз, анкет и броней под каждую поездку.</div></div></div>
+    <div class="ni"><div class="k">02</div><div><div class="t">До 90 дней за въезд</div><div class="d">В Таиланде — 90 дней вместо 30 по безвизу, который действует с 15.09.2026.</div></div></div>
+    <div class="ni"><div class="k">03</div><div><div class="t">Коридор APEC Lane</div><div class="d">Отдельный паспортный контроль в аэропортах стран-участниц.</div></div></div>
+  </div>
+  <div class="banner"><span>Единый документ<br>для бизнеса и жизни</span><span class="arr">до 18 стран<br>APEC →</span></div>
+  <div class="bottom"><span>apec.center</span><span class="pn">02 / 13</span></div>
+</section>
+
+<!-- 03 СТРАНЫ -->
+<section class="page dark">
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>География безвиза</span></div>
+  <span class="tag">Страны-участницы APEC</span>
+  <h2>18 стран APEC <span class="acc">и сроки пребывания</span></h2>
+  <div class="group-h"><span>До 90 дней за въезд</span><span>6</span></div>
+  <div class="countries">
+    <div class="cn"><i>TH</i>Таиланд</div><div class="cn"><i>KR</i>Южная Корея</div>
+    <div class="cn"><i>MX</i>Мексика</div><div class="cn"><i>PE</i>Перу</div>
+    <div class="cn"><i>CL</i>Чили</div><div class="cn"><i>NZ</i>Новая Зеландия</div>
+  </div>
+  <div class="group-h"><span>До 60 дней за въезд</span><span>10</span></div>
+  <div class="countries">
+    <div class="cn"><i>CN</i>Китай</div><div class="cn"><i>SG</i>Сингапур</div>
+    <div class="cn"><i>ID</i>Индонезия</div><div class="cn"><i>MY</i>Малайзия</div>
+    <div class="cn"><i>PH</i>Филиппины</div><div class="cn"><i>VN</i>Вьетнам</div>
+    <div class="cn"><i>HK</i>Гонконг</div><div class="cn"><i>TW</i>Тайвань</div>
+    <div class="cn"><i>BN</i>Бруней</div><div class="cn"><i>PG</i>Папуа — Новая Гвинея</div>
+  </div>
+  <div class="note"><b>Важно:</b> Австралия и Япония входят в APEC, но сейчас не гарантируют ответ на запросы МИДа по гражданам РФ. Остальные 16 стран работают в штатном режиме. Китай, Гонконг, Индонезия, Филиппины и Сингапур объявили о переходе на 90 дней — сроки внедрения каждая страна назовёт сама.</div>
+  <div class="bottom"><span>apec.center</span><span class="pn">03 / 13</span></div>
+</section>
+
+<!-- 04 СРАВНЕНИЕ -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Сравнение решений</span></div>
+  <span class="tag">Новые правила с 15.09.2026</span>
+  <h2>Почему карта APEC <span class="acc">удобнее виз Таиланда</span></h2>
+  <div class="photo" style="background-image:url(img/airport.jpg); height:400px"></div>
+  <table class="cmp">
+    <tr><th></th><th>Безвиз</th><th>ED</th><th>DTV</th><th class="win">APEC</th></tr>
+    <tr><td class="rowh">Дней за въезд</td><td>30 + 30 продление за 1 900 ฿</td><td>90, продления пока идёт учёба</td><td>до 180</td><td class="win">до 90</td></tr>
+    <tr><td class="rowh">Условия</td><td>Решение офицера, по суше 2 въезда в год</td><td>Школа и посещаемость</td><td>От<td>От 500 000 ฿ на счету</td>nbsp;500<td>От 500 000 ฿ на счету</td>nbsp;000<td>От 500 000 ฿ на счету</td>nbsp;฿ на<td>От 500 000 ฿ на счету</td>nbsp;счету</td><td class="win">Только загран&shy;паспорт</td></tr>
+    <tr><td class="rowh">Граница</td><td>Общая очередь</td><td>Общая очередь</td><td>Общая очередь</td><td class="win">Коридор APEC Lane</td></tr>
+    <tr><td class="rowh">География</td><td>Только Таиланд</td><td>Только Таиланд</td><td>Только Таиланд</td><td class="win">До 18 стран</td></tr>
+    <tr><td class="rowh">Срок</td><td>Каждый въезд заново</td><td>Обычно до года</td><td>5 лет</td><td class="win">5 лет</td></tr>
+  </table>
+  <div class="bottom"><span>APEC vs безвиз / ED / DTV</span><span class="pn">04 / 13</span></div>
+</section>
+
+<!-- 05 МИД -->
+<section class="page dark">
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>Законный порядок</span></div>
+  <span class="tag">Порядок оформления через МИД РФ</span>
+  <h2>Как МИД РФ <span class="acc">выдаёт карту APEC</span></h2>
+  <div class="photo sm" style="background-image:url(img/ministry.jpg)"></div>
+  <div class="steps">
+    <div class="st"><div class="c">I</div><div class="card"><div class="kicker">Юридический статус</div><div class="ct">Заявитель</div><div class="cd">Включение в пул внешнеэкономических советников аккредитованной ВЭД-компании.</div></div></div>
+    <div class="st"><div class="c">II</div><div class="card"><div class="kicker">Аккредитованный канал</div><div class="ct">Проверка и ходатайство</div><div class="cd">Подача досье через уполномоченную организацию: ТПП РФ, РСПП или «Опора России».</div></div></div>
+    <div class="st"><div class="c">III</div><div class="card"><div class="kicker">Международная проверка</div><div class="ct">Согласование МИД</div><div class="cd">Проверка консульскими службами стран APEC.</div></div></div>
+    <div class="st"><div class="c">✓</div><div class="card hl"><div class="kicker">Внесение в реестр APEC</div><div class="ct">Выпуск карты</div><div class="cd">Карта выдаётся заявителю.</div></div></div>
+  </div>
+  <div class="bottom"><span>apec.center</span><span class="pn">05 / 13</span></div>
+</section>
+
+<!-- 06 ЦЕНА ДЕШЁВОГО ПУТИ -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Иллюзия экономии</span></div>
+  <span class="tag">Подача через деловые ассоциации</span>
+  <h2>Самостоятельная подача: <span class="acc">скрытая цена «дешёвого» пути</span></h2>
+  <div class="photo sm" style="background-image:url(img/paperwork.jpg)"></div>
+  <div class="grid2">
+    <div class="card"><div class="kicker">Ожидание</div><div class="big strike" style="font-size:50px">~20 000 ₽</div><div class="cd">Вступительный взнос кажется небольшим.</div></div>
+    <div class="card navy"><div class="kicker">Реальность</div><div class="big" style="font-size:50px">40–50 тыс.&nbsp;₽</div><div class="cd">Вступительные и ежегодные взносы. При отказе не возвращаются.</div></div>
+  </div>
+  <div class="card" style="margin-top:20px">
+    <div class="row-stat"><div class="big">80+ ч</div><div class="cd" style="margin:0">на справки, ГТД, валютный контроль и бюрократию. Срок получения — <b style="color:var(--dark)">8–14 месяцев</b>.</div></div>
+  </div>
+  <div class="note" style="margin-top:20px"><b>Главный риск:</b> отказ МИД РФ из-за отсутствия реального подтверждённого оборота ВЭД за последние 12 месяцев.</div>
+  <div class="bottom"><span>apec.center</span><span class="pn">06 / 13</span></div>
+</section>
+
+<!-- 07 ФАКТОРЫ РИСКА -->
+<section class="page dark">
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>Факторы риска</span></div>
+  <span class="tag">Из практики APEC Center</span>
+  <h2>Почему самостоятельные заявки <span class="acc">чаще всего отклоняют</span></h2>
+  <div class="stack" style="margin-top:70px; gap:34px">
+    <div class="card"><div class="num-list" style="margin:0"><div class="ni"><div class="k">01</div><div><div class="kicker">Таможня и оборот</div><div class="t">Нулевой или «бумажный» ВЭД</div><div class="d">Без реальных таможенных деклараций и валютных проводок МИД отклоняет заявку.</div></div></div></div></div>
+    <div class="card"><div class="num-list" style="margin:0"><div class="ni"><div class="k">02</div><div><div class="kicker">Тип занятости</div><div class="t">Фрилансер, IT или ИП</div><div class="d">Без штатного расписания и международных контрактов подать заявку не получится.</div></div></div></div></div>
+    <div class="card"><div class="num-list" style="margin:0"><div class="ni"><div class="k">03</div><div><div class="kicker">Потеря времени</div><div class="t">Дело зависает на месяцы</div><div class="d">Ошибка в анкете возвращает досье на доработку, а ускорить рассмотрение нельзя.</div></div></div></div></div>
+  </div>
+  <div class="banner" style="background:linear-gradient(135deg,var(--electric),var(--electric-2))"><span>Есть путь без этих рисков</span><span class="arr" style="color:#fff">дальше →</span></div>
+  <div class="bottom"><span>apec.center</span><span class="pn">07 / 13</span></div>
+</section>
+
+<!-- 08 ВЭД-ПУЛ -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Зелёный коридор APEC Center</span></div>
+  <span class="tag">Юридическое сопровождение</span>
+  <h2>Официальное включение <span class="acc" style="white-space:nowrap">в&nbsp;ВЭД-пул</span></h2>
+  <div class="photo sm" style="background-image:url(img/meeting.jpg); height:330px; margin-top:34px"></div>
+  <div class="chain">
+    <div class="card"><div class="ct">Вы</div><div class="cd">Нужен только загранпаспорт. Своя компания и оборот не требуются.</div></div>
+    <div class="card"><div class="ct">Действующая ВЭД-компания</div><div class="cd">Включает вас в пул внешнеторговых советников с полным пакетом корпоративных полномочий.</div></div>
+    <div class="card"><div class="ct">МИД РФ</div><div class="cd">Получает заявку от компании с реальным оборотом ВЭД — главный стоп-фактор снят.</div></div>
+    <div class="card navy"><div class="ct">Карта APEC на ваше имя</div><div class="cd">Временная — через 60–80 дней, постоянная — по мере одобрения стран.</div></div>
+  </div>
+  <div class="checks">
+    <div class="chk">Подача по процедуре МИД РФ</div>
+    <div class="chk">Экспресс-аудит паспорта до оплаты</div>
+    <div class="chk">Без бухгалтерии и отчётов по ВЭД</div>
+  </div>
+  <div class="bottom"><span>apec.center</span><span class="pn">08 / 13</span></div>
+</section>
+
+<!-- 09 ДОГОВОР -->
+<section class="page dark">
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>Безопасность сделки</span></div>
+  <span class="tag">Договор и оплата</span>
+  <h2>Прозрачный договор <span class="acc">и гарантия возврата</span></h2>
+  <div class="photo sm" style="background-image:url(img/contract.jpg)"></div>
+  <div class="grid2">
+    <div class="card"><div class="kicker">Договор-оферта</div><div class="cd" style="color:#fff;font-weight:600">Условия, сроки и возврат фиксируем в договоре до старта работы. Цена не меняется: госпошлины и временная карта уже включены.</div></div>
+    <div class="card hl"><div class="kicker">Возврат 100%</div><div class="cd" style="font-weight:600">Если МИД РФ или Секретариат АТЭС официально откажут — вернём всю оплату в течение 5 рабочих дней.</div></div>
+  </div>
+  <div class="card navy" style="margin-top:20px"><div class="dl"><div><div class="ct">Образец договора</div><div class="cd">PDF-оферту со спецификацией пришлём в Telegram</div></div><div class="arrow">→</div></div></div>
+  <div class="kicker" style="margin-top:40px">Способы оплаты</div>
+  <div class="grid4" style="margin-top:6px">
+    <div class="pay"><div class="t">Рубли</div><div class="d">карта / СБП, юрлицо по договору</div></div>
+    <div class="pay"><div class="t">USDT</div><div class="d">TRC-20 / TON</div></div>
+    <div class="pay"><div class="t">THB</div><div class="d">PromptPay / карта</div></div>
+    <div class="pay"><div class="t">Наличные</div><div class="d">в батах при встрече</div></div>
+  </div>
+  <div class="bottom"><span>apec.center</span><span class="pn">09 / 13</span></div>
+</section>
+
+<!-- 10 ТАЙМЛАЙН -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Прозрачный трекинг</span></div>
+  <span class="tag">Порядок выпуска карты APEC</span>
+  <h2>Механика выпуска <span class="acc">и этапы одобрения</span></h2>
+  <div class="tl">
+    <div class="tp on"><div class="o">0</div><div class="l">оплата<br>и подача</div></div>
+    <div class="tp"><div class="o">~60</div><div class="l">дней:<br>трек-номер</div></div>
+    <div class="tp on"><div class="o" style="font-size:28px">60–80</div><div class="l">дней:<br>временная карта</div></div>
+    <div class="tp"><div class="o">~6</div><div class="l">мес:<br>постоянная</div></div>
+  </div>
+  <div class="stack" style="margin-top:60px">
+    <div class="card"><div class="kicker">Старт в МИД РФ</div><div class="ct">Трек-номер и фиксация в МИД</div><div class="cd">Сразу после оплаты досье уходит в МИД РФ. Примерно через 60 дней приходит официальный трек-номер — подтверждение регистрации в системе APEC.</div></div>
+    <div class="card navy"><div class="kicker">60–80 дней · ~10 стран одобряют</div><div class="ct">Временная карта</div><div class="cd">Около 10 стран, включая Таиланд и Китай, уже одобряют въезд — можно выпускать карту и лететь. Временная карта работает так же, как постоянная: разница только в числе одобренных стран.</div></div>
+    <div class="card"><div class="kicker">~6 месяцев</div><div class="ct">Постоянная карта</div><div class="cd">Пластик с полным списком одобривших стран. Доставляем в Таиланд и любую страну.</div></div>
+  </div>
+  <div class="note"><b>Специфика:</b> Австралия и Япония сейчас не гарантируют ответ по гражданам РФ. Остальные 16 стран — в штатном режиме.</div>
+  <div class="bottom"><span>apec.center</span><span class="pn">10 / 13</span></div>
+</section>
+
+<!-- 11 ТАРИФЫ -->
+<section class="page light">
+  <div class="top"><img src="img/apec-logo-navy.png" alt=""><span>Выбор сценария</span></div>
+  <span class="tag">Прайс-лист APEC Center 2026</span>
+  <h2>Тарифы <span class="acc">без скрытых доплат</span></h2>
+  <table class="price">
+    <tr><th></th><th>Сам<small>DIY</small></th><th>Стандарт<small>&nbsp;</small></th><th class="pr"><span class="popular">Выбор большинства</span>Приоритет<small>быстро</small></th><th>Сплит<small>3 платежа</small></th></tr>
+    <tr class="price-row"><td>Цена</td><td style="font-size:22px">~40–50<br>тыс. ₽</td><td>60 000 ₽</td><td class="pr">90 000 ₽</td><td>120 000 ₽</td></tr>
+    <tr><td>Срок до карты</td><td>8–14 мес.</td><td>6–8 мес.</td><td class="pr">60–80 дней</td><td>60–80 дней</td></tr>
+    <tr><td>Ваше время</td><td>80+ часов</td><td>~1 час</td><td class="pr">15 минут</td><td>15 минут</td></tr>
+    <tr><td>Оплата</td><td>взносы без возврата</td><td>1 платёж</td><td class="pr">1 платёж</td><td>60 + 40 + 20 тыс.</td></tr>
+    <tr><td>Аудит паспорта до оплаты</td><td class="no">—</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Включение в ВЭД-пул</td><td>сами</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Подготовка и подача досье</td><td>сами</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Приоритетная подача</td><td class="no">—</td><td class="no">—</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Трек-номер и статус в Telegram</td><td class="no">—</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Специалист до выдачи карты</td><td class="no">—</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+    <tr><td>Возврат 100% при отказе МИД</td><td class="no">—</td><td class="yes">✓</td><td class="pr yes">✓</td><td class="yes">✓</td></tr>
+  </table>
+  <div class="note" style="margin-top:30px">Госпошлины, сборы ведомств и выпуск временной карты включены во все тарифы APEC Center.</div>
+  <div class="bottom"><span>apec.center</span><span class="pn">11 / 13</span></div>
+</section>
+
+<!-- 12 КЕЙС -->
+<section class="page dark">
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>История клиента</span></div>
+  <span class="tag">Кейс · тариф «Приоритет»</span>
+  <h2>Алексей, 32 года — <span class="acc">IT-предприниматель</span></h2>
+  <p class="lead" style="margin-top:14px">Пхукет / Бали</p>
+  <div class="case-photo"></div>
+  <div class="grid2">
+    <div class="card"><div class="kicker">Было</div><div class="cd" style="color:#fff;font-weight:600;margin:0">Каждые 2 месяца — стресс визаранов. Своего ВЭД-бизнеса нет.</div></div>
+    <div class="card hl"><div class="kicker">Решение</div><div class="cd" style="font-weight:600;margin:0">Оформлен как внешнеторговый советник действующей ВЭД-компании.</div></div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="n">70</div><div class="l">дней до временной карты</div></div>
+    <div class="kpi"><div class="n">10</div><div class="l">стран сразу, включая Таиланд</div></div>
+    <div class="kpi"><div class="n">90</div><div class="l">дней в Таиланде за въезд</div></div>
+    <div class="kpi"><div class="n">6</div><div class="l">месяцев до постоянной</div></div>
+  </div>
+  <div class="bottom"><span>Результат клиента APEC Center</span><span class="pn">12 / 13</span></div>
+</section>
+
+<!-- 13 CTA -->
+<section class="page dark final">
+  <div class="bgimg"></div>
+  <div class="top"><img src="img/apec-logo-white.png" alt=""><span>APEC Center</span></div>
+  <div class="inner">
+    <span class="badge">Бесплатно · без обязательств</span>
+    <h1 style="margin-top:26px;font-size:72px">Первый шаг к карте — <span class="acc">экспресс-аудит в МИД РФ</span></h1>
+    <p class="lead">Отправим за вас экспресс-запрос в МИД РФ на возможность оформления карты APEC. От вас — только загранпаспорт.</p>
+    <div class="grid3">
+      <div class="card"><div class="kicker">01</div><div class="ct" style="font-size:27px">Фото загранпаспорта</div><div class="cd" style="font-size:22px">в Telegram-боте</div></div>
+      <div class="card"><div class="kicker">02</div><div class="ct" style="font-size:27px">Экспресс-запрос в МИД</div><div class="cd" style="font-size:22px">отправляем за вас</div></div>
+      <div class="card"><div class="kicker">03</div><div class="ct" style="font-size:27px">Ответ и сроки</div><div class="cd" style="font-size:22px">по вашим странам</div></div>
+    </div>
+    <div class="tg">
+      <img src="img/qr.png" alt="QR">
+      <div><div class="k">Telegram</div><div class="h">@apec_center_bot →</div><div class="s">Пройти экспресс-аудит</div></div>
+    </div>
+  </div>
+  <div class="bottom"><span>APEC Center · 2026</span><span class="pn">13 / 13</span></div>
+</section>
+
+</body>
+</html>
