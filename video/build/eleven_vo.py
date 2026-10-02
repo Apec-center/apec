@@ -4,7 +4,7 @@
 import json, os, subprocess, sys, urllib.request
 
 KEY = os.environ['ELEVENLABS_API_KEY']
-VOICE_ID = os.environ.get('ELEVENLABS_VOICE_ID', 'yF2eB3gTd5IryfYhSZbo')  # Dima Expat (клон, ru), если голос не задан
+VOICE_ID = os.environ.get('ELEVENLABS_VOICE_ID', '3EuKHIEZbSzrHGNmdYsx')  # Nikolay (библиотека ElevenLabs, ru), если голос не задан
 S = json.load(open(os.path.join(os.path.dirname(__file__), '..', 'scenes.json')))['scenes']
 os.makedirs('vo', exist_ok=True)
 
@@ -15,7 +15,7 @@ prev = ''
 for i, s in enumerate(S):
     nxt = spoken(S[i + 1]['vo']) if i + 1 < len(S) else ''
     body = {'text': spoken(s['vo']), 'model_id': 'eleven_multilingual_v2', 'previous_text': prev, 'next_text': nxt,
-            'voice_settings': {'stability': 0.55, 'similarity_boost': 0.75, 'style': 0.15, 'speed': 1.1}}
+            'voice_settings': {'stability': 0.5, 'similarity_boost': 0.8, 'style': 0.0, 'use_speaker_boost': True, 'speed': 1.0}}
     req = urllib.request.Request(f'https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}?output_format=mp3_44100_192',
                                  data=json.dumps(body).encode(), headers={'xi-api-key': KEY, 'Content-Type': 'application/json'})
     mp3 = f'vo/eleven_s{s["id"]}.mp3'

@@ -1,6 +1,6 @@
 # Карта APEC: инфографическое видео с озвучкой (Reels / Shorts 9:16)
 
-**Файл:** `APEC_card_explainer_9x16.mp4`: 1080×1920, 30 fps, 76 сек, громкость ≈ −15 LUFS.
+**Файл:** `APEC_card_explainer_9x16.mp4`: 1080×1920, 30 fps, 79 сек, громкость −14 LUFS.
 **Субтитры:** `APEC_card_explainer_9x16.srt`. **Раскадровка:** `preview/storyboard.jpg`.
 
 ## Как сделано
@@ -10,7 +10,7 @@
 | Анимация кадров | kie.ai · Veo 3 Fast image-to-video → 1080p |
 | Музыка | ElevenLabs Music (инструментал, 78 с); исходная Suno-дорожка заменена вместе с озвучкой |
 | Инфографика | `build/overlays.py`: фирменный стиль (#0F1E36 + матовое золото #D4AF37, Source Serif 4 / Source Sans 3) |
-| Озвучка | ElevenLabs · eleven_multilingual_v2, клон «Dima Expat», speed 1.1: `build/eleven_vo.py` |
+| Озвучка | ElevenLabs · eleven_multilingual_v2, голос Nikolay из библиотеки (носитель русского), speed 1.0: `build/eleven_vo.py` |
 | Переозвучка | `build/revoice.py`: готовый ролик режется по сценам (по старому .srt), каждая сцена растягивается под новую озвучку, звук собирается заново: голос + музыка с дакингом |
 | Монтаж | `build/render.py`: каждая сцена собирается отдельной частью, затем части склеиваются кроссфейдами и сводятся с музыкой |
 

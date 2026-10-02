@@ -40,7 +40,7 @@ fc += ''.join(f'[v{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=0,format=yuv42
 for i in range(n):
     ms = int(starts[i] * 1000); fc += f'[{i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,adelay={ms}|{ms}[a{i}];'
 fc += ''.join(f'[a{i}]' for i in range(n)) + f'amix=inputs={n}:normalize=0,apad,atrim=0:{total:.3f}[voice];'
-fc += (f'[{n + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.35,afade=in:d=1.5,'
+fc += (f'[{n + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.25,afade=in:d=1.5,'
        f'afade=out:st={total - 2.5:.3f}:d=2.5,apad,atrim=0:{total:.3f}[mus];'
        '[voice]asplit[vx][sc];[mus][sc]sidechaincompress=threshold=0.03:ratio=4:attack=20:release=400[duck];'
        '[vx][duck]amix=inputs=2:duration=first:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[aout]')
