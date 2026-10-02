@@ -2,7 +2,7 @@
 Тайминг сцен берётся из старого .srt: каждая сцена готового видео растягивается под длину новой озвучки
 (резы проходят по середине существующих кроссфейдов), сверху кладутся vo/eleven_s*.wav и music.mp3.
 Запуск из рабочей папки:  python3 revoice.py OLD.mp4 OLD.srt OUT.mp4 OUT.srt"""
-import re, subprocess, sys
+import json, os, re, subprocess, sys
 SRC, SRT, OUT, OUT_SRT = sys.argv[1:5]
 VOICE = 'eleven'; XF = 0.4; LEAD = 0.3; TAIL = 0.7
 
@@ -27,13 +27,15 @@ old_d = [max(LEAD + (e - s) + TAIL, 4.0) + (2.5 if i == n - 1 else 0) for i, (s,
 vo = [f'vo/{VOICE}_s{i + 1}.wav' for i in range(n)]
 new_d = [max(LEAD + dur(v) + TAIL, 4.0) + (2.5 if i == n - 1 else 0) for i, v in enumerate(vo)]
 k = [nd / od for nd, od in zip(new_d, old_d)]
+SCENES = os.path.join(os.path.dirname(__file__), '..', 'scenes.json')     # текст субтитров — из актуального сценария
+text = [re.sub(r'\[[a-z ]+\]\s*', '', s['vo']) for s in json.load(open(SCENES))['scenes']]
 
 fc = ''; pos = 0.0; starts = []; srt = []
 for i in range(n):
     a, b = cuts[i], cuts[i + 1]
     fc += f'[0:v]trim={a:.3f}:{b:.3f},setpts=(PTS-STARTPTS)*{k[i]:.4f},fps=30[v{i}];'
     vs = pos + (offs[i] + LEAD - a) * k[i]                     # где в новом ролике начинается фраза
-    starts.append(vs); srt.append(f'{i + 1}\n{stamp(vs)} --> {stamp(vs + dur(vo[i]))}\n{subs[i][2]}\n')
+    starts.append(vs); srt.append(f'{i + 1}\n{stamp(vs)} --> {stamp(vs + dur(vo[i]))}\n{text[i]}\n')
     pos += (b - a) * k[i]
 total = pos
 fc += ''.join(f'[v{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=0,format=yuv420p[vout];'
