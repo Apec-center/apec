@@ -31,5 +31,10 @@
 - Активные кодовые слова: «КАРТА» (органика, работает: ~25–35% жмут «Забрать разбор»), «Карусель 6 · ПАСПОРТ» (пока 0 клиентов: CTA на слайдах стоит проверить).
 
 ## Генерация в kie.ai
+- Подключено и проверено 02.10.2026: ключ в переменной окружения `KIE_API_KEY`, в сети окружения разрешены `api.kie.ai` и `tempfile.aiquickdraw.com` (с него отдаются готовые картинки).
+- Создать задачу: `POST https://api.kie.ai/api/v1/jobs/createTask`, тело `{"model":"google/nano-banana","input":{"prompt":"…","output_format":"png","image_size":"3:4"}}`.
+- Статус и ссылка на результат: `GET https://api.kie.ai/api/v1/jobs/recordInfo?taskId=…`, поле `resultJson.resultUrls`. Ссылки временные, картинку скачиваем сразу.
+- Баланс: `GET https://api.kie.ai/api/v1/chat/credit`. nano-banana стоит 4 кредита за картинку и отдаёт 864×1184 (3:4). Для слайда 1080×1350 картинку масштабируем и обрезаем.
+- В промпте не просить надписи на предметах: модель рисует «псевдотекст» и кривые гербы (на пробном фоне получился паспорт с выдуманной эмблемой).
 - Текст на слайдах лучше накладывать отдельно (HTML/Figma), а в kie.ai генерировать только фоны и сцены. Так кириллица не ломается и шрифты одинаковые на всех слайдах.
 - База промпта: `minimalist premium editorial photo, deep navy #0F1E36 and matte gold #D4AF37, old money diplomatic aesthetic, soft natural light, clean negative space for text, no text, no logos, 4:5`.
