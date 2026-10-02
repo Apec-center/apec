@@ -1,0 +1,59 @@
+{
+ "style": "Ultra photorealistic cinematic photograph, shot on ARRI Alexa 35mm lens, shallow depth of field, Old Money / diplomatic minimalist aesthetic, deep navy blue (#0F1E36) shadows and matte gold (#D4AF37) warm highlights, soft volumetric light, premium editorial look, no neon, no on-screen captions, no watermarks, vertical 9:16, main subject in the upper 55% of the frame, lower third of the frame darker and calm with empty space for text",
+ "scenes": [
+  {
+   "id": 1,
+   "vo": "С пятнадцатого сентября безвиз в Таиланде — тридцать дней. Продлить можно лишь раз в году. Дальше — выезд каждый месяц: около одиннадцати бордерранов в год.",
+   "image": "Close-up of a tired Russian businessman in his 30s standing in a long crowded passport control queue at Bangkok Suvarnabhumi airport, holding a dark red passport, looking at his watch, fluorescent hall, crowd blurred behind, slightly cold mood with warm gold accent light",
+   "motion": "Slow push-in on the tired man in the queue, people shuffle slowly in the background, subtle handheld feel. No talking, no text."
+  },
+  {
+   "id": 2,
+   "vo": "Есть спокойное решение — карта APEC. Один документ на пять лет. До девяноста дней за каждый въезд.",
+   "image": "Hero product shot of the real APEC Business Travel Card: a pearl-white / light silver plastic card, top-left the word 'APEC' in large dark burgundy-red serif letters with 'Business Travel Card' below it in burgundy serif, top-right a blue oval globe emblem with 'APEC' written across it, a grey passport-style portrait photo placeholder on the left, faint grey world map on the right, floating at a slight angle above a dark navy night globe of the Asia-Pacific with glowing golden city lights and thin gold latitude lines, gold rim light glinting on the card edge, dark navy background",
+   "motion": "The card slowly rotates and floats toward camera, a gold light sweep glides across its surface, the globe turns gently behind. No text added."
+  },
+  {
+   "id": 3,
+   "vo": "В Таиланде это четыре выезда в год вместо одиннадцати. Раз в квартал — и без визитов в иммиграционную.",
+   "image": "Relaxed confident man in a linen shirt working on a laptop on the terrace of a luxury villa in Phuket at golden hour, infinity pool and Andaman sea behind, coconut on the table, warm sunset light, calm successful mood",
+   "motion": "Gentle slow dolly sideways, palm leaves sway, sunlight flickers on the pool. No talking."
+  },
+  {
+   "id": 4,
+   "vo": "А ещё — восемнадцать стран Азиатско-Тихоокеанского региона. Сингапур и Тайвань — без визы. Гонконг — шестьдесят дней вместо четырнадцати. Корея — без электронного разрешения.",
+   "image": "Cinematic view from space at night of the Asia-Pacific region: Southeast Asia, China, Korea, Australia, glowing golden city lights, thin elegant golden flight arcs connecting cities like Bangkok, Singapore, Hong Kong, Seoul, deep navy ocean, realistic Earth curvature",
+   "motion": "Slow orbital camera drift over the Earth, golden flight arcs draw themselves between glowing cities. No text."
+  },
+  {
+   "id": 5,
+   "vo": "На границе — отдельный коридор APEC. Мимо общей очереди.",
+   "image": "Elegant business traveller in a navy suit with a leather carry-on walking confidently through an empty dedicated fast-track passport lane in a modern Asian airport, long queue of travellers behind ropes on the side, large windows, warm golden morning light",
+   "motion": "Camera tracks behind the traveller as he walks steadily past the long queue toward the passport booth. No text."
+  },
+  {
+   "id": 6,
+   "vo": "Своя компания не нужна. Заявление подаётся через МИД России: мы включаем вас внешнеторговым советником аккредитованной ВЭД-компании. От вас — только загранпаспорт. Всё удалённо, из любой страны.",
+   "image": "Top-down shot of a dark walnut desk: Russian international passport, a smartphone, an elegant fountain pen and a neat folder of official documents with a golden seal, a container port at dusk softly visible through the window reflection, navy and gold palette",
+   "motion": "Slow overhead push-in, a hand places a passport on the desk, gentle light shift. No text."
+  },
+  {
+   "id": 7,
+   "vo": "Всё фиксируем в договоре. Если МИД официально откажет — вернём сто процентов оплаты.",
+   "image": "A crisp contract document on a dark navy leather desk with a gold fountain pen resting on it, brass stamp and embossed gold seal beside, law books softly blurred in background, warm desk lamp, premium trustworthy mood",
+   "motion": "Slow push-in across the contract, the pen slightly catches gold light. No text."
+  },
+  {
+   "id": 8,
+   "vo": "На тарифе «Приоритет» временная карта — через шестьдесят–восемьдесят дней. Госпошлины уже в цене.",
+   "image": "Close-up of a man's hand holding the real APEC Business Travel Card: a pearl-white / light silver plastic card, top-left the word 'APEC' in large dark burgundy-red serif letters with 'Business Travel Card' below it in burgundy serif, top-right a blue oval globe emblem with 'APEC' written across it, a grey passport-style portrait photo placeholder on the left, faint grey world map on the right, in an elegant hotel lobby with soft focus navy and gold interior, morning window light",
+   "motion": "Subtle slow camera drift and gentle rack focus onto the card, soft light glints on the card. No text."
+  },
+  {
+   "id": 9,
+   "vo": "Первый шаг — бесплатная проверка загранпаспорта в Телеграм-боте APEC Center. Это ни к чему не обязывает.",
+   "image": "Man's hand holding a dark navy passport with the real APEC Business Travel Card: a pearl-white / light silver plastic card, top-left the word 'APEC' in large dark burgundy-red serif letters with 'Business Travel Card' below it in burgundy serif, top-right a blue oval globe emblem with 'APEC' written across it, a grey passport-style portrait photo placeholder on the left, faint grey world map on the right tucked inside it, at a large airport lounge window, wide-body airplane on the tarmac at sunset, golden sun flare, aspirational travel mood",
+   "motion": "Slow push toward the window as the airplane taxis in the golden sunset. No text."
+  }
+ ]
+}
