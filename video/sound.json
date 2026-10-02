@@ -1,0 +1,39 @@
+{
+ "music": {
+  "global": ["modern cinematic advertising score", "premium, elegant, confident", "warm felt piano, airy synth pads, soft strings", "tight modern percussion", "instrumental", "leaves space for a voiceover", "92 BPM"],
+  "negative": ["vocals", "choir", "epic trailer drums", "cheesy corporate ukulele", "dubstep"],
+  "sections": [
+   {"scenes": [1], "name": "Tension", "styles": ["muted, slightly tense", "ticking hi-hat pulse", "low sustained synth drone", "sparse piano notes", "minor key"]},
+   {"scenes": [2], "name": "Reveal", "styles": ["sudden warm lift into major key", "shimmering pads swell", "soft kick enters", "sense of relief and possibility"]},
+   {"scenes": [3, 4, 5], "name": "Groove", "styles": ["light confident groove", "plucked synth arpeggio", "warm bass", "snaps and soft claps", "travel, freedom, momentum"]},
+   {"scenes": [6, 7], "name": "Trust", "styles": ["calmer, steady, reassuring", "piano chords with soft strings", "percussion reduced to a light pulse"]},
+   {"scenes": [8, 9], "name": "Resolve", "styles": ["uplifting resolution", "full groove returns with strings", "warm, hopeful, aspirational", "clean ending on a held chord"]}
+  ]
+ },
+ "transition": {"prompt": "soft fast cinematic air whoosh transition, smooth, clean, no impact", "duration": 1.2, "volume": 0.5},
+ "scenes": [
+  {"id": 1, "ambience": {"prompt": "busy airport passport control hall ambience, crowd murmur, distant muffled announcements, shuffling feet, no music", "volume": 0.35},
+   "accents": [{"prompt": "airport public address chime, two soft tones, distant reverb", "at": 0.6, "volume": 0.45, "duration": 2.5},
+               {"prompt": "close-up wristwatch ticking, crisp mechanical clock ticks", "at": 3.5, "volume": 0.3, "duration": 4}]},
+  {"id": 2, "ambience": {"prompt": "deep calm space hum, soft airy low drone, subtle", "volume": 0.25},
+   "accents": [{"prompt": "magical golden shimmer sparkle sweep, glass chime glint, premium product reveal", "at": 0.1, "volume": 0.55, "duration": 2.5},
+               {"prompt": "deep soft cinematic sub boom, warm low impact, no distortion", "at": 0.0, "volume": 0.45, "duration": 2}]},
+  {"id": 3, "ambience": {"prompt": "tropical villa terrace ambience, gentle sea waves, soft breeze through palm leaves, distant birds", "volume": 0.4},
+   "accents": [{"prompt": "soft laptop keyboard typing, a few keystrokes", "at": 2.0, "volume": 0.25, "duration": 2.5}]},
+  {"id": 4, "ambience": {"prompt": "earth from orbit, deep cosmic ambience, low airy rumble, subtle shimmering texture", "volume": 0.3},
+   "accents": [{"prompt": "soft digital data blips and light UI swooshes, elegant, futuristic interface", "at": 2.5, "volume": 0.3, "duration": 5}]},
+  {"id": 5, "ambience": {"prompt": "modern airport terminal ambience, spacious hall reverb, quiet crowd far away", "volume": 0.3},
+   "accents": [{"prompt": "confident footsteps of leather shoes on polished airport floor with a rolling suitcase", "at": 0.2, "volume": 0.5, "duration": 5}]},
+  {"id": 6, "ambience": {"prompt": "quiet office room tone at dusk, faint distant city and harbour", "volume": 0.25},
+   "accents": [{"prompt": "passport placed down on a wooden desk, soft paper rustle", "at": 0.4, "volume": 0.55, "duration": 2},
+               {"prompt": "documents in a folder flipped through, paper pages rustle", "at": 6.0, "volume": 0.35, "duration": 2}]},
+  {"id": 7, "ambience": {"prompt": "quiet study room tone, desk lamp hum, very subtle", "volume": 0.2},
+   "accents": [{"prompt": "fountain pen signing on paper, smooth scratch", "at": 0.5, "volume": 0.4, "duration": 2},
+               {"prompt": "heavy rubber stamp hitting paper on a wooden desk, solid thud", "at": 3.4, "volume": 0.6, "duration": 1.5}]},
+  {"id": 8, "ambience": {"prompt": "elegant hotel lobby ambience, soft distant voices, light footsteps, calm", "volume": 0.3},
+   "accents": [{"prompt": "plastic card glint shimmer, short sparkle", "at": 0.6, "volume": 0.45, "duration": 1.5}]},
+  {"id": 9, "ambience": {"prompt": "airport lounge by a window, distant jet engine of a plane taxiing outside, calm evening", "volume": 0.35},
+   "accents": [{"prompt": "smartphone notification ping, soft pleasant tone", "at": 2.2, "volume": 0.35, "duration": 1},
+               {"prompt": "elegant cinematic logo sting ending, warm shimmer and soft low hit", "at": -2.6, "volume": 0.5, "duration": 3}]}
+ ]
+}
