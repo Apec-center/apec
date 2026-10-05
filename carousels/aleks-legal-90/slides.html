@@ -172,6 +172,11 @@
   .ci.no .m { background: rgba(255,255,255,.14); }
   .chips-l { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
   .chip-l { font: 600 27px/1 'Montserrat'; padding: 20px 26px; border-radius: 999px; background: var(--white); color: var(--dark); box-shadow: 0 6px 20px rgba(28,52,73,.07); }
+
+  .stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 44px; }
+  .stat2 .big { font: 700 170px/1 'Unbounded'; letter-spacing: -.04em; margin-top: 18px; }
+  .stat2 .u { font: 700 30px/1.2 'Montserrat'; margin-top: 8px; }
+  .stat2 .k { font: 500 27px/1.38 'Montserrat'; margin-top: 18px; opacity: .85; }
 </style>
 </head>
 <body>
@@ -181,113 +186,116 @@
   <div class="bg sky-shade" style="background-image:url(bg/cover.png)"></div>
   <img class="cover-logo" src="apec-logo-navy.png" alt="">
   <div class="content">
-    <span class="pill">Вопрос, который задают все</span>
-    <h1 style="font-size:74px;margin-top:24px">Штамп на&nbsp;90&nbsp;дней<br>в&nbsp;Таиланде —<br><span class="accent">это легально?</span></h1>
+    <span class="pill">Не верьте на слово</span>
+    <h1 style="font-size:70px;margin-top:24px;white-space:nowrap">Штамп на&nbsp;90&nbsp;дней:<br><span class="accent">законно или&nbsp;развод?</span></h1>
   </div>
-  <div class="footer"><span>@ALEKS_RYKOV</span><span class="swipe">Разбираю без воды →</span></div>
+  <div class="footer"><span>@ALEKS_RYKOV</span><span class="swipe">3 факта внутри →</span></div>
 </section>
 
-<!-- 2. КОРОТКИЙ ОТВЕТ -->
+<!-- 2. ОТВЕТ: ДА + 3 ПРОВЕРЯЕМЫХ ФАКТА -->
 <section class="slide light" id="s2">
   <div class="content">
     <span class="tag">Короткий ответ</span>
     <div class="yes-big">Да.</div>
     <div class="pillars">
-      <div class="pillar"><div class="ic">1</div><div><div class="t">Карту выдаёт МИД РФ</div><div class="d">Официальный документ, а не «услуга посредника»</div></div></div>
-      <div class="pillar"><div class="ic">2</div><div><div class="t">Таиланд — участник программы</div><div class="d">Полноправный участник APEC Business Travel Card</div></div></div>
-      <div class="pillar"><div class="ic">3</div><div><div class="t">90 дней прописаны в правилах</div><div class="d">Держателям карты с кодом THA — до&nbsp;90&nbsp;дней за въезд</div></div></div>
+      <div class="pillar"><div class="ic">1</div><div><div class="t">Карту выдаёт МИД РФ</div><div class="d">Официальный документ на 5 лет, а не «виза от посредника»</div></div></div>
+      <div class="pillar"><div class="ic">2</div><div><div class="t">Подача только через ТПП, РСПП или «Опору России»</div><div class="d">Других каналов в МИД просто нет</div></div></div>
+      <div class="pillar"><div class="ic">3</div><div><div class="t">Трек-номер проверяете сами</div><div class="d">В официальном кабинете APEC — без нас</div></div></div>
     </div>
   </div>
-  <div class="teaser"><span>Как это устроено</span><span>→</span></div>
+  <div class="teaser"><span>«Но я же не бизнесмен»</span><span>→</span></div>
   <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">02 / 08</span></div>
 </section>
 
-<!-- 3. КАК РАБОТАЕТ -->
+<!-- 3. Я НЕ БИЗНЕСМЕН (ИН-01) -->
 <section class="slide dark" id="s3">
   <div class="content">
-    <span class="tag">Как это работает</span>
-    <h2>Не лазейка, <span class="accent">а&nbsp;программа АТЭС</span></h2>
-    <div class="photo-box" style="background-image:url(bg/stamp.png)"></div>
-    <div class="flow">
-      <div class="fl"><div class="n">1</div><div><div class="t">Страны проверяют вас заранее</div><div class="d">Каждая страна АТЭС сама одобряет держателя карты</div></div></div>
-      <div class="fl"><div class="n">2</div><div><div class="t">На обороте — код THA</div><div class="d">Значит, Таиланд уже дал согласие на ваш въезд</div></div></div>
-      <div class="fl"><div class="n">3</div><div><div class="t">Паспорт + карта на границе</div><div class="d">Отдельный коридор и штамп до 90 дней</div></div></div>
+    <span class="tag">Самый частый страх</span>
+    <h2>«Карта же для&nbsp;бизнесменов. <span class="accent">Мне нужно ИП?»</span></h2>
+    <div class="flow" style="margin-top:50px; gap:30px">
+      <div class="fl"><div class="n">1</div><div><div class="t">Нет, ИП открывать не нужно</div><div class="d">Подходит фриланс, найм, удалёнка — нужен только загранпаспорт</div></div></div>
+      <div class="fl"><div class="n">2</div><div><div class="t">Вас включают в компанию с реальной ВЭД</div><div class="d">Вы — её международный представитель</div></div></div>
+      <div class="fl"><div class="n">3</div><div><div class="t">Заявку подаёт она через аккредитованный канал</div><div class="d">ТПП РФ, РСПП или «Опора России» → МИД РФ</div></div></div>
+      <div class="fl"><div class="n">4</div><div><div class="t">Бухгалтерия и отчёты вам не нужны</div><div class="d">Статус формальный, обязательств не несёт</div></div></div>
     </div>
   </div>
-  <div class="teaser"><span>Почему 90, а не 30</span><span>→</span></div>
+  <div class="teaser"><span>Зачем это всё, если есть безвиз</span><span>→</span></div>
   <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">03 / 08</span></div>
 </section>
 
-<!-- 4. ПОЧЕМУ 90, А НЕ 30 -->
+<!-- 4. 11 ПРОТИВ 4 (ИН-09) -->
 <section class="slide light" id="s4">
   <div class="content">
     <span class="tag">С 15 сентября 2026</span>
-    <h2>Почему всем 30, <span class="accent">а&nbsp;по&nbsp;карте 90?</span></h2>
-    <div class="vs">
-      <div class="lightcol"><h3>Безвиз</h3><div class="big">30</div><div class="k">дней, только туризм, продление на&nbsp;усмотрение офицера</div></div>
-      <div class="bluecol"><h3>Карта APEC</h3><div class="big">90</div><div class="k">дней, отдельное соглашение для деловых поездок</div></div>
+    <h2>11 бордерранов в&nbsp;год <span class="accent">против&nbsp;4</span></h2>
+    <div class="stat2">
+      <div class="lightcol"><h3>Без карты</h3><div class="big">11</div><div class="u">выездов в год</div><div class="k">Безвиз 30 дней. Продлить на&nbsp;30 можно только раз в&nbsp;году</div></div>
+      <div class="bluecol"><h3>С картой APEC</h3><div class="big">4</div><div class="u">выезда в год</div><div class="k">90 дней за въезд, раз в&nbsp;квартал, без визитов в&nbsp;иммиграционную</div></div>
     </div>
-    <div class="verdict">Это <b>два разных основания для въезда</b>. Новые правила урезали безвиз, а&nbsp;программу APEC не&nbsp;затронули.</div>
+    <div class="verdict">Сокращение безвиза <b>держателей карты не затронуло</b>. Посчитайте: сколько стоит ваш один выезд × 7?</div>
   </div>
   <div class="teaser"><span>А теперь честно о нюансах</span><span>→</span></div>
   <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">04 / 08</span></div>
 </section>
 
-<!-- 5. ЧТО ДАЁТ И ЧЕГО НЕТ -->
+<!-- 5. ЧЕСТНО ПРЕДУПРЕЖДАЕМ -->
 <section class="slide dark" id="s5">
   <div class="content">
-    <span class="tag">Честно о нюансах</span>
+    <span class="tag">Честно предупреждаем</span>
     <h2>Что карта даёт <span class="accent">и&nbsp;чего не&nbsp;даёт</span></h2>
     <div class="can">
-      <div class="ci ok"><div class="m">✓</div><div><div class="t">До 90 дней за въезд</div><div class="d">Деловые поездки: встречи, переговоры, поиск партнёров</div></div></div>
-      <div class="ci ok"><div class="m">✓</div><div><div class="t">Многократно 5 лет</div><div class="d">Пока действует загранпаспорт</div></div></div>
-      <div class="ci no"><div class="m">✕</div><div><div class="t">Не разрешение на работу</div><div class="d">Работать по найму в Таиланде можно только с work permit</div></div></div>
-      <div class="ci no"><div class="m">✕</div><div><div class="t">Не «автомат» на границе</div><div class="d">Последнее слово за офицером — как при любом въезде</div></div></div>
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">До 90 дней за въезд, 5 лет</div><div class="d">Въезды не ограничены, коридор APEC в аэропортах</div></div></div>
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">Ещё 17 стран АТЭС</div><div class="d">Сингапур и Тайвань без визы, Корея без K-ETA</div></div></div>
+      <div class="ci no"><div class="m">✕</div><div><div class="t">Не разрешение на работу</div><div class="d">И 90 дней в иммиграционной обычно не продлевают</div></div></div>
+      <div class="ci no"><div class="m">✕</div><div><div class="t">Не «пустят всегда»</div><div class="d">Решение о въезде — за пограничником. Японию и Австралию не обещаем</div></div></div>
     </div>
   </div>
-  <div class="teaser"><span>Откуда статус для подачи</span><span>→</span></div>
+  <div class="teaser"><span>Как проверить нас</span><span>→</span></div>
   <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">05 / 08</span></div>
 </section>
 
-<!-- 6. ВЭД-ПУЛ -->
+<!-- 6. КАК ПРОВЕРИТЬ НАС (ИН-04) -->
 <section class="slide light" id="s6">
   <div class="content">
-    <span class="tag">Частый вопрос</span>
-    <h2>«У меня нет бизнеса. <span class="accent">Мне можно?»</span></h2>
-    <div class="pillars">
-      <div class="pillar"><div class="ic">✓</div><div><div class="t">Да, по установленной процедуре</div><div class="d">Вас включают в пул внешнеторговых советников действующей ВЭД-компании</div></div></div>
-      <div class="pillar"><div class="ic">✓</div><div><div class="t">Заявку подаёт компания</div><div class="d">Через аккредитованный канал в МИД РФ: ТПП, РСПП или «Опора России»</div></div></div>
-      <div class="pillar"><div class="ic">✓</div><div><div class="t">Без обязательств для вас</div><div class="d">Статус формальный: ни отчётов, ни бухгалтерии</div></div></div>
+    <span class="tag">Проверяемые факты</span>
+    <h2>Как проверить, <span class="accent">что&nbsp;это не&nbsp;развод</span></h2>
+    <div class="photo-box" style="background-image:url(bg/check.png); height:370px; background-position:center 55%"></div>
+    <div class="chips-l">
+      <span class="chip-l">Договор с ИП Константиновым Д.&nbsp;Ю.</span>
+      <span class="chip-l">Трек-номер в кабинете APEC</span>
+      <span class="chip-l">Отзывы на Яндексе</span>
+      <span class="chip-l">Один сайт — apec.center</span>
+      <span class="chip-l">Возврат 100% при отказе МИД</span>
     </div>
   </div>
-  <div class="teaser"><span>Как проверить, что всё чисто</span><span>→</span></div>
+  <div class="teaser"><span>И всё это — удалённо</span><span>→</span></div>
   <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">06 / 08</span></div>
 </section>
 
-<!-- 7. КАК ПРОВЕРИТЬ -->
+<!-- 7. УДАЛЁННО (ИН-08) -->
 <section class="slide photo" id="s7">
-  <div class="bg card-shade" style="background-image:url(bg/card.png)"></div>
+  <div class="bg full-shade" style="background-image:url(bg/cover-real.png)"></div>
   <div class="content">
-    <span class="tag">Чек-лист без серых схем</span>
-    <h2>Как понять, <span class="accent">что&nbsp;вас не&nbsp;обманут</span></h2>
+    <span class="tag">Без поездки в Россию</span>
+    <h2>Не&nbsp;выезжая <span class="accent">с&nbsp;Пхукета</span></h2>
     <div class="facts">
-      <div class="fact"><div class="t">Трек-номер из МИД РФ</div><div class="d">Приходит примерно через 60 дней после подачи</div></div>
-      <div class="fact"><div class="t">Код THA на обороте карты</div><div class="d">Проверяется сразу, как карта у вас в руках</div></div>
-      <div class="fact"><div class="t">Договор и возврат 100%</div><div class="d">Если МИД РФ официально откажет — деньги вернут по договору</div></div>
+      <div class="fact"><div class="t">Ни МИДа, ни собеседований</div><div class="d">Отпечатки и личный визит не нужны — только электронные копии</div></div>
+      <div class="fact"><div class="t">Цена фиксирована договором</div><div class="d">От 60 000 до 120 000 ₽, госпошлины и временная карта включены</div></div>
+      <div class="fact"><div class="t">Карту привезёт курьер</div><div class="d">По России и в Таиланд — бесплатно</div></div>
     </div>
   </div>
   <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">07 / 08</span></div>
 </section>
 
-<!-- 8. CTA -->
+<!-- 8. CTA (ИН-07) -->
 <section class="slide photo" id="s8">
   <div class="bg full-shade" style="background-image:url(bg/airport.png)"></div>
   <div class="content">
-    <span class="tag">Остались вопросы?</span>
+    <span class="tag">Первый шаг — бесплатный</span>
     <h2>Напиши в&nbsp;комментариях</h2>
     <div><span class="word">КАРТА</span></div>
-    <div class="lead">Пришлю в директ разбор: <b>условия, сроки, цену</b> и&nbsp;бесплатно проверим ваш паспорт</div>
-    <div class="save">Отправь тому, кто спрашивал «это легально?»</div>
+    <div class="lead">Бесплатно проверим ваш паспорт: <b>2 минуты, ни&nbsp;к&nbsp;чему не&nbsp;обязывает</b>. И сразу скажем, подходит ли карта</div>
+    <div class="save">Отправь тому, кто спрашивал «а это не развод?»</div>
   </div>
   <div class="footer"><span>@ALEKS_RYKOV</span><img src="apec-logo-white.png" alt=""></div>
 </section>
