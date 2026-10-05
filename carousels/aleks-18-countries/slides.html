@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link href="fonts/fonts.css" rel="stylesheet">
+<style>
+  /* Фирменная палитра APEC Center */
+  :root {
+    --dark: #1C3449;       /* Тёмно-синий */
+    --dark-2: #2E5070;
+    --midnight: #122338;   /* Полночный */
+    --pearl: #EBEAEC;      /* Жемчужный */
+    --steel: #D8DDE4;      /* Стальной */
+    --light-2: #F7F8FA;
+    --electric: #287FF2;   /* Электрик */
+    --electric-2: #62A4FF;
+    --cobalt: #1F4985;     /* Кобальт */
+    --white: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #333; font-family: 'Montserrat', sans-serif; }
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; padding: 96px 88px 0; margin-bottom: 40px; }
+  .dark  { background: linear-gradient(135deg, var(--midnight) 0%, var(--dark) 55%, var(--dark-2) 100%); color: var(--white); }
+  .light { background: linear-gradient(135deg, var(--steel) 0%, var(--light-2) 100%); color: var(--dark); }
+  .bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+  h1, h2, h3, .num, .huge, .word, .name, .v { font-family: 'Unbounded', sans-serif; }
+  h1 { font-weight: 700; font-size: 86px; line-height: 1.06; letter-spacing: -.01em; margin-top: 36px; }
+  h2 { font-weight: 600; font-size: 72px; line-height: 1.1; letter-spacing: -.01em; margin-top: 34px; }
+  .accent { color: var(--electric); }
+  .dark .accent, .photo .accent { color: var(--electric-2); }
+
+  .tag { display: inline-flex; align-self: flex-start; align-items: center; gap: 14px;
+    font: 700 25px/1 'Montserrat'; letter-spacing: .16em; text-transform: uppercase; color: var(--electric); }
+  .dark .tag, .photo .tag { color: var(--electric-2); }
+  .tag::before { content: ''; width: 44px; height: 3px; background: currentColor; }
+  .pill { display: inline-block; align-self: flex-start; color: var(--white);
+    background: linear-gradient(90deg, var(--electric), var(--electric-2));
+    font: 700 27px/1 'Montserrat'; letter-spacing: .08em; text-transform: uppercase; padding: 17px 28px; border-radius: 999px; }
+
+  .footer { position: absolute; left: 88px; right: 88px; bottom: 60px; z-index: 3;
+    display: flex; justify-content: space-between; align-items: center; font: 700 24px/1 'Montserrat'; letter-spacing: .12em; }
+  .footer img { height: 54px; display: block; }
+  .dark .footer, .photo .footer { color: rgba(255,255,255,.8); }
+  .light .footer { color: rgba(28,52,73,.6); }
+  .count { color: var(--electric); }
+  .dark .count, .photo .count { color: var(--electric-2); }
+
+  .teaser { position: absolute; left: 88px; right: 88px; bottom: 148px; z-index: 3;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 30px 36px; border-radius: 28px; font: 700 33px/1.2 'Montserrat';
+    color: var(--white); background: linear-gradient(90deg, var(--electric), var(--electric-2)); }
+  .teaser span:last-child { font: 600 42px/1 'Unbounded'; }
+
+  /* 1. обложка */
+  .cover-shade::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,35,56,.82) 0%, rgba(18,35,56,.45) 34%, rgba(18,35,56,0) 55%, rgba(18,35,56,0) 78%, rgba(18,35,56,.7) 100%); }
+  .photo { color: var(--white); }
+  .photo h1 { text-shadow: 0 4px 30px rgba(18,35,56,.45); }
+  .swipe { font: 700 29px/1 'Montserrat'; color: var(--white); padding: 18px 28px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--electric), var(--electric-2)); letter-spacing: .01em; }
+  .cover-logo { position: absolute; right: 88px; top: 80px; z-index: 3; height: 92px; }
+
+  .sky { color: var(--dark); }
+  .sky h1 { color: var(--dark); }
+  .sky .accent { color: var(--electric); text-shadow: 0 0 24px rgba(247,248,250,.9), 0 0 6px rgba(247,248,250,.8); }
+  .sky .footer { color: var(--dark); }
+  .sky-shade::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(247,248,250,.55) 0%, rgba(247,248,250,.15) 35%, rgba(247,248,250,0) 50%); }
+
+  /* 2. что изменилось */
+  .big-change { display: flex; align-items: center; gap: 34px; margin-top: 56px; }
+  .num { font-weight: 700; font-size: 220px; line-height: .9; letter-spacing: -.04em; }
+  .num.old { color: rgba(28,52,73,.22); position: relative; }
+  .num.old::after { content: ''; position: absolute; left: -10px; right: -10px; top: 50%; height: 16px;
+    background: var(--electric); transform: rotate(-12deg); border-radius: 8px; }
+  .num.new { background: linear-gradient(135deg, var(--electric), var(--cobalt)); -webkit-background-clip: text; color: transparent; }
+  .arrow { font: 600 90px/1 'Unbounded'; color: var(--electric); }
+  .days { font: 700 38px/1.2 'Montserrat'; color: var(--dark-2); margin-top: 12px; }
+  .list { list-style: none; margin-top: 56px; display: flex; flex-direction: column; gap: 32px; }
+  .list li { display: flex; gap: 22px; font: 600 39px/1.3 'Montserrat'; color: var(--dark); }
+  .list li::before { content: ''; flex: none; width: 16px; height: 16px; margin-top: 16px; background: var(--electric); transform: rotate(45deg); }
+
+  /* 3. математика */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 50px; }
+  .col { border-radius: 36px; padding: 46px 40px 50px; background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.14); }
+  .col.win { background: linear-gradient(150deg, var(--electric) 0%, var(--electric-2) 100%); border: none; }
+  .col h3 { font-weight: 600; font-size: 29px; text-transform: uppercase; letter-spacing: .02em; }
+  .row { margin-top: 30px; }
+  .row .v { white-space: nowrap; font-weight: 700; font-size: 70px; line-height: 1; letter-spacing: -.02em; }
+  .row .k { font: 600 29px/1.25 'Montserrat'; opacity: .85; margin-top: 8px; }
+
+  /* 4. варианты */
+  .opts { margin-top: 56px; display: flex; flex-direction: column; gap: 24px; }
+  .opt { display: grid; grid-template-columns: 210px 1fr; gap: 28px; align-items: center;
+    padding: 44px 40px; border-radius: 32px; background: var(--white); box-shadow: 0 10px 30px rgba(28,52,73,.08); }
+  .opt .name { font-weight: 700; font-size: 50px; line-height: 1; color: var(--dark); }
+  .opt .desc { font: 500 33px/1.32 'Montserrat'; color: var(--dark-2); }
+  .opt .desc b { color: var(--dark); font-weight: 700; }
+  .opt.win { background: linear-gradient(135deg, var(--dark) 0%, var(--cobalt) 100%); }
+  .opt.win .name { color: var(--electric-2); }
+  .opt.win .desc, .opt.win .desc b { color: var(--white); }
+
+  /* 5. карта */
+  .card-shade::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,35,56,.92) 0%, rgba(18,35,56,.6) 50%, rgba(18,35,56,.15) 75%, rgba(18,35,56,.65) 100%); }
+  .full-shade::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,35,56,.92) 0%, rgba(18,35,56,.62) 45%, rgba(18,35,56,.86) 100%); }
+  .huge { font-weight: 700; font-size: 360px; line-height: .85; letter-spacing: -.05em; margin-top: 40px;
+    background: linear-gradient(135deg, var(--electric-2), var(--electric)); -webkit-background-clip: text; color: transparent; }
+  .huge-sub { font: 600 52px/1.12 'Unbounded'; margin-top: 18px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 56px; }
+  .chip { font: 600 30px/1 'Montserrat'; padding: 22px 30px; border-radius: 999px; background: rgba(18,35,56,.7); border: 2px solid rgba(98,164,255,.6); }
+
+  /* 6. шаги */
+  .steps { margin-top: 58px; display: flex; flex-direction: column; gap: 42px; }
+  .step { display: grid; grid-template-columns: 96px 1fr; gap: 30px; align-items: start; }
+  .step .n { width: 96px; height: 96px; border-radius: 50%; color: var(--white);
+    background: linear-gradient(135deg, var(--electric), var(--electric-2)); display: grid; place-items: center; font: 600 40px/1 'Unbounded'; }
+  .step .t { font: 700 40px/1.2 'Montserrat'; padding-top: 6px; }
+  .step .d { font: 500 32px/1.32 'Montserrat'; color: var(--dark-2); margin-top: 8px; }
+
+  /* 7. честно */
+  .facts { margin-top: 50px; display: flex; flex-direction: column; gap: 24px; }
+  .fact { padding: 32px 40px; border-radius: 30px; background: rgba(255,255,255,.06); border-left: 8px solid var(--electric); }
+  .fact .t { font: 700 39px/1.2 'Montserrat'; }
+  .fact .d { font: 500 31px/1.32 'Montserrat'; color: rgba(255,255,255,.75); margin-top: 8px; }
+
+  /* 8. CTA */
+  .word { display: inline-block; margin-top: 44px; font-weight: 700; font-size: 150px; line-height: 1; letter-spacing: -.02em;
+    color: var(--white); background: linear-gradient(135deg, var(--electric), var(--electric-2)); padding: 26px 50px 34px; border-radius: 40px; }
+  .lead { font: 500 38px/1.35 'Montserrat'; color: rgba(255,255,255,.82); margin-top: 30px; }
+  .lead b { color: var(--white); font-weight: 700; }
+  .save { margin-top: auto; margin-bottom: 170px; font: 600 32px/1.3 'Montserrat'; color: var(--white);
+    padding: 26px 32px; border-radius: 28px; background: rgba(18,35,56,.72); border: 2px solid rgba(255,255,255,.2); align-self: flex-start; }
+
+  /* --- карусель «это легально?» --- */
+  .yes-big { font: 700 300px/0.9 'Unbounded'; letter-spacing: -.04em; margin-top: 30px;
+    background: linear-gradient(135deg, var(--electric), var(--cobalt)); -webkit-background-clip: text; color: transparent; }
+  .pillars { display: flex; flex-direction: column; gap: 22px; margin-top: 46px; }
+  .pillar { display: grid; grid-template-columns: 84px 1fr; gap: 26px; align-items: center; padding: 30px 34px; border-radius: 30px;
+    background: var(--white); box-shadow: 0 10px 30px rgba(28,52,73,.08); }
+  .pillar .ic { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: var(--white);
+    font: 600 34px/1 'Unbounded'; background: linear-gradient(135deg, var(--electric), var(--electric-2)); }
+  .pillar .t { font: 700 34px/1.25 'Montserrat'; color: var(--dark); }
+  .pillar .d { font: 500 27px/1.35 'Montserrat'; color: var(--dark-2); margin-top: 6px; }
+  .photo-box { margin-top: 34px; height: 300px; border-radius: 32px; background-size: cover; background-position: center; }
+  .flow { display: flex; flex-direction: column; gap: 16px; margin-top: 30px; }
+  .fl { display: grid; grid-template-columns: 70px 1fr; gap: 24px; align-items: start; }
+  .fl .n { width: 70px; height: 70px; border-radius: 50%; display: grid; place-items: center; font: 600 30px/1 'Unbounded'; color: var(--white);
+    background: linear-gradient(135deg, var(--electric), var(--electric-2)); }
+  .fl .t { font: 700 34px/1.25 'Montserrat'; padding-top: 4px; }
+  .fl .d { font: 500 27px/1.35 'Montserrat'; color: rgba(255,255,255,.75); margin-top: 6px; }
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 46px; }
+  .vs .col h3 { font-size: 27px; }
+  .vs .big { font: 700 150px/1 'Unbounded'; letter-spacing: -.03em; margin-top: 22px; }
+  .vs .k { font: 600 30px/1.35 'Montserrat'; margin-top: 18px; opacity: .9; }
+  .lightcol { border-radius: 36px; padding: 50px 40px 56px; background: var(--white); box-shadow: 0 10px 30px rgba(28,52,73,.08); color: var(--dark); }
+  .bluecol { border-radius: 36px; padding: 50px 40px 56px; color: var(--white); background: linear-gradient(150deg, var(--electric), var(--electric-2)); }
+  .lightcol .big { color: rgba(28,52,73,.35); }
+  .verdict { margin-top: 26px; padding: 30px 36px; border-radius: 28px; background: var(--dark); color: var(--white); font: 600 31px/1.38 'Montserrat'; }
+  .verdict b { color: var(--electric-2); }
+  .can { display: flex; flex-direction: column; gap: 18px; margin-top: 40px; }
+  .ci { display: grid; grid-template-columns: 64px 1fr; gap: 22px; align-items: start; padding: 26px 30px; border-radius: 26px; }
+  .ci .m { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font: 700 32px/1 'Montserrat'; color: var(--white); }
+  .ci .t { font: 700 32px/1.25 'Montserrat'; padding-top: 4px; }
+  .ci .d { font: 500 26px/1.35 'Montserrat'; margin-top: 6px; opacity: .8; }
+  .ci.ok { background: rgba(255,255,255,.07); }
+  .ci.ok .m { background: linear-gradient(135deg, var(--electric), var(--electric-2)); }
+  .ci.no { background: rgba(255,255,255,.04); border: 2px dashed rgba(255,255,255,.22); }
+  .ci.no .m { background: rgba(255,255,255,.14); }
+  .chips-l { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+  .chip-l { font: 600 27px/1 'Montserrat'; padding: 20px 26px; border-radius: 999px; background: var(--white); color: var(--dark); box-shadow: 0 6px 20px rgba(28,52,73,.07); }
+
+  .stat2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 44px; }
+  .stat2 .big { font: 700 170px/1 'Unbounded'; letter-spacing: -.04em; margin-top: 18px; }
+  .stat2 .u { font: 700 30px/1.2 'Montserrat'; margin-top: 8px; }
+  .stat2 .k { font: 500 27px/1.38 'Montserrat'; margin-top: 18px; opacity: .85; }
+
+  .note { margin-top: 40px; border-radius: 26px; padding: 30px 36px; font: 500 28px/1.45 'Montserrat'; background: rgba(98,164,255,.12); border-left: 6px solid var(--electric-2); color: rgba(255,255,255,.9); }
+  .note b { color: var(--white); }
+  #s1 .footer > span:first-child { color: var(--white); text-shadow: 0 2px 12px rgba(0,0,0,.6); }
+  .ctable.big .crow { padding: 36px 34px; }
+  .ctable.big .crow .c { font-size: 42px; }
+  .ctable.big .crow .b { font-size: 60px; }
+  .ctable.big .crow .a { font-size: 34px; }
+  .ctable { margin-top: 36px; display: flex; flex-direction: column; gap: 12px; }
+  .crow { display: grid; grid-template-columns: 1fr 170px 60px 170px; align-items: center; gap: 10px; padding: 21px 32px; border-radius: 24px; }
+  .light .crow { background: var(--white); box-shadow: 0 8px 24px rgba(28,52,73,.07); }
+  .dark .crow { background: rgba(255,255,255,.06); }
+  .crow .c { font: 700 35px/1.2 'Montserrat'; }
+  .crow .a { font: 600 30px/1 'Unbounded'; text-align: right; opacity: .45; }
+  .crow .ar { font: 600 30px/1 'Unbounded'; text-align: center; color: var(--electric); }
+  .dark .crow .ar { color: var(--electric-2); }
+  .crow .b { font: 700 46px/1 'Unbounded'; color: var(--electric); }
+  .dark .crow .b { color: var(--electric-2); }
+  .crow .b small, .crow .a small { font: 600 18px/1 'Montserrat'; letter-spacing: .02em; margin-left: 6px; }
+  .crow.win { background: linear-gradient(135deg, var(--electric), var(--electric-2)) !important; color: var(--white); box-shadow: none; }
+  .crow.win .a { opacity: .7; } .crow.win .b, .crow.win .ar { color: var(--white); }
+  .colhead { display: grid; grid-template-columns: 1fr 170px 60px 170px; gap: 10px; padding: 0 30px; margin-top: 36px;
+    font: 700 19px/1 'Montserrat'; letter-spacing: .14em; text-transform: uppercase; opacity: .6; }
+  .colhead span:nth-child(2) { text-align: right; }
+  .colhead span:nth-child(4) { text-align: left; }
+  .three { display: flex; flex-direction: column; gap: 22px; margin-top: 46px; }
+  .route { display: flex; flex-direction: column; gap: 0; margin-top: 30px; }
+  .leg { display: grid; grid-template-columns: 140px 1fr 150px; align-items: center; gap: 20px; padding: 22px 0; border-bottom: 1.5px dashed rgba(255,255,255,.2); }
+  .leg .m { font: 700 22px/1.2 'Montserrat'; letter-spacing: .1em; text-transform: uppercase; color: var(--electric-2); }
+  .leg .p { font: 700 34px/1.2 'Montserrat'; }
+  .leg .d { font: 700 40px/1 'Unbounded'; text-align: right; }
+  .leg .d small { font: 600 18px/1 'Montserrat'; margin-left: 4px; }
+</style>
+</head>
+<body>
+
+<!-- 1. ХУК -->
+<section class="slide sky" id="s1">
+  <div class="bg sky-shade" style="background-image:url(bg/cover.png)"></div>
+  <img class="cover-logo" src="apec-logo-navy.png" alt="">
+  <div class="content">
+    <span class="pill">Не только Таиланд</span>
+    <h1 style="font-size:74px;margin-top:24px">Одна карта —<br><span class="accent">и&nbsp;пол-Азии без&nbsp;виз</span></h1>
+  </div>
+  <div class="footer"><span>@ALEKS_RYKOV</span><span class="swipe">Смотри по странам →</span></div>
+</section>
+
+<!-- 2. ТРИ ВИДА ВЫГОДЫ -->
+<section class="slide light" id="s2">
+  <div class="content">
+    <span class="tag">18 стран АТЭС на 5 лет</span>
+    <h2>Что карта даёт <span class="accent">в&nbsp;других странах</span></h2>
+    <div class="pillars" style="margin-top:56px">
+      <div class="pillar"><div class="ic">1</div><div><div class="t">Вместо визы</div><div class="d">Туда, где россиянам сейчас нужна виза</div></div></div>
+      <div class="pillar"><div class="ic">2</div><div><div class="t">Дольше за въезд</div><div class="d">В 2, 3, а где-то и в 6 раз больше дней</div></div></div>
+      <div class="pillar"><div class="ic">3</div><div><div class="t">Меньше формальностей</div><div class="d">Без электронных разрешений и с отдельным коридором</div></div></div>
+    </div>
+  </div>
+  <div class="teaser"><span>1. Вместо визы</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">02 / 08</span></div>
+</section>
+
+<!-- 3. ВМЕСТО ВИЗЫ -->
+<section class="slide dark" id="s3">
+  <div class="content">
+    <span class="tag">1 · Вместо визы</span>
+    <h2>Где сейчас нужна виза, <span class="accent">а&nbsp;по&nbsp;карте — нет</span></h2>
+    <div class="colhead"><span>Страна</span><span>Без карты</span><span></span><span>С картой</span></div>
+    <div class="ctable big" style="margin-top:14px">
+      <div class="crow"><div class="c">Сингапур</div><div class="a">виза</div><div class="ar">→</div><div class="b">60<small>дней</small></div></div>
+      <div class="crow"><div class="c">Тайвань</div><div class="a">виза</div><div class="ar">→</div><div class="b">90<small>дней</small></div></div>
+    </div>
+    <div class="note" style="margin-top:40px">Япония, Австралия и Новая Зеландия тоже в программе: без визы — если страна одобрит именно вас. <b>Это мы не обещаем</b>: сейчас они не гарантируют ответ по гражданам РФ.</div>
+  </div>
+  <div class="teaser"><span>2. Дольше за въезд</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">03 / 08</span></div>
+</section>
+
+<!-- 4. ДОЛЬШЕ ЗА ВЪЕЗД -->
+<section class="slide light" id="s4">
+  <div class="content">
+    <span class="tag">2 · Дольше за въезд</span>
+    <h2>Дней за въезд: <span class="accent">без карты → с&nbsp;картой</span></h2>
+    <div class="ctable">
+      <div class="crow win"><div class="c">Таиланд</div><div class="a">30</div><div class="ar">→</div><div class="b">90</div></div>
+      <div class="crow"><div class="c">Бруней</div><div class="a">14</div><div class="ar">→</div><div class="b">90</div></div>
+      <div class="crow"><div class="c">Гонконг</div><div class="a">14</div><div class="ar">→</div><div class="b">60</div></div>
+      <div class="crow"><div class="c">Бали (Индонезия)</div><div class="a">~30</div><div class="ar">→</div><div class="b">60</div></div>
+      <div class="crow"><div class="c">Китай · Малайзия</div><div class="a">30</div><div class="ar">→</div><div class="b">60</div></div>
+      <div class="crow"><div class="c">Филиппины</div><div class="a">30</div><div class="ar">→</div><div class="b">59</div></div>
+      <div class="crow"><div class="c">Вьетнам</div><div class="a">45</div><div class="ar">→</div><div class="b">60</div></div>
+    </div>
+  </div>
+  <div class="teaser"><span>3. Меньше формальностей</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">04 / 08</span></div>
+</section>
+
+<!-- 5. МЕНЬШЕ ФОРМАЛЬНОСТЕЙ -->
+<section class="slide dark" id="s5">
+  <div class="content">
+    <span class="tag">3 · Меньше формальностей</span>
+    <h2>Без анкет <span class="accent">и&nbsp;очередей</span></h2>
+    <div class="can">
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">Южная Корея — 90 дней без K-ETA</div><div class="d">Без карты — 60 дней и электронное разрешение</div></div></div>
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">Мексика — 90 дней по карте</div><div class="d">Без электронного разрешения</div></div></div>
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">Коридор APEC в аэропортах</div><div class="d">Отдельный паспортный контроль, мимо общей очереди</div></div></div>
+      <div class="ci ok"><div class="m">✓</div><div><div class="t">Одна проверка — на 5 лет</div><div class="d">Въезды не ограничены, анкеты под каждую поездку не нужны</div></div></div>
+    </div>
+  </div>
+  <div class="teaser"><span>Как это выглядит в жизни</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">05 / 08</span></div>
+</section>
+
+<!-- 6. ПРИМЕР МАРШРУТА -->
+<section class="slide photo" id="s6">
+  <div class="bg full-shade" style="background-image:url(bg/route.png)"></div>
+  <div class="content">
+    <span class="tag">Пример зимовки</span>
+    <h2>7 месяцев в&nbsp;Азии — <span class="accent">ни одной визы</span></h2>
+    <div class="route">
+      <div class="leg"><div class="m">Ноя — янв</div><div class="p">Таиланд, Пхукет</div><div class="d">90<small>дн</small></div></div>
+      <div class="leg"><div class="m">Февраль</div><div class="p">Вьетнам, Нячанг</div><div class="d">30<small>дн</small></div></div>
+      <div class="leg"><div class="m">Март</div><div class="p">Бали</div><div class="d">30<small>дн</small></div></div>
+      <div class="leg"><div class="m">Апрель</div><div class="p">Сингапур → Гонконг</div><div class="d">14<small>дн</small></div></div>
+      <div class="leg" style="border-bottom:none"><div class="m">Май</div><div class="p">Корея, Сеул</div><div class="d">30<small>дн</small></div></div>
+    </div>
+  </div>
+  <div class="teaser"><span>Честно о нюансах</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-white.png" alt=""><span class="count">06 / 08</span></div>
+</section>
+
+<!-- 7. ЧЕСТНО -->
+<section class="slide light" id="s7">
+  <div class="content">
+    <span class="tag">Честно предупреждаем</span>
+    <h2>Что важно знать <span class="accent">до&nbsp;поездки</span></h2>
+    <div class="pillars" style="margin-top:50px">
+      <div class="pillar"><div class="ic">!</div><div><div class="t">90 дней в Китае, Гонконге, на Бали…</div><div class="d">Расширение объявлено в августе 2026, дата пока не назначена</div></div></div>
+      <div class="pillar"><div class="ic">!</div><div><div class="t">Сроки безвиза меняются</div><div class="d">В таблице — то, что действует сейчас</div></div></div>
+      <div class="pillar"><div class="ic">!</div><div><div class="t">Решение — за пограничником</div><div class="d">Как при любом въезде. И работать по карте нельзя</div></div></div>
+    </div>
+  </div>
+  <div class="teaser"><span>Посчитаем по вашим странам</span><span>→</span></div>
+  <div class="footer"><img src="apec-logo-navy.png" alt=""><span class="count">07 / 08</span></div>
+</section>
+
+<!-- 8. CTA -->
+<section class="slide photo" id="s8">
+  <div class="bg full-shade" style="background-image:url(bg/airport.png)"></div>
+  <div class="content">
+    <span class="tag">Куда летаете вы?</span>
+    <h2>Напиши в&nbsp;комментариях</h2>
+    <div><span class="word">КАРТА</span></div>
+    <div class="lead">Пришлю разбор по&nbsp;вашим странам: <b>без карты → с&nbsp;картой</b>. И&nbsp;бесплатно проверим паспорт — 2&nbsp;минуты</div>
+    <div class="save">Сохрани, чтобы спланировать зимовку</div>
+  </div>
+  <div class="footer"><span>@ALEKS_RYKOV</span><img src="apec-logo-white.png" alt=""></div>
+</section>
+
+</body>
+</html>
