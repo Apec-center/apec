@@ -160,7 +160,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .btn-lg{min-height:62px;padding:0 32px;font-size:17px}
 .btn .arrow{transition:transform .25s}
 .btn:hover .arrow{transform:translateX(4px)}
-@media (max-width:600px){.btn-lg{width:100%}.cta-stack{justify-items:stretch}}
+@media (max-width:600px){.btn-lg{width:100%;font-size:15.5px;padding:0 18px;white-space:nowrap;gap:8px}.cta-stack{justify-items:stretch}}
 /* kinetic headline */
 .kick{margin:4px 0 4px}
 .hero .alert{margin-bottom:22px}
@@ -800,7 +800,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     </nav>
     <a class="tel" href="tel:88001000943">8 800 100-09-43</a>
     <button class="skin" id="skin" type="button" aria-label="Переключить светлую и тёмную тему"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></button>
-    <button class="btn btn-primary btn-sm" type="button" data-quiz>Проверить шансы</button>
+    <button class="btn btn-primary btn-sm" type="button" data-quiz>Подойдёт ли мне?</button>
   </div>
 </header>
 
@@ -829,8 +829,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <p class="lead">Оформляем через МИД РФ дистанционно — <b>без ИП и поездки в Россию</b>. Откажет МИД — вернём 100%.</p>
         <div class="cta-stack">
           <div class="cta-row">
-            <button class="btn btn-primary btn-lg" type="button" data-quiz>Проверить шансы на карту <span class="arrow" aria-hidden="true">→</span></button>
-            <a class="btn btn-line" href="#math">Математика зимовки</a>
+            <button class="btn btn-primary btn-lg" type="button" data-quiz>Узнать, подойдёт ли мне карта <span class="arrow" aria-hidden="true">→</span></button>
+            <a class="btn btn-line" href="#math">Сколько я сэкономлю</a>
           </div>
           <p class="cta-note"><span>5 вопросов</span><span>30 секунд</span><span>бесплатно, без звонка</span></p>
         </div>
@@ -1165,7 +1165,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
           <div class="res hl rv"><small>Вы сохраните</small><b class="num" id="r-save">240 000 ₽</b><span id="r-save-s">с учётом цены карты</span></div>
         </div>
         <p class="verdict rv" id="verdict"></p>
-        <button class="btn btn-primary" type="button" data-quiz style="justify-self:start">Проверить, можно ли мне получить карту</button>
+        <button class="btn btn-primary" type="button" data-quiz style="justify-self:start">Узнать, подойдёт ли мне карта</button>
       </div>
     </div>
   </div>
@@ -1366,7 +1366,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
   </div>
 </footer>
 
-<div class="mbar" id="mbar"><button class="btn btn-primary" type="button" data-quiz>Проверить шансы на карту</button></div>
+<div class="mbar" id="mbar"><button class="btn btn-primary" type="button" data-quiz>Узнать, подойдёт ли мне карта</button></div>
 <div class="modal" id="modal" hidden><div class="quiz" id="quiz-modal" role="dialog" aria-modal="true" aria-label="Проверка шансов на карту АТЭС"></div></div>
 
 <script>
