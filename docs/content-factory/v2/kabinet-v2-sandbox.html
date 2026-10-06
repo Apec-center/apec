@@ -1445,7 +1445,7 @@ function kieCard(p,snap){
       h("span",{class:"chip "+(b.credits!=null?"ok":b.err?"warn":"mute")},b.credits!=null?"В n8n работает, баланс "+nf(b.credits):b.err?"В n8n нет доступа":"В n8n не проверялась"))),
     h("ol",{style:"margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px"},
       h("li",null,"В CRM добавьте нейросеть Kie.ai: адрес https://api.kie.ai и ваш ключ. Так ключ лежит в одном месте и виден в списке выше."),
-      h("li",null,"Генерацию из кабинета делает n8n, поэтому тот же ключ нужен там как доступ «kie.ai API» (Bearer) в проекте Funnel Demo. Из CRM ключ в n8n не передаётся: CRM отдаёт ключи только скрытыми."),
+      h("li",null,"Генерацию из кабинета делает n8n. Сейчас ключ временно вписан заголовком в воркфлоу «Demo · Картинки kie.ai» (песочница, по разрешению владельца). Когда CRM начнёт отдавать ключ или проксировать вызовы, запись в n8n уберём. Из CRM ключ в n8n сам не передаётся: CRM отдаёт ключи только скрытыми."),
       h("li",null,"Нажмите «Проверить доступ в n8n»: кабинет спросит у kie.ai баланс.")),
     h("div",{class:"row"},S.mcp&&h("button",{class:"btn ghost",disabled:b.busy,onclick:loadBalance},b.busy?"Проверяю…":"Проверить доступ в n8n"),b.err&&h("span",{class:"muted"},b.err))));
 }
