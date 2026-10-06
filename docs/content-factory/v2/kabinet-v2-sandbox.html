@@ -160,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[]}};
+const S={pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -171,7 +171,7 @@ function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body
 const can=()=>ROLES[S.role].edit&&S.canWrite;
 
 /* ---------- данные (db) ---------- */
-const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals"};
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals",pieces:"pieces"};
 function listen(name){
   S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
 }
@@ -649,45 +649,222 @@ async function addProposed(){
 }
 
 /* ---------- 4. Производство ---------- */
+const PASS=75;
+const RUBRIC=[["hook","Крючок",25],["concrete","Конкретика",20],["save","Повод сохранить или переслать",15],["facts","Факты и запреты",20],["cta","Призыв",10],["voice","Голос",10]];
+const FORBID_TXT="слово «АТЭС», «виза» про карту, обещания одобрения, работа по карте, Япония/Австралия/Новая Зеландия, цены чужих виз, скидки, ложная срочность, «визараны умерли»";
+/* форматы по каналам из конституции v1; ключ — id канала */
+const FORMATS={
+  "ig-dima":"Рилс Димы на 25–40 секунд. Два крючка до 7 слов (A и B). Формат:\nКРЮЧОК A:\n…\nКРЮЧОК B:\n…\n\nСУФЛЁР (60–90 слов, каждая фраза с новой строки; 1,5–6 с — почему это касается зрителя; 6–25 с — три факта или расчёт; финал — доказательство и призыв написать КАРТА):\n…\n\nПЕРЕБИВКИ (таблица: время, что показать, источник своё или ИИ, промпт для ИИ на английском; ИИ-перебивка 4–8 с, 9:16, без текста и людей крупным планом):\n…\n\nПОДПИСЬ (2–3 предложения с призывом написать КАРТА):\n…",
+  "ig-aleks":"Рилс Алекса на локации Пхукета, 20–35 секунд. Назови конкретное место. Два крючка до 7 слов (A и B). Формат:\nКРЮЧОК A:\n…\nКРЮЧОК B:\n…\n\nКАДРЫ (по секундам):\n…\n\nТЕКСТ ЗА КАДРОМ (50–80 слов):\n…\n\nПОДПИСЬ с призывом написать КАРТА:\n…",
+  "ig-brand":"Карусель для @apec_center на 7–9 слайдов. Для каждого слайда: заголовок до 6 слов и текст до 25 слов. Слайд 1 — обложка-крючок с цифрой, 2 — боль, 3–7 — цифры, сравнение, шаги, 8 — доказательство, 9 — призыв. Ниже подпись к посту с призывом написать КАРТА в комментариях.",
+  "tg":"Пост для Telegram-канала APEC Center, 600–1200 знаков. Живо, абзацы по 1–3 предложения, без хэштегов. В конце один призыв и ссылка {LINK}.",
+  "yt":"Упаковка для YouTube Shorts: заголовок до 70 знаков с поисковым запросом, описание 2–3 предложения, ссылка {LINK} в описании, 3–5 хэштегов. Плюс краткий план длинного видео на 8–12 минут: заголовок, текст на обложку до 4 слов, тайм-коды, тезисы разделов.",
+  "dzen":"Статья для Дзена, 4000–6000 знаков. Заголовок с цифрой или вопросом. Лид в 2 предложения. Подзаголовки, списки, расчёт выездов за год. Вывод и призыв со ссылкой {LINK}.",
+  "vcru":"Статья для vc.ru, 5000–8000 знаков, от первого лица Димы, который живёт на Пхукете. Личный опыт, расчёты, таблица сравнения по срокам и числу выездов в markdown. Ссылка {LINK} один раз в конце.",
+  "seo":"SEO-статья для сайта apec.center, 6000–9000 знаков. В начале строки «Запрос:», «Title:» (до 60 знаков), «Description:» (до 160 знаков). Затем H1, разделы H2 и H3 под запрос, блок FAQ из 4–5 вопросов клиентов, ссылка {LINK} в конце.",
+  "meta-ads":"3 варианта рекламного креатива для Meta. Для каждого: текст на картинке до 6 слов, основной текст до 125 знаков, заголовок до 40 знаков, кнопка.",
+  "refs":"Креатив для партнёров-рефералов. 3 коротких поста до 400 знаков, которые партнёр перешлёт друзьям, и текст на картинку до 6 слов. В конце каждого поста строка «Ссылка: из кабинета партнёра»."
+};
+const fmtOfName=n=>{const c=S.data.channels.find(x=>x.name===n);return(c&&FORMATS[c.id])||"Материал для канала «"+n+"»: заголовок, основной текст, один призыв."};
+function platformCtx(){const st=lastStrategy()||{};
+  return "Бизнес: карта APEC (APEC Business Travel Card) для россиян через МИД РФ; до 90 дней за въезд; около 4 выездов в год вместо ~11; тарифы Стандарт 60 000 ₽, Приоритет 90 000 ₽, Сплит 120 000 ₽ тремя платежами; возврат 100% при официальном отказе МИД; реестр в МИД до четверга 15:00 МСК.\n"+
+  "Главное сообщение: "+(st.roof||"")+"\nТон: "+(st.tov||"")+"\nЦенности: "+(st.values||"")+"\nОпоры: "+((st.pillars||[]).map(x=>x.title+" — "+x.proof).join("; "))+"\n"+
+  "Пиши на «вы», живой речью, фразы 4–10 слов, без канцелярита и языка ИИ. Потеря цепляет сильнее выгоды. Запрещено: "+FORBID_TXT+". Не выдумывай цифры, кейсы и отзывы: используй только факты выше."}
+const topicRef=id=>S.data.topics.find(t=>t.id===id);
+const piecesOf=id=>S.data.pieces.filter(x=>x.topic===id).sort((a,b)=>String(a.id).localeCompare(String(b.id)));
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const stageName=id=>(FLOW.find(f=>f.id===id)||{}).name||id;
+function busyOf(id){return !!S.pr.busy[id]}
+function setBusy(id,v){if(v)S.pr.busy[id]=true;else delete S.pr.busy[id];render()}
+function prog(t){S.pr.prog=t;const e=$("#prprog");if(e)e.textContent=t}
+
+/* судья: шкала 0–100 из конституции, порог 75; любое нарушение запретов режет оценку до 40 */
+async function judge(kind,text){
+  const prompt="Ты строгий судья контента APEC Center. Оцени "+kind+" по шкале 0–100.\n"+platformCtx()+"\n\nШКАЛА (макс. по пунктам): "+RUBRIC.map(([k,n,m])=>k+" — "+n+" (до "+m+")").join("; ")+
+   ". Крючок: до 7 слов, цифра/деньги/срок/риск, останавливает скролл. Конкретика: цифры, сроки, места из фактов выше, никаких общих слов. Повод сохранить или переслать: расчёт, список, шаги. Факты и запреты: любой запрещённый оборот, выдуманная цифра или обещание сверх договора — это нарушение. Призыв: одно действие. Голос: на «вы», живая речь.\n\nТЕКСТ:\n"+text+
+   "\n\nОтвет строго JSON: {\"parts\":{\"hook\":0,\"concrete\":0,\"save\":0,\"facts\":0,\"cta\":0,\"voice\":0},\"violations\":[\"что нарушено\"],\"notes\":[\"3–5 конкретных правок\"]}";
+  const r=await S.sample.json(prompt,{cache:false});
+  const parts={};let total=0;
+  RUBRIC.forEach(([k,,m])=>{const v=Math.max(0,Math.min(m,Math.round(Number(r&&r.parts&&r.parts[k])||0)));parts[k]=v;total+=v});
+  const violations=(r&&Array.isArray(r.violations)?r.violations:[]).map(String).filter(Boolean).slice(0,6);
+  if(violations.length)total=Math.min(total,40);
+  return{total,parts,violations,notes:(r&&Array.isArray(r.notes)?r.notes:[]).map(String).slice(0,6),at:new Date().toISOString()};
+}
+const verdictChip=v=>v?h("span",{class:"chip "+(v.total>=PASS?"ok":"warn"),title:(v.violations||[]).join("; ")},"Судья "+v.total+(v.violations&&v.violations.length?" · нарушения":"")):null;
+/* пишем, судим, при оценке ниже порога один раз переписываем по замечаниям, оставляем лучшее */
+async function writeJudged(kind,makePrompt,parse){
+  let text=parse(await S.sample(makePrompt(""),{cache:false}));let v=await judge(kind,text);
+  if(v.total<PASS){const t2=parse(await S.sample(makePrompt("Предыдущая версия получила "+v.total+" из 100. Исправь замечания судьи: "+[...v.violations,...v.notes].join("; ")+"\n\nПредыдущая версия:\n"+text),{cache:false}));
+    const v2=await judge(kind,t2);if(v2.total>=v.total){text=t2;v=v2}}
+  return{text,verdict:v};
+}
+async function genBrief(t){
+  if(!S.sample||busyOf(t.id))return;setBusy(t.id,true);
+  try{
+    const cell=cellOf(t.cell||"");const cellTxt=cell&&cell.meaning?"Ячейка матрицы: смысл «"+cell.meaning+"»; углы: "+linesOf(cell.angles).join(", ")+"; триггеры: "+linesOf(cell.triggers).join(", ")+"; доказательства: "+(cell.proof||"")+"; банк хуков: "+linesOf(cell.hooks).join(" | "):"Ячейка матрицы не описана.";
+    const seg=(S.data.segments.find(x=>x.id===t.segment)||{}).name||"любой";
+    const mk=extra=>"Ты редактор контента APEC Center. Подготовь тезисы и хуки для темы «"+t.title+"».\n"+platformCtx()+"\nСегмент: "+seg+". Ступень Ханта: "+(t.stage_idx!=null?(Number(t.stage_idx)+1)+" ("+STAGES[t.stage_idx]+"; "+STAGE_HINT[t.stage_idx]+")":"не задана")+".\n"+cellTxt+"\nПочему тема: "+(t.why||"—")+"\nКаналы: "+((t.channels||[]).join("; ")||"не выбраны")+"\n"+extra+
+      "\n\nДай: angle (угол подачи, одно предложение), theses (3–5 тезисов), hooks (3 варианта: text до 7 слов с цифрой, деньгами, сроком или риском; screen — текст на экране; visual — что в кадре), proof (какое доказательство использовать, только из фактов выше), cta (одно действие).\nОтвет строго JSON: {\"angle\":\"\",\"theses\":[\"\"],\"hooks\":[{\"text\":\"\",\"screen\":\"\",\"visual\":\"\"}],\"proof\":\"\",\"cta\":\"\"}";
+    const parse=r=>r;let brief,v;
+    brief=await S.sample.json(mk(""),{cache:false});v=await judge("тезисы и хуки",JSON.stringify(brief));
+    if(v.total<PASS){const b2=await S.sample.json(mk("Предыдущая версия получила "+v.total+" из 100. Исправь: "+[...v.violations,...v.notes].join("; ")+"\nПредыдущая версия: "+JSON.stringify(brief)),{cache:false});const v2=await judge("тезисы и хуки",JSON.stringify(b2));if(v2.total>=v.total){brief=b2;v=v2}}
+    const clean={angle:String(brief.angle||""),theses:(brief.theses||[]).map(String).slice(0,6),hooks:(brief.hooks||[]).slice(0,4).map(x=>({text:String(x.text||""),screen:String(x.screen||""),visual:String(x.visual||"")})),proof:String(brief.proof||""),cta:String(brief.cta||"")};
+    if(!clean.hooks.length)throw{code:"empty"};
+    await S.db.doc("topics/"+t.id).update({brief:clean,brief_verdict:v,hooks_sel:[],stage:"hooks_review",history:[...(t.history||[]),{at:new Date().toISOString(),from:t.stage,to:"hooks_review",by:"Claude",score:v.total}]});
+    toast("Тезисы и хуки готовы, оценка судьи "+v.total);
+  }catch(e){const m=sampleErr(e);toast(m||"Не получилось написать, попробуйте ещё раз")}
+  setBusy(t.id,false);
+}
+async function genPieces(t){
+  if(!S.sample||busyOf(t.id))return;
+  if(!(t.channels||[]).length){toast("Выберите каналы у темы");return}
+  setBusy(t.id,true);
+  try{
+    const hooks=(t.brief.hooks||[]).filter((_,i)=>(t.hooks_sel||[]).includes(i));const use=hooks.length?hooks:(t.brief.hooks||[]).slice(0,2);
+    let n=0;
+    for(let i=0;i<t.channels.length;i++){
+      const ch=t.channels[i];prog("Пишу "+(i+1)+" из "+t.channels.length+": "+ch);
+      const mk=extra=>"Ты автор контента APEC Center. Напиши готовый материал для канала «"+ch+"» по теме «"+t.title+"».\n"+platformCtx()+"\nУгол: "+t.brief.angle+"\nТезисы: "+(t.brief.theses||[]).join("; ")+"\nУтверждённые хуки: "+use.map(h=>h.text+" (на экране: "+h.screen+"; в кадре: "+h.visual+")").join(" | ")+"\nДоказательство: "+t.brief.proof+"\nПризыв: "+t.brief.cta+"\nВместо ссылки ставь {LINK}.\n\nФОРМАТ:\n"+fmtOfName(ch)+"\n"+extra+"\n\nОтветь только текстом материала, без пояснений.";
+      const r=await writeJudged("готовый материал для «"+ch+"»",mk,x=>String((x&&x.text)||x||"").trim());
+      await S.db.doc("pieces/"+t.id+"__"+i).set({topic:t.id,channel:ch,body:r.text,verdict:r.verdict,status:"draft",at:new Date().toISOString()});n++;
+    }
+    await S.db.doc("topics/"+t.id).update({stage:"script_review",history:[...(t.history||[]),{at:new Date().toISOString(),from:t.stage,to:"script_review",by:"Claude"}]});
+    toast("Сценарии готовы: "+n);
+  }catch(e){const m=sampleErr(e);toast(m||"Не получилось написать, попробуйте ещё раз")}
+  prog("");setBusy(t.id,false);
+}
+async function genBatch(stage){
+  const list=S.data.topics.filter(t=>t.stage===stage).slice(0,5);
+  for(const t of list){const fresh=topicRef(t.id)||t;await(stage==="hooks"?genBrief(fresh):genPieces(fresh));if(!S.sample)break}
+}
+async function moveTopic(t,to,comment,by,extra){
+  await write(()=>S.db.doc("topics/"+t.id).update({...(extra||{}),stage:to,history:[...(t.history||[]),{at:new Date().toISOString(),from:t.stage,to,...(comment?{comment}:{}),...(by?{by}:{})}]}));
+}
+function approve(t,m){
+  const f=FLOW.find(x=>x.id===t.stage);if(!f||!f.gate)return;
+  if(t.stage==="hooks_review"&&!(t.hooks_sel||[]).length){toast("Отметьте хотя бы один хук");return}
+  if(t.stage==="script_review"&&!piecesOf(t.id).length){toast("Материалов пока нет");return}
+  moveTopic(t,f.next).then(()=>toast(m||"Утверждено"));
+}
+function giveBack(t){
+  const f=FLOW.find(x=>x.id===t.stage),c=(S.pr.ret[t.id]||"").trim();
+  if(!c){toast("Напишите, что исправить");return}
+  moveTopic(t,f.back,c).then(()=>{delete S.pr.ret[t.id];toast("Возвращено Claude на доработку");render()});
+}
 function vProduction(p){
-  p.append(head("Производство","Три ворота: темы на период, тезисы и хуки, финальный сценарий. Без пройденных ворот публикации нет."));
-  const t=S.data.topics;
+  const P=S.pr,t=S.data.topics;
+  p.append(head("Производство","Три ворота: темы на период, тезисы и хуки, финальный сценарий. Перед воротами Claude пишет, а судья оценивает по шкале 0–100 (порог "+PASS+")."));
   const waiting=t.filter(x=>{const f=FLOW.find(y=>y.id===x.stage);return f&&f.gate});
-  p.append(h("div",{class:"card"},h("h2",null,"Ждёт вашего решения · "+waiting.length),
+  const batchable=waiting.filter(x=>P.sel[x.id]);
+  p.append(h("div",{class:"card"},h("div",{class:"row",style:"justify-content:space-between"},h("h2",null,"Ждёт вашего решения · "+waiting.length),
+    can()&&waiting.length>0&&h("button",{class:"btn sm",disabled:!batchable.length,onclick:async()=>{for(const x of batchable){
+      const fresh=topicRef(x.id)||x;
+      if(fresh.stage==="hooks_review"&&!(fresh.hooks_sel||[]).length)await moveTopic(fresh,"script",null,null,{hooks_sel:[0]});else approve(fresh,"Утверждено")}P.sel={};render()},title:"Для тезисов берётся первый хук"},"Утвердить выбранные · "+batchable.length)),
     waiting.length?h("div",{style:"display:flex;flex-direction:column;gap:8px;margin-top:10px"},waiting.map(x=>topicRow(x))):h("p",{class:"muted",style:"margin:6px 0 0"},"Всё разобрано.")));
+  const work=["hooks","script"].map(st=>({st,n:t.filter(x=>x.stage===st).length})).filter(x=>x.n);
+  if(work.length&&S.sample&&can())p.append(h("div",{class:"card row"},work.map(w=>h("button",{class:"btn ghost",disabled:Object.keys(P.busy).length>0,onclick:()=>genBatch(w.st)},(w.st==="hooks"?"Написать тезисы и хуки":"Написать сценарии")+" для "+Math.min(5,w.n)+" из "+w.n)),h("span",{class:"muted",id:"prprog"},P.prog)));
   if(can())p.append(addTopic());
+  p.append(h("div",{class:"tabs",role:"tablist"},[["kanban","Канбан"],["table","Таблица"],["calendar","Календарь"]].map(([id,n])=>h("button",{role:"tab","aria-selected":P.view===id,onclick:()=>{P.view=id;render()}},n))));
+  if(P.open&&topicRef(P.open))p.append(topicDetail(topicRef(P.open)));
+  ({kanban:viewKanban,table:viewTable,calendar:viewCalendar})[P.view](p);
+}
+function topicRow(x){const f=FLOW.find(y=>y.id===x.stage),P=S.pr;
+  return h("div",{class:"row",style:"justify-content:space-between"},
+    h("label",{class:"row",style:"gap:8px;flex:1 1 260px;cursor:pointer"},can()&&h("input",{type:"checkbox",id:"sel-"+x.id,checked:!!P.sel[x.id],onchange:e=>{P.sel[x.id]=e.target.checked;render()}}),h("b",null,x.title)," ",h("span",{class:"chip warn"},"Ворота "+f.gate),verdictChip(x.stage==="hooks_review"?x.brief_verdict:null)),
+    h("button",{class:"btn ghost sm",onclick:()=>{P.open=x.id;render();$(".main").scrollTop=0}},"Открыть"));}
+function topicCard(x,f){return h("div",{class:"item"},h("b",null,x.title),
+  x.channels&&x.channels.length>0&&h("div",{class:"pill-row"},x.channels.map(c=>h("span",{class:"chip mute"},c.replace(/\s*[(@].*$/,"")))),
+  f.who&&h("span",{class:"chip vio"},busyOf(x.id)?"Claude пишет…":"Ждёт: "+f.who),
+  x.pillar_title&&h("span",{class:"chip mute"},x.pillar_title),x.due&&h("span",{class:"muted",style:"font-size:12px"},"Выпуск "+x.due),
+  h("div",{class:"row"},h("button",{class:"btn ghost sm",onclick:()=>{S.pr.open=x.id;render();$(".main").scrollTop=0}},"Открыть"),
+    can()&&f.who&&S.sample&&h("button",{class:"btn sm",disabled:busyOf(x.id),onclick:()=>(x.stage==="hooks"?genBrief(x):genPieces(x))},x.stage==="hooks"?"Написать хуки":"Написать сценарии"),
+    can()&&x.stage==="production"&&h("button",{class:"btn ghost sm",onclick:()=>moveTopic(x,"ready")},"Готово"),
+    can()&&x.stage==="ready"&&h("button",{class:"btn ghost sm",onclick:()=>moveTopic(x,"published")},"Опубликовано")))}
+function viewKanban(p){const t=S.data.topics;
   p.append(h("div",{class:"kanban"},FLOW.map(f=>h("div",{class:"col"+(f.gate?" gate":"")},
     h("h3",null,h("span",null,(f.gate?"Ворота "+f.gate+" · ":"")+f.name),h("span",null,t.filter(x=>x.stage===f.id).length)),
     t.filter(x=>x.stage===f.id).map(x=>topicCard(x,f))))));
-  p.append(later(5,"Календарь, таблица и превью, судья перед воротами, пакетное утверждение"));
 }
-function topicRow(x){const f=FLOW.find(y=>y.id===x.stage);return h("div",{class:"row",style:"justify-content:space-between"},h("span",null,h("b",null,x.title)," ",h("span",{class:"chip warn"},"Ворота "+f.gate)),topicActions(x,f))}
-function topicCard(x,f){return h("div",{class:"item"},h("b",null,x.title),
-  x.channels&&h("div",{class:"pill-row"},x.channels.map(c=>h("span",{class:"chip mute"},c))),
-  f.who&&h("span",{class:"chip vio"},"Ждёт: "+f.who),
-  x.pillar_title&&h("span",{class:"chip mute"},x.pillar_title),x.why&&h("span",{class:"muted",style:"font-size:12px"},x.why),
-  x.strategy_v&&h("span",{class:"muted",style:"font-size:12px"},"Стратегия v"+x.strategy_v),
-  topicActions(x,f))}
-function topicActions(x,f){
-  if(!can())return null;
-  const set=(stage,m)=>write(()=>col("topics").doc(x.id).update({stage,history:[...(x.history||[]),{at:new Date().toISOString(),from:x.stage,to:stage}]}),m);
-  const b=[];
-  if(f.gate){b.push(h("button",{class:"btn sm",onclick:()=>set(f.next,"Утверждено")},"Утвердить"));
-    if(f.back)b.push(h("button",{class:"btn ghost sm",onclick:()=>set(f.back,"Возвращено на доработку")},"Вернуть"));}
-  else if(f.who){const nx=FLOW[FLOW.indexOf(f)+1];b.push(h("button",{class:"btn ghost sm",title:"Пока вручную. Claude будет делать это сам на этапе 5.",onclick:()=>set(nx.id,"Передано на ворота")},"Готово, на ворота"))}
-  else if(f.id==="production")b.push(h("button",{class:"btn ghost sm",onclick:()=>set("ready","Готово к выпуску")},"Готово"));
-  else if(f.id==="ready")b.push(h("button",{class:"btn ghost sm",onclick:()=>set("published","Отмечено опубликованным")},"Опубликовано"));
-  b.push(h("button",{class:"btn ghost sm","aria-label":"Удалить тему "+x.title,onclick:()=>write(()=>col("topics").doc(x.id).delete(),"Удалено")},"Удалить"));
-  return h("div",{class:"row"},b);
+function viewTable(p){const t=[...S.data.topics].sort((a,b)=>FLOW.findIndex(f=>f.id===a.stage)-FLOW.findIndex(f=>f.id===b.stage));
+  p.append(t.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Тема","Этап","Каналы","Опора","Выпуск","Судья","Стратегия",""].map(x=>h("th",null,x)))),
+    h("tbody",null,t.map(x=>{const v=x.stage==="script_review"||x.stage==="production"||x.stage==="ready"||x.stage==="published"?(piecesOf(x.id)[0]||{}).verdict:x.brief_verdict;
+      return h("tr",null,h("td",null,h("b",null,x.title)),h("td",null,stageName(x.stage)),h("td",null,(x.channels||[]).length),h("td",null,x.pillar_title||"—"),
+        h("td",null,can()?h("input",{type:"date",id:"due-"+x.id,value:x.due||"","aria-label":"Дата выпуска",style:"width:auto",onchange:e=>write(()=>S.db.doc("topics/"+x.id).update({due:e.target.value}))}):(x.due||"—")),
+        h("td",null,verdictChip(v)||"—"),h("td",null,x.strategy_v?"v"+x.strategy_v:"—"),h("td",null,h("button",{class:"btn ghost sm",onclick:()=>{S.pr.open=x.id;render();$(".main").scrollTop=0}},"Открыть")))})))):h("div",{class:"empty"},"Тем пока нет."));
+}
+function viewCalendar(p){
+  const t=S.data.topics,days=[];const d0=new Date();d0.setHours(0,0,0,0);for(let i=0;i<14;i++){const d=new Date(d0);d.setDate(d.getDate()+i);days.push(d)}
+  const wd=["вс","пн","вт","ср","чт","пт","сб"];
+  p.append(h("div",{class:"card scroll"},h("div",{style:"display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;min-width:860px"},
+    days.map(d=>{const key=ymd(d),list=t.filter(x=>x.due===key);
+      return h("div",{class:"cellbox",style:"min-height:92px"},h("div",{class:"muted",style:"font-size:12px;font-weight:600"},wd[d.getDay()]+" "+String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+(d.getDay()===4?" · реестр до 15:00":"")),
+        list.map(x=>h("button",{class:"chip",style:"display:block;margin-top:4px;border:0;cursor:pointer;text-align:left;white-space:normal",onclick:()=>{S.pr.open=x.id;render();$(".main").scrollTop=0}},x.title)))}))));
+  const free=t.filter(x=>!x.due);
+  p.append(h("div",{class:"card"},h("h2",{style:"margin-bottom:8px"},"Без даты · "+free.length),free.length?h("div",{style:"display:flex;flex-direction:column;gap:8px"},free.map(x=>h("div",{class:"row",style:"justify-content:space-between"},h("span",null,x.title," ",h("span",{class:"chip mute"},stageName(x.stage))),
+    can()&&h("input",{type:"date",id:"dd-"+x.id,"aria-label":"Дата выпуска: "+x.title,style:"width:auto",onchange:e=>{if(e.target.value)write(()=>S.db.doc("topics/"+x.id).update({due:e.target.value}),"Дата поставлена")}})))):h("span",{class:"muted"},"У всех тем есть дата.")));
+}
+/* карточка темы: родословная, тезисы и хуки, материалы по каналам, решение */
+function topicDetail(x){
+  const P=S.pr,f=FLOW.find(y=>y.id===x.stage)||{},cell=cellOf(x.cell||""),seg=(S.data.segments.find(s=>s.id===x.segment)||{}).name;
+  const box=h("div",{class:"card",style:"display:flex;flex-direction:column;gap:14px"});
+  box.append(h("div",{class:"row",style:"justify-content:space-between"},h("div",null,h("h2",null,x.title),
+    h("div",{class:"pill-row",style:"margin-top:6px"},h("span",{class:"chip vio"},stageName(x.stage)),seg&&h("span",{class:"chip"},seg),x.stage_idx!=null&&h("span",{class:"chip mute"},"ступень "+(Number(x.stage_idx)+1)),x.pillar_title&&h("span",{class:"chip mute"},x.pillar_title),x.strategy_v?h("span",{class:"chip mute"},"стратегия v"+x.strategy_v):null)),
+    h("button",{class:"btn ghost sm",onclick:()=>{P.open=null;render()}},"Закрыть")));
+  if(x.why)box.append(h("p",{class:"muted",style:"margin:0"},"Почему тема: "+x.why));
+  if(can()){const act=S.data.channels.filter(c=>c.status==="active");
+    box.append(h("div",{class:"row"},h("span",{class:"muted"},"Каналы:"),act.map(c=>h("label",{class:"row",style:"gap:4px"},h("input",{type:"checkbox",id:"ch-"+x.id+"-"+c.id,checked:(x.channels||[]).includes(c.name),onchange:e=>{const set=new Set(x.channels||[]);e.target.checked?set.add(c.name):set.delete(c.name);write(()=>S.db.doc("topics/"+x.id).update({channels:[...set]}))}}),c.name.replace(/\s*[(@].*$/,""))),
+      h("input",{type:"date",id:"due-d-"+x.id,value:x.due||"","aria-label":"Дата выпуска",style:"width:auto",onchange:e=>write(()=>S.db.doc("topics/"+x.id).update({due:e.target.value}),"Дата сохранена")})));}
+  const b=x.brief;
+  if(b){
+    box.append(h("div",null,h("div",{class:"row",style:"justify-content:space-between"},h("h2",null,"Тезисы и хуки"),verdictChip(x.brief_verdict)),
+      h("p",{style:"margin:6px 0"},h("b",null,"Угол: "),b.angle),
+      h("ul",{style:"margin:0 0 8px;padding-left:18px"},(b.theses||[]).map(t=>h("li",null,t))),
+      h("div",{style:"display:flex;flex-direction:column;gap:8px"},(b.hooks||[]).map((hk,i)=>h("label",{class:"item",style:"cursor:pointer"},
+        h("div",{class:"row",style:"flex-wrap:nowrap;gap:8px"},h("input",{type:"checkbox",id:"hk-"+x.id+"-"+i,disabled:!can()||x.stage!=="hooks_review",checked:(x.hooks_sel||[]).includes(i),onchange:e=>{const set=new Set(x.hooks_sel||[]);e.target.checked?set.add(i):set.delete(i);write(()=>S.db.doc("topics/"+x.id).update({hooks_sel:[...set].sort()}))}}),h("b",null,"Хук "+"ABCD"[i]+": "+hk.text)),
+        h("span",{class:"muted"},"На экране: "+hk.screen+" · В кадре: "+hk.visual)))),
+      h("p",{style:"margin:8px 0 0"},h("b",null,"Доказательство: "),b.proof),h("p",{style:"margin:2px 0 0"},h("b",null,"Призыв: "),b.cta),
+      judgeBox(x.brief_verdict)));
+  }
+  const ps=piecesOf(x.id);
+  if(ps.length){
+    box.append(h("div",null,h("h2",{style:"margin-bottom:8px"},"Материалы по каналам"),h("div",{style:"display:flex;flex-direction:column;gap:12px"},ps.map(pc=>pieceCard(x,pc)))));
+  }
+  if(f.gate){
+    box.append(h("div",{class:"card",style:"background:var(--warning-l);border-color:var(--warning);display:flex;flex-direction:column;gap:10px"},h("b",null,"Ворота "+f.gate+": "+f.name),
+      can()&&[h("div",{class:"row"},h("button",{class:"btn",onclick:()=>approve(x)},"Утвердить"),x.stage==="hooks_review"&&h("span",{class:"muted"},"Отметьте хуки галочками выше.")),
+        h("label",{class:"field"},h("span",null,"Что исправить (для «Вернуть»)"),h("textarea",{id:"ret-"+x.id,oninput:e=>{P.ret[x.id]=e.target.value}},P.ret[x.id]||"")),
+        h("div",null,h("button",{class:"btn ghost",onclick:()=>giveBack(x)},"Вернуть Claude на доработку"))]));
+  }
+  if((x.history||[]).length)box.append(h("details",null,h("summary",{class:"muted",style:"cursor:pointer"},"История · "+x.history.length),
+    h("ul",{style:"margin:6px 0 0;padding-left:18px"},[...x.history].reverse().map(e=>h("li",null,new Date(e.at).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+": "+stageName(e.from)+" → "+stageName(e.to)+(e.by?" ("+e.by+")":"")+(e.comment?". «"+e.comment+"»":""))))));
+  return box;
+}
+function judgeBox(v){
+  if(!v)return null;
+  return h("details",{style:"margin-top:8px"},h("summary",{class:"muted",style:"cursor:pointer"},"Оценка по пунктам"),
+    h("div",{class:"pill-row",style:"margin-top:6px"},RUBRIC.map(([k,n,m])=>h("span",{class:"chip "+(v.parts[k]>=m*0.7?"ok":"warn")},n+" "+v.parts[k]+"/"+m))),
+    v.violations&&v.violations.length>0&&h("p",{style:"margin:6px 0 0;color:var(--error-t)"},"Нарушения: "+v.violations.join("; ")),
+    v.notes&&v.notes.length>0&&h("ul",{style:"margin:6px 0 0;padding-left:18px"},v.notes.map(n=>h("li",null,n))));
+}
+function pieceCard(x,pc){
+  const P=S.pr,draft=P.preview["d"+pc.id],editing=draft!==undefined,prev=P.preview["p"+pc.id];
+  return h("div",{class:"item"},h("div",{class:"row",style:"justify-content:space-between"},h("b",null,pc.channel),h("div",{class:"row"},verdictChip(pc.verdict),
+      h("button",{class:"btn ghost sm",onclick:()=>{P.preview["p"+pc.id]=!prev;render()}},prev?"Текст":"Как в ленте"))),
+    prev?h("div",{style:"max-width:340px;margin:0 auto;border:1px solid var(--border);border-radius:18px;padding:14px;background:var(--bg);white-space:pre-wrap;font-size:14px"},h("div",{class:"muted",style:"font-size:12px;margin-bottom:6px"},pc.channel.replace(/\s*\(.*$/,"")),pc.body)
+      :editing?h("textarea",{id:"pb-"+pc.id,style:"min-height:220px",oninput:e=>{P.preview["d"+pc.id]=e.target.value}},draft)
+      :h("div",{style:"white-space:pre-wrap"},pc.body),
+    judgeBox(pc.verdict),
+    can()&&h("div",{class:"row"},editing?[h("button",{class:"btn sm",onclick:()=>write(()=>S.db.doc("pieces/"+pc.id).update({body:draft,edited:true}),"Правка сохранена").then(()=>{delete P.preview["d"+pc.id];render()})},"Сохранить правку"),h("button",{class:"btn ghost sm",onclick:()=>{delete P.preview["d"+pc.id];render()}},"Отмена")]
+      :h("button",{class:"btn ghost sm",onclick:()=>{P.preview["d"+pc.id]=pc.body;render()}},"Править")));
 }
 function addTopic(){
-  const act=[...S.data.strategy_versions].sort((a,b)=>b.n-a.n)[0];
+  const act=lastStrategy();
   const act_ch=S.data.channels.filter(c=>c.status==="active");
   const f=h("form",{class:"card row",onsubmit:e=>{e.preventDefault();const title=f.title.value.trim();if(!title)return;
     const chs=[...f.querySelectorAll("input[type=checkbox]:checked")].map(i=>i.value);
     const seg=S.data.segments.find(s=>s.id===f.segment.value);
-    write(()=>col("topics").add({title,stage:"idea",channels:chs,segment:seg?seg.id:"",stage_idx:Number(f.ladder.value),strategy_v:act?act.n:0,created_at:new Date().toISOString(),history:[]}),"Тема добавлена на ворота 1");f.reset()}},
-    h("label",{class:"field",style:"flex:2 1 260px"},h("span",null,"Новая тема"),h("input",{type:"text",id:"nt-title",name:"title",placeholder:"Сколько стоят визараны за сезон"})),
+    write(()=>S.db.collection("topics").add({title,stage:"idea",channels:chs,segment:seg?seg.id:"",stage_idx:Number(f.ladder.value),cell:seg?cellId(seg.id,Number(f.ladder.value)):"",strategy_v:act?act.n:0,created_at:new Date().toISOString(),history:[]}),"Тема добавлена на ворота 1");f.reset()}},
+    h("label",{class:"field",style:"flex:2 1 260px"},h("span",null,"Новая тема вручную"),h("input",{type:"text",id:"nt-title",name:"title",placeholder:"Сколько стоят визараны за сезон"})),
     h("label",{class:"field"},h("span",null,"Сегмент"),h("select",{id:"nt-seg",name:"segment"},h("option",{value:""},"Не выбран"),S.data.segments.map(s=>h("option",{value:s.id},s.name)))),
     h("label",{class:"field"},h("span",null,"Ступень"),h("select",{id:"nt-ladder",name:"ladder"},STAGES.map((s,i)=>h("option",{value:i},(i+1)+". "+s)))),
     h("fieldset",{style:"border:0;padding:0;margin:0;display:flex;gap:10px;flex-wrap:wrap;flex:1 1 100%"},act_ch.map(c=>h("label",{class:"row",style:"gap:4px"},h("input",{type:"checkbox",value:c.name}),c.name))),
