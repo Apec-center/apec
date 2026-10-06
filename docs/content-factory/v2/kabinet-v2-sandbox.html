@@ -164,7 +164,7 @@ const S={cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,bus
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
-  for(const k of kids.flat()){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(String(k)))}return e}
+  for(const k of kids.flat(Infinity)){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(String(k)))}return e}
 function lsGet(k){try{return localStorage.getItem(k)}catch{return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch{}}
 function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body.append(e);setTimeout(()=>e.remove(),2200)}
