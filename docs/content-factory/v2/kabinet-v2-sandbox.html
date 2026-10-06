@@ -1,5 +1,5 @@
 <title>Контент APEC v2 · песочница</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&family=Montserrat:wght@400;600;700&display=swap">
 <style>
 /* Раскладка и токены как в CRM APEC Center: панель раздела слева (264px), рабочая область справа, белые карточки с рамкой, радиус 14. На телефоне панель становится полосой сверху. */
 :root{
@@ -160,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[],creators:[],tasks:[]}};
+const S={assets:null,downloads:null,md:{f:{q:"",kind:"",loc:"",speaker:"",rights:"",unused:false},up:{kind:"broll",loc:"",speaker:"",rights:"own",tags:""},prog:"",open:null,ed:{},g:{kind:"image",model:"google/nano-banana",ratio:"3:4",task:"",scene:"",prompt:"",busy:false,pbusy:false,prog:""},c:{piece:"",slides:null,photo:"",busy:false,prog:"",json:null},bal:null,usage:null},cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[],creators:[],tasks:[],assets:[],jobs:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -171,7 +171,7 @@ function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body
 const can=()=>ROLES[S.role].edit&&S.canWrite;
 
 /* ---------- данные (db) ---------- */
-const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals",pieces:"pieces",creators:"creators",tasks:"tasks"};
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals",pieces:"pieces",creators:"creators",tasks:"tasks",assets:"assets",jobs:"jobs"};
 function listen(name){
   S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
 }
@@ -1038,11 +1038,321 @@ function teleprompter(){
     h("div",{class:"row",style:"padding:12px 16px;gap:8px;justify-content:space-between"},h("div",{class:"row"},h("button",{class:"btn ghost sm","aria-label":"Меньше",onclick:()=>{C.tpSize=Math.max(18,C.tpSize-4);render()}},"A−"),h("button",{class:"btn ghost sm","aria-label":"Больше",onclick:()=>{C.tpSize=Math.min(72,C.tpSize+4);render()}},"A+")),h("button",{class:"btn",onclick:()=>{C.tp=null;render()}},"Закрыть")),
     h("div",{style:`flex:1;overflow-y:auto;padding:16px 24px 120px;font-size:${C.tpSize}px;line-height:1.35;white-space:pre-wrap;font-weight:600`},C.tp));
 }
+async function fontsReady(){try{await Promise.all(["700 80px Unbounded","600 40px Unbounded","400 30px Montserrat","600 30px Montserrat","700 30px Montserrat"].map(f=>document.fonts.load(f)))}catch(e){}}
+function wrapText(x,t,X,Y,maxW,lh,maxLines){const words=String(t||"").split(/\s+/).filter(Boolean);let line="",n=0,y=Y;
+  for(const w of words){const test=line?line+" "+w:w;if(x.measureText(test).width>maxW&&line){x.fillText(line,X,y);y+=lh;n++;line=w;if(maxLines&&n>=maxLines-1){/* последняя строка */}}else line=test}
+  if(line){x.fillText(line,X,y);y+=lh}return y}
+function fitFont(x,t,weight,fam,size,maxW,minSize){let s=size;x.font=`${weight} ${s}px ${fam}`;while(x.measureText(String(t||"")).width>maxW&&s>minSize){s-=4;x.font=`${weight} ${s}px ${fam}`}return s}
+function rr(x,X,Y,W,H,r,fill){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+W,Y,X+W,Y+H,r);x.arcTo(X+W,Y+H,X,Y+H,r);x.arcTo(X,Y+H,X,Y,r);x.arcTo(X,Y,X+W,Y,r);x.closePath();x.fillStyle=fill;x.fill()}
+function drawSlide(s,i,n,photo,handle){const c=document.createElement("canvas");c.width=1080;c.height=1440;const x=c.getContext("2d");x.textBaseline="alphabetic";
+  const light=s.type==="compare";const ink=light?BR.navy2:BR.white;const sub=light?BR.deep:BR.gray;
+  if(s.type==="cta"){const g=x.createLinearGradient(0,0,1080,1440);g.addColorStop(0,BR.deep);g.addColorStop(1,BR.blue);x.fillStyle=g}else x.fillStyle=light?BR.light:(s.type==="cover"?BR.navy:BR.navy2);x.fillRect(0,0,1080,1440);
+  if(s.type==="cover"&&photo){const r=Math.max(1080/photo.width,1000/photo.height);const w=photo.width*r,h=photo.height*r;x.drawImage(photo,(1080-w)/2,(1000-h)*0.3,w,h);
+    const g=x.createLinearGradient(0,0,0,1440);g.addColorStop(0,"rgba(18,35,56,0.55)");g.addColorStop(0.18,"rgba(18,35,56,0)");g.addColorStop(0.42,"rgba(18,35,56,0)");g.addColorStop(0.66,"rgba(18,35,56,0.92)");g.addColorStop(0.74,BR.navy);x.fillStyle=g;x.fillRect(0,0,1080,1440)}
+  // прогресс
+  const segW=(936-8*(n-1))/n;for(let k=0;k<n;k++){rr(x,72+k*(segW+8),56,segW,6,3,k<=i?(light?BR.blue:BR.sky):(light?BR.gray:"rgba(216,221,228,0.25)"))}
+  // шапка
+  x.fillStyle=light?BR.deep:BR.white;x.font="700 34px Unbounded";x.fillText("APEC Center",72,128);x.font="600 26px Montserrat";x.textAlign="right";x.fillStyle=light?BR.deep:BR.gray;x.fillText(`${i+1} / ${n}`,1008,126);x.textAlign="left";
+  let y;
+  if(s.type==="cover"){y=photo?1000:620;
+    if(s.kicker){x.font="700 26px Montserrat";const t=String(s.kicker).toUpperCase();const w=x.measureText(t).width+48;rr(x,72,y-44,w,56,28,BR.blue);x.fillStyle=BR.white;x.fillText(t,96,y-6);y+=48}
+    x.fillStyle=BR.white;x.font="700 84px Unbounded";y=wrapText(x,s.title,72,y+40,936,92,4);
+    if(s.big){x.fillStyle=BR.sky;const fs=fitFont(x,s.big,700,"Unbounded",120,600,60);x.fillText(s.big,72,y+fs*0.9);const bw=x.measureText(s.big).width;x.fillStyle=BR.white;x.font="600 44px Montserrat";x.fillText(s.unit||"",72+bw+20,y+fs*0.9);y+=fs+30}
+    if(s.sub){x.fillStyle=BR.gray;x.font="400 30px Montserrat";wrapText(x,s.sub,72,Math.max(y+20,1330),936,40,2)}}
+  else if(s.type==="number"){x.fillStyle=BR.sky;x.font="600 32px Montserrat";x.fillText(String(s.label||"").toUpperCase(),72,520);
+    x.fillStyle=BR.white;const fs=fitFont(x,s.big,700,"Unbounded",240,820,100);x.fillText(s.big||"",72,520+fs);const bw=x.measureText(s.big||"").width;x.fillStyle=BR.sky;x.font="600 64px Unbounded";const uw=x.measureText(s.unit||"").width;
+    let ty=520+fs+90;if(72+bw+24+uw<=1008)x.fillText(s.unit||"",72+bw+24,520+fs);else{x.fillText(s.unit||"",72,520+fs+80);ty+=80}
+    x.fillStyle=BR.gray;x.font="400 40px Montserrat";wrapText(x,s.text,72,ty,900,56,5)}
+  else if(s.type==="compare"){x.fillStyle=ink;x.font="700 70px Unbounded";y=wrapText(x,s.title,72,250,936,80,2)+30;
+    [[s.left,72,BR.white,BR.navy2,BR.deep],[s.right,552,BR.navy2,BR.white,BR.sky]].forEach(([col,X,bg,tc,lc])=>{col=col||{};rr(x,X,y,456,1250-y,36,bg);x.fillStyle=lc;x.font="700 28px Montserrat";x.fillText(String(col.label||"").toUpperCase(),X+40,y+70);
+      let yy=y+150;(col.rows||[]).slice(0,3).forEach(r=>{x.fillStyle=tc;const fs=fitFont(x,r.v,700,"Unbounded",80,376,40);x.fillText(String(r.v||""),X+40,yy+fs*0.8);x.fillStyle=tc===BR.white?BR.gray:BR.navy2;x.font="400 28px Montserrat";yy=wrapText(x,r.l,X+40,yy+fs*0.8+44,376,36,2)+40})});
+    x.fillStyle=BR.deep;x.font="600 26px Montserrat";x.fillText("APEC Center",72,1360)}
+  else if(s.type==="steps"){x.fillStyle=BR.white;x.font="700 66px Unbounded";y=wrapText(x,s.title,72,270,936,76,2)+40;const st=(s.steps||[]).slice(0,6);const gap=Math.min(170,(1330-y)/Math.max(1,st.length));
+    st.forEach((p,k)=>{const cy=y+k*gap;x.beginPath();x.arc(108,cy+36,36,0,Math.PI*2);x.fillStyle=BR.blue;x.fill();x.fillStyle=BR.white;x.font="700 32px Unbounded";x.textAlign="center";x.fillText(String(k+1),108,cy+48);x.textAlign="left";
+      if(k<st.length-1){x.fillStyle="rgba(98,164,255,0.35)";x.fillRect(106,cy+76,3,gap-80)}x.fillStyle=BR.white;x.font="700 36px Montserrat";x.fillText(String(p.t||""),176,cy+34);x.fillStyle=BR.gray;x.font="400 28px Montserrat";wrapText(x,p.d,176,cy+76,830,34,2)})}
+  else if(s.type==="cta"){x.fillStyle=BR.white;x.font="700 80px Unbounded";y=wrapText(x,s.title,72,420,936,90,4)+50;
+    x.font="700 44px Unbounded";const w=x.measureText(s.word||"КАРТА").width+64;rr(x,72,y,w,96,28,BR.navy);x.fillStyle=BR.white;x.fillText(s.word||"КАРТА",104,y+64);x.font="400 28px Montserrat";x.fillStyle=BR.light;x.fillText("в комментариях",72+w+24,y+60);
+    x.fillStyle=BR.white;x.font="400 36px Montserrat";wrapText(x,s.text,72,y+190,936,50,4);x.fillStyle="rgba(255,255,255,0.3)";x.fillRect(72,1300,936,2);x.font="600 24px Montserrat";x.fillStyle=BR.white;x.fillText("APEC BUSINESS TRAVEL CARD",72,1350);x.textAlign="right";x.fillText(handle||"@apec_center",1008,1350);x.textAlign="left"}
+  else{x.fillStyle=BR.white;x.font="700 70px Unbounded";y=wrapText(x,s.title,72,420,936,80,3)+40;x.fillStyle=BR.gray;x.font="400 42px Montserrat";wrapText(x,s.text,72,y,920,58,8)}
+  return c}
+/* ---------- 6. Медиа-студия ---------- */
+const BR={navy:"#122338",navy2:"#1C3449",deep:"#1F4985",blue:"#287FF2",sky:"#62A4FF",light:"#EBEAEC",gray:"#D8DDE4",white:"#FFFFFF"};
+const KINDS={broll:"Б-ролл",photo:"Фото",cover:"Обложка",slide:"Слайд",ai_image:"ИИ-картинка",ai_video:"ИИ-видео",music:"Музыка",other:"Другое"};
+const RIGHTS={own:"Своё",ambassador:"Амбассадор",stock:"Сток",ai:"ИИ"};
+const LOCS=["Пхукет","Бангкок","Аэропорт","Пляж","Офис, студия","Другое"];
+const PRICE={image:4,veo3_fast:60,veo3:400};
+const N8N_SRV="n8n",KIE_WF="6c2YLQQg1OYzcZZ1";
+const NEG="no text, no logos, no watermarks, no flags, no passports close-up, no uniforms, no recognizable faces";
+const SCENES=["airport departure hall with a calendar on the wall","passport control queue seen from above","airplane wing over turquoise sea","beach cafe table with a laptop and coffee","Phuket old town street at golden hour","hand turning calendar pages","taxi driving along a coastal road","condo balcony with sea view and suitcase"];
+const LIGHTS=["golden hour","soft daylight","blue hour","bright midday sun"];
+const CAMS=["35mm, shallow depth of field, vertical 9:16","slow push-in, 35mm, vertical 9:16","handheld, 28mm, vertical 9:16","overhead shot, 35mm, vertical 9:16"];
+const M=()=>S.md;
+const mediaCfg=()=>S.data.stats.find(x=>x.id==="media")||{};
+const rate=()=>Number(mediaCfg().rate)||0.005;
+const weekLimit=()=>Number(mediaCfg().limit)||100;
+const usd=c=>c*rate();
+const spentWeek=()=>S.data.jobs.filter(j=>Date.now()-Date.parse(j.at)<7*864e5).reduce((a,j)=>a+usd(Number(j.credits)||Number(j.est)||0),0);
+const assetUrl=a=>a.url||"";
+const usedN=a=>(a.used||[]).length;
+const usesIn=id=>S.data.assets.filter(a=>(a.used||[]).some(u=>u.task===id));
 function vMedia(p){
-  p.append(head("Медиа-студия","Карусели, картинки и видео-перебивки под сценарий. Медиатека на тегах с отметкой «где использовано»."));
+  const T=M();
+  p.append(head("Медиа-студия","Библиотека своих и ИИ-ассетов, генерация под сценарий и карусели в стиле бренда."));
+  tabs("media",[["lib","Библиотека · "+S.data.assets.length],["gen","Генерация"],["car","Карусели"]],(t,pp)=>{
+    if(t==="lib")libTab(pp);if(t==="gen")genTab(pp);if(t==="car")carTab(pp)},p);
+}
+/* --- библиотека --- */
+function matches(a){
+  const f=M().f,q=f.q.trim().toLowerCase();
+  if(f.kind&&a.kind!==f.kind)return false;if(f.speaker&&a.speaker!==f.speaker)return false;if(f.loc&&a.location!==f.loc)return false;if(f.rights&&a.rights!==f.rights)return false;
+  if(f.unused&&usedN(a))return false;
+  if(q&&![a.name,(a.tags||[]).join(" "),a.prompt,a.location,a.speaker].join(" ").toLowerCase().includes(q))return false;
+  return true;
+}
+function thumb(a){
+  const st="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;background:var(--bg);display:block";
+  if(a.mime&&a.mime.startsWith("image/")&&a.url)return h("img",{src:a.url,alt:a.name||a.kind,style:st,loading:"lazy"});
+  if(a.mime&&a.mime.startsWith("video/")&&a.url)return h("video",{src:a.url,controls:true,preload:"metadata",style:st});
+  if(a.ext_url)return h("div",{style:st+";display:grid;place-items:center;text-align:center;padding:10px"},h("span",{class:"muted"},"Видео по временной ссылке"));
+  return h("div",{style:st+";display:grid;place-items:center"},h("span",{class:"muted"},KINDS[a.kind]||"Файл"));
+}
+function libTab(p){
+  const T=M(),f=T.f,all=S.data.assets;
+  p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},h("h2",null,"Загрузить файлы"),
+    h("p",{class:"muted",style:"margin:0"},"Сначала задайте теги, потом выберите файлы: загрузка начнётся сразу. Фото, видео до 20 МБ."),
+    h("div",{class:"row",style:"align-items:flex-end"},
+      h("label",{class:"field"},h("span",null,"Тип"),h("select",{id:"up-kind",onchange:e=>{T.up.kind=e.target.value}},Object.entries(KINDS).filter(([k])=>!["slide","ai_image","ai_video"].includes(k)).map(([k,v])=>h("option",{value:k,selected:T.up.kind===k},v)))),
+      h("label",{class:"field"},h("span",null,"Место"),h("select",{id:"up-loc",onchange:e=>{T.up.loc=e.target.value}},h("option",{value:""},"Не указано"),LOCS.map(l=>h("option",{value:l,selected:T.up.loc===l},l)))),
+      h("label",{class:"field"},h("span",null,"Кто в кадре"),h("select",{id:"up-sp",onchange:e=>{T.up.speaker=e.target.value}},[["","Никто"],["Дима","Дима"],["Алекс","Алекс"]].map(([v,n])=>h("option",{value:v,selected:T.up.speaker===v},n)))),
+      h("label",{class:"field"},h("span",null,"Права"),h("select",{id:"up-rt",onchange:e=>{T.up.rights=e.target.value}},Object.entries(RIGHTS).map(([k,v])=>h("option",{value:k,selected:T.up.rights===k},v)))),
+      h("label",{class:"field",style:"flex:1 1 220px"},h("span",null,"Теги через запятую"),h("input",{type:"text",id:"up-tags",value:T.up.tags,placeholder:"аэропорт, очередь, сезон",oninput:e=>{T.up.tags=e.target.value}}))),
+    h("div",{class:"row"},h("input",{type:"file",id:"up-file",multiple:true,accept:"image/*,video/*,audio/*",disabled:!S.assets||!can(),onchange:e=>uploadFiles([...e.target.files])}),
+      !S.assets&&h("span",{class:"muted"},"Загрузка доступна редактору и продюсеру в самом Claude."),h("span",{class:"muted",id:"upprog"},T.prog))));
+  p.append(h("div",{class:"row"},
+    h("input",{type:"text",id:"f-q",placeholder:"Поиск по названию, тегам, промпту",value:f.q,style:"flex:1 1 220px",oninput:e=>{f.q=e.target.value;clearTimeout(T.qt);T.qt=setTimeout(render,300)}}),
+    h("select",{id:"f-kind","aria-label":"Тип",style:"width:auto",onchange:e=>{f.kind=e.target.value;render()}},h("option",{value:""},"Все типы"),Object.entries(KINDS).map(([k,v])=>h("option",{value:k,selected:f.kind===k},v))),
+    h("select",{id:"f-loc","aria-label":"Место",style:"width:auto",onchange:e=>{f.loc=e.target.value;render()}},h("option",{value:""},"Все места"),LOCS.map(l=>h("option",{value:l,selected:f.loc===l},l))),
+    h("select",{id:"f-sp","aria-label":"Кто в кадре",style:"width:auto",onchange:e=>{f.speaker=e.target.value;render()}},h("option",{value:""},"Все"),["Дима","Алекс"].map(l=>h("option",{value:l,selected:f.speaker===l},l))),
+    h("select",{id:"f-rt","aria-label":"Права",style:"width:auto",onchange:e=>{f.rights=e.target.value;render()}},h("option",{value:""},"Любые права"),Object.entries(RIGHTS).map(([k,v])=>h("option",{value:k,selected:f.rights===k},v))),
+    h("label",{class:"row",style:"gap:4px"},h("input",{type:"checkbox",id:"f-un",checked:f.unused,onchange:e=>{f.unused=e.target.checked;render()}}),"Ещё не использовалось"),
+    h("button",{class:"btn ghost sm",onclick:()=>{Object.assign(f,{q:"",kind:"broll",loc:"Пхукет",speaker:"",rights:"",unused:true});render()}},"Б-ролл Пхукет без использования"),
+    h("button",{class:"btn ghost sm",onclick:()=>{Object.assign(f,{q:"",kind:"",loc:"",speaker:"",rights:"",unused:false});render()}},"Сбросить")));
+  const list=all.filter(matches).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  if(S.assets&&T.usage)p.append(h("p",{class:"muted",style:"margin:0"},"Хранилище: занято "+(T.usage.mb||0)+" МБ."));
+  if(!all.length)return p.append(h("div",{class:"empty"},h("b",null,"Библиотека пуста. "),"Загрузите свои съёмки с Пхукета или сгенерируйте перебивки во вкладке «Генерация». ИИ нужен только там, где своего кадра нет."));
+  if(!list.length)return p.append(h("div",{class:"empty"},"По этим фильтрам ничего нет."));
+  p.append(h("div",{class:"grid",style:"grid-template-columns:repeat(auto-fill,minmax(190px,1fr))"},list.map(a=>assetCard(a))));
+  if(T.open&&all.find(a=>a.id===T.open))p.append(assetDetail(all.find(a=>a.id===T.open)));
+}
+function assetCard(a){const n=usedN(a);
+  return h("div",{class:"item"},thumb(a),h("div",{class:"pill-row"},h("span",{class:"chip"},KINDS[a.kind]||a.kind),h("span",{class:"chip mute"},RIGHTS[a.rights]||""),a.temp&&h("span",{class:"chip warn"},"ссылка временная")),
+    h("div",{style:"overflow-wrap:anywhere;font-weight:600"},a.name||"Без названия"),
+    (a.tags||[]).length>0&&h("div",{class:"muted",style:"font-size:12px"},a.tags.join(" · ")),
+    h("span",{class:"chip "+(n>=3&&a.kind==="broll"?"warn":"mute")},n?"Использовано "+n+(n>=3&&a.kind==="broll"?": пора обновить":""):"Не использовалось"),
+    h("button",{class:"btn ghost sm",onclick:()=>{M().open=a.id;render();setTimeout(()=>{const d=document.getElementById("asset-detail");d&&d.scrollIntoView()},50)}},"Открыть"));
+}
+function assetDetail(a){
+  const T=M(),tasks=S.data.tasks;
+  const box=h("div",{class:"card",id:"asset-detail",style:"display:flex;flex-direction:column;gap:12px"});
+  const d=T.ed[a.id]||(T.ed[a.id]={name:a.name||"",tags:(a.tags||[]).join(", "),location:a.location||"",speaker:a.speaker||"",rights:a.rights||"own"});
+  box.append(h("div",{class:"row",style:"justify-content:space-between"},h("h2",null,a.name||"Ассет"),h("button",{class:"btn ghost sm",onclick:()=>{T.open=null;render()}},"Закрыть")));
+  box.append(h("div",{style:"max-width:340px"},thumb(a)));
+  if(a.ext_url)box.append(h("p",{style:"margin:0"},"Временная ссылка kie.ai: ",h("a",{href:a.ext_url,target:"_blank",rel:"noopener",style:"color:var(--primary);overflow-wrap:anywhere"},"открыть видео"),". Скачайте файл и загрузите его в библиотеку, ссылка перестаёт работать через некоторое время."));
+  if(a.prompt)box.append(h("details",null,h("summary",{class:"muted",style:"cursor:pointer"},"Промпт"+(a.model?" · "+a.model:"")+(a.credits?" · "+a.credits+" кредитов":"")),h("div",{style:"white-space:pre-wrap;margin-top:6px"},a.prompt)));
+  box.append(h("div",{class:"row",style:"align-items:flex-end"},
+    h("label",{class:"field",style:"flex:1 1 200px"},h("span",null,"Название"),h("input",{type:"text",id:"ad-name",value:d.name,disabled:!can(),oninput:e=>{d.name=e.target.value}})),
+    h("label",{class:"field",style:"flex:2 1 240px"},h("span",null,"Теги"),h("input",{type:"text",id:"ad-tags",value:d.tags,disabled:!can(),oninput:e=>{d.tags=e.target.value}})),
+    h("label",{class:"field"},h("span",null,"Место"),h("select",{id:"ad-loc",disabled:!can(),onchange:e=>{d.location=e.target.value}},h("option",{value:""},"Не указано"),LOCS.map(l=>h("option",{value:l,selected:d.location===l},l)))),
+    h("label",{class:"field"},h("span",null,"Кто в кадре"),h("select",{id:"ad-sp",disabled:!can(),onchange:e=>{d.speaker=e.target.value}},[["","Никто"],["Дима","Дима"],["Алекс","Алекс"]].map(([v,n])=>h("option",{value:v,selected:d.speaker===v},n)))),
+    h("label",{class:"field"},h("span",null,"Права"),h("select",{id:"ad-rt",disabled:!can(),onchange:e=>{d.rights=e.target.value}},Object.entries(RIGHTS).map(([k,v])=>h("option",{value:k,selected:d.rights===k},v)))),
+    can()&&h("button",{class:"btn",onclick:()=>write(()=>S.db.doc("assets/"+a.id).update({name:d.name.trim(),tags:d.tags.split(",").map(x=>x.trim()).filter(Boolean),location:d.location,speaker:d.speaker,rights:d.rights}),"Сохранено")},"Сохранить")));
+  box.append(h("div",null,h("h2",{style:"margin-bottom:6px"},"Где использовано · "+usedN(a)),usedN(a)?h("ul",{style:"margin:0;padding-left:18px"},a.used.map(u=>h("li",null,(u.code||"")+" "+(u.title||"")))):h("span",{class:"muted"},"Пока нигде.")));
+  if(can()&&tasks.length)box.append(h("div",{class:"row"},h("select",{id:"ad-att","aria-label":"Задание",style:"width:auto;max-width:100%"},tasks.map(t=>h("option",{value:t.id},t.code+" · "+t.title.slice(0,50)))),
+    h("button",{class:"btn ghost",onclick:()=>{const id=document.getElementById("ad-att").value,tk=tasks.find(x=>x.id===id);if(!tk)return;
+      if((a.used||[]).some(u=>u.task===id)){toast("Уже прикреплено");return}
+      write(async()=>{await S.db.doc("assets/"+a.id).update({used:[...(a.used||[]),{task:id,code:tk.code,title:tk.title,at:new Date().toISOString()}]});await S.db.doc("tasks/"+id).update({assets:[...(tk.assets||[]),a.id]})},"Прикреплено к заданию")}},"Прикрепить к заданию")));
+  if(can())box.append(h("div",null,h("button",{class:"btn ghost",onclick:()=>deleteAsset(a)},"Удалить из библиотеки")));
+  return box;
+}
+async function deleteAsset(a){
+  if(usedN(a)){toast("Ассет использован в заданиях, сначала открепите");return}
+  try{if(a.blob&&S.assets)await S.assets.delete(a.blob);await S.db.doc("assets/"+a.id).delete();M().open=null;toast("Удалено")}catch(e){toast("Не удалось удалить")}
+}
+function upProg(t){M().prog=t;const e=$("#upprog");if(e)e.textContent=t}
+const kindOfMime=m=>m.startsWith("video/")?"broll":m.startsWith("audio/")?"music":"photo";
+async function saveBlobAsset(blob,meta){
+  const r=await S.assets.upload(blob);
+  const ref=await S.db.collection("assets").add({name:meta.name||"",kind:meta.kind,mime:r.contentType||blob.type,blob:r.id,url:r.url,size:r.sizeBytes,tags:meta.tags||[],location:meta.location||"",speaker:meta.speaker||"",rights:meta.rights||"own",source:meta.source||"upload",prompt:meta.prompt||"",model:meta.model||"",credits:meta.credits||0,job:meta.job||"",used:[],at:new Date().toISOString()});
+  return ref;
+}
+async function uploadFiles(files){
+  const T=M();if(!files.length||!S.assets)return;
+  const tags=T.up.tags.split(",").map(x=>x.trim()).filter(Boolean);let n=0;
+  for(const f of files){
+    upProg("Загружаю "+(n+1)+" из "+files.length+": "+f.name);
+    if(f.size>20*1024*1024){toast(f.name+": больше 20 МБ, пропущен");continue}
+    try{await saveBlobAsset(f,{name:f.name,kind:T.up.kind==="photo"&&f.type.startsWith("video/")?"broll":T.up.kind,tags,location:T.up.loc,speaker:T.up.speaker,rights:T.up.rights});n++}
+    catch(e){toast(f.name+": не загрузился"+(e&&e.code==="quota_exceeded"?" (хранилище заполнено)":""))}
+  }
+  upProg("");toast("Загружено: "+n);render();
+}
+/* --- генерация kie.ai через n8n --- */
+function payloadOf(r){return payload(r)||{}}
+async function n8nRun(query){const r=await S.mcp.callTool(N8N_SRV,"execute_workflow",{workflowId:KIE_WF,executionMode:"manual",inputs:{type:"webhook",webhookData:{method:"GET",query}}},{cache:false});const id=payloadOf(r).executionId;if(!id)throw{code:"no_exec"};return id}
+async function n8nResult(id,node){
+  for(let i=0;i<30;i++){await new Promise(r=>setTimeout(r,i<2?600:1500));
+    const r=await S.mcp.callTool(N8N_SRV,"get_execution",{workflowId:KIE_WF,executionId:String(id),includeData:true,nodeNames:[node]},{cache:false});const p=payloadOf(r),st=p.execution&&p.execution.status;
+    if(st==="success"){const rd=p.data&&p.data.resultData&&p.data.resultData.runData&&p.data.resultData.runData[node];const j=rd&&rd[0]&&rd[0].data&&rd[0].data.main&&rd[0].data.main[0]&&rd[0].data.main[0][0]&&rd[0].data.main[0][0].json;if(j)return j;throw{code:"empty"}}
+    if(st==="error"||st==="crashed"||st==="canceled"){const em=p.data&&p.data.resultData&&p.data.resultData.error&&p.data.resultData.error.message;throw{code:"exec_failed",message:em||""}}
+  }
+  throw{code:"timeout"};
+}
+const kieErr=e=>{const m=String(e&&e.message||"");
+  if(/credential/i.test(m))return"В n8n нет доступа «kie.ai API» (Bearer-ключ). Добавьте его в проекте Funnel Demo и привяжите к трём HTTP-узлам воркфлоу «Demo · Картинки kie.ai».";
+  if(e&&e.code==="timeout")return"kie.ai не ответил вовремя, нажмите «Проверить» у задачи позже";
+  if(e&&(e.code==="not_in_manifest"||e.code==="server_not_connected"||e.code==="needs_reauth"))return mcpErr(e);
+  return"kie.ai: "+(m||"не получилось");};
+async function loadBalance(){const T=M();T.bal={busy:true};render();
+  try{const id=await n8nRun({op:"credit"});const r=await n8nResult(id,"Итог");T.bal=r&&r.balance!=null?{credits:r.balance,at:new Date().toISOString()}:{err:r&&r.msg?("kie.ai: "+r.msg):"Нет данных о балансе"}}catch(e){T.bal={err:kieErr(e)}}render()}
+function chaosPrompt(){const r=a=>a[Math.floor(Math.random()*a.length)];return r(SCENES)+", Phuket, Thailand, "+r(LIGHTS)+", "+r(CAMS)+", cinematic, natural colors, realistic, "+NEG}
+async function aiPrompt(){
+  const T=M(),G=T.g;if(!S.sample||G.pbusy)return;
+  G.pbusy=true;render();
+  const tk=S.data.tasks.find(t=>t.id===G.task);
+  const prompt="Ты арт-директор APEC Center. Напиши ОДИН промпт на английском для генерации "+(G.kind==="image"?"картинки":"видео-перебивки 4–8 секунд")+" под эту сцену: «"+(G.scene||"сцена не указана")+"»."+
+   (tk?" Контекст темы: «"+tk.title+"», канал «"+tk.channel+"».":"")+"\nСхема: сюжет + место (Phuket, Thailand) + свет (golden hour или soft daylight) + камера (35mm, shallow depth of field, vertical "+G.ratio+") + стиль (cinematic, natural colors, realistic). В конце всегда: "+NEG+".\nНе рисуй паспорта и карты APEC, флаги, людей в форме, узнаваемые лица, чужие логотипы. Без текста в кадре.\nОтвет строго JSON: {\"prompt\":\"...\"}";
+  try{const r=await S.sample.json(prompt,{cache:false});G.prompt=String((r&&r.prompt)||"")}catch(e){const m=sampleErr(e);if(m)toast(m)}
+  G.pbusy=false;render();
+}
+function genTab(p){
+  const T=M(),G=T.g,b=T.bal||{},spent=spentWeek(),left=weekLimit()-spent;
   p.append(h("div",{class:"grid"},
-    ["Библиотека","Генерация","Шаблоны бренда"].map((n,i)=>h("div",{class:"card"},h("b",null,n),h("div",{class:"muted"},["Свои съёмки с Пхукета и ИИ-ассеты, теги, права, версии","Очередь kie.ai: модель, промпт, статус, кредиты","Карусели 1080×1440, Unbounded и Montserrat"][i])))));
-  p.append(later(7,"Хранилище, теги и бюджет генерации"));
+    stat("Потрачено за 7 дней","$"+spent.toFixed(2),"из $"+weekLimit()+" в неделю"),
+    stat("Осталось","$"+Math.max(0,left).toFixed(2),left<10?"меньше $10: только по согласованным единицам":"в пределах лимита"),
+    h("div",{class:"card"},h("div",{class:"muted"},"Баланс kie.ai"),h("div",{class:"statnum"},b.credits!=null?nf(b.credits):"—"),h("div",{class:"muted"},b.credits!=null?"≈ $"+usd(b.credits).toFixed(2)+" по курсу $"+rate()+" за кредит":(b.err||"не загружен")),
+      S.mcp&&h("button",{class:"btn ghost sm",disabled:b.busy,onclick:loadBalance,style:"margin-top:6px"},b.busy?"Проверяю…":"Проверить баланс"))));
+  if(b.err)p.append(h("div",{class:"empty"},b.err));
+  const price=G.kind==="image"?PRICE.image:PRICE[G.model];
+  p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:12px"},h("h2",null,"Новая генерация"),
+    h("div",{class:"row",style:"align-items:flex-end"},
+      h("label",{class:"field"},h("span",null,"Что делаем"),h("select",{id:"g-model",onchange:e=>{const v=e.target.value;G.kind=v==="image"?"image":"veo";G.model=v==="image"?"google/nano-banana":v;G.ratio=v==="image"?"3:4":"9:16";render()}},
+        [["image","Картинка · Nano Banana · "+PRICE.image+" кр."],["veo3_fast","Видео · Veo 3 Fast · "+PRICE.veo3_fast+" кр. (черновик)"],["veo3","Видео · Veo 3 · "+PRICE.veo3+" кр. (финал)"]].map(([v,n])=>h("option",{value:v,selected:(G.kind==="image"?"image":G.model)===v},n)))),
+      h("label",{class:"field"},h("span",null,"Формат"),h("select",{id:"g-ratio",onchange:e=>{G.ratio=e.target.value}},(G.kind==="image"?["3:4","1:1","4:5","9:16","16:9"]:["9:16","16:9"]).map(r=>h("option",{value:r,selected:G.ratio===r},r)))),
+      h("label",{class:"field",style:"flex:1 1 240px"},h("span",null,"Для задания"),h("select",{id:"g-task",onchange:e=>{G.task=e.target.value}},h("option",{value:""},"Без привязки"),S.data.tasks.map(t=>h("option",{value:t.id,selected:G.task===t.id},t.code+" · "+t.title.slice(0,50)))))),
+    h("label",{class:"field"},h("span",null,"Сцена по-русски (для Claude)"),h("input",{type:"text",id:"g-scene",value:G.scene,placeholder:"Например: очередь на паспортном контроле",oninput:e=>{G.scene=e.target.value}})),
+    h("label",{class:"field"},h("span",null,"Промпт по-английски"),h("textarea",{id:"g-prompt",oninput:e=>{G.prompt=e.target.value}},G.prompt),h("small",null,"Хвост «"+NEG+"» добавится сам, если его нет.")),
+    h("div",{class:"row"},S.sample&&h("button",{class:"btn ghost",disabled:G.pbusy,onclick:aiPrompt},G.pbusy?"Claude пишет…":"Промпт от Claude"),h("button",{class:"btn ghost",onclick:()=>{G.prompt=chaosPrompt();render()}},"Случайная сцена Пхукета"),
+      S.mcp&&can()&&h("button",{class:"btn",disabled:!G.prompt.trim()||G.busy,onclick:startJob},G.busy?"Генерирую…":"Сгенерировать · ≈$"+usd(price).toFixed(2))),
+    left<10&&!G.task&&h("span",{class:"muted"},"Осталось меньше $10: выберите задание, генерируем только по согласованным единицам."),
+    h("span",{class:"muted",id:"gprog"},G.prog)));
+  const jobs=[...S.data.jobs].sort((a,b)=>String(b.at).localeCompare(String(a.at))).slice(0,30);
+  p.append(h("h2",null,"Очередь и расходы"));
+  p.append(jobs.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Когда","Что","Статус","Кредиты","Промпт",""].map(x=>h("th",null,x)))),
+    h("tbody",null,jobs.map(j=>h("tr",null,h("td",null,new Date(j.at).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})),h("td",null,j.model),
+      h("td",null,h("span",{class:"chip "+(j.status==="success"?"ok":j.status==="fail"?"warn":"vio")},({success:"Готово",fail:"Ошибка",running:"Идёт"})[j.status]||j.status),j.err&&h("div",{class:"muted",style:"font-size:12px"},j.err)),
+      h("td",{class:"num"},j.credits||("≈"+j.est)),h("td",{style:"max-width:320px;overflow-wrap:anywhere"},String(j.prompt||"").slice(0,90)),
+      h("td",null,j.status==="running"&&S.mcp&&can()&&h("button",{class:"btn ghost sm",disabled:G.busy,onclick:()=>resumeJob(j)},"Проверить")))))))
+    :h("div",{class:"empty"},"Генераций пока не было. Свой кадр с Пхукета всегда лучше: сначала загляните в библиотеку."));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Хранение: картинки сохраняются в библиотеку навсегда. Видео остаётся по временной ссылке kie.ai, его нужно скачать и загрузить вручную. Правила ИИ: спикеры в кадре всегда настоящие, ИИ делает только перебивки, фоны и иллюстрации."));
+}
+function gprog(t){M().g.prog=t;const e=$("#gprog");if(e)e.textContent=t}
+async function startJob(){
+  const T=M(),G=T.g;if(G.busy)return;
+  let prompt=G.prompt.trim();if(!prompt)return;
+  if(!/no recognizable faces/i.test(prompt))prompt+=", "+NEG;
+  const model=G.kind==="image"?"google/nano-banana":G.model,est=G.kind==="image"?PRICE.image:PRICE[G.model];
+  if(usd(est)>weekLimit()-spentWeek()){toast("Недельный лимит исчерпан");return}
+  G.busy=true;gprog("Ставлю задачу в kie.ai");render();
+  let ref=null;
+  try{
+    const id=await n8nRun({op:"create",kind:G.kind==="image"?"image":"veo",prompt,ratio:G.ratio,model});
+    const c=await n8nResult(id,"Итог");
+    if(!c||!c.ok||!c.taskId)throw{code:"kie",message:(c&&(c.msg||c.code))||"нет ответа"};
+    ref=await S.db.collection("jobs").add({kind:G.kind==="image"?"image":"veo",model,prompt,ratio:G.ratio,task_id:c.taskId,task:G.task,est,credits:0,status:"running",at:new Date().toISOString()});
+    G.prompt="";await followJob(ref.id,{kind:G.kind==="image"?"image":"veo",taskId:c.taskId,prompt,model,task:G.task,est});
+  }catch(e){const m=kieErr(e);toast(m);if(ref)write(()=>S.db.doc("jobs/"+ref.id).update({status:"fail",err:m.slice(0,160)}))}
+  G.busy=false;gprog("");render();
+}
+async function resumeJob(j){const G=M().g;if(G.busy)return;G.busy=true;render();
+  try{await followJob(j.id,{kind:j.kind,taskId:j.task_id,prompt:j.prompt,model:j.model,task:j.task,est:j.est})}catch(e){toast(kieErr(e))}
+  G.busy=false;gprog("");render()}
+async function followJob(jobId,j){
+  const limit=j.kind==="image"?36:80;
+  for(let i=0;i<limit;i++){
+    gprog("kie.ai рисует… "+(i+1)*5+" с");await new Promise(r=>setTimeout(r,5000));
+    const sid=await n8nRun({op:"status",kind:j.kind,taskId:j.taskId});const s=await n8nResult(sid,"Итог");
+    if(s&&s.state==="fail"){await S.db.doc("jobs/"+jobId).update({status:"fail",err:String(s.fail||"kie.ai не смог сгенерировать").slice(0,160)});toast("kie.ai не смог сгенерировать");return}
+    if(s&&s.state==="success"&&s.urls&&s.urls.length){
+      const credits=Number(s.credits)||j.est,url=s.urls[0],tk=S.data.tasks.find(t=>t.id===j.task);
+      const meta={name:(j.kind==="image"?"ИИ-картинка ":"ИИ-видео ")+new Date().toLocaleDateString("ru-RU"),kind:j.kind==="image"?"ai_image":"ai_video",tags:["ИИ"].concat(tk?[tk.code]:[]),rights:"ai",source:"kie",prompt:j.prompt,model:j.model,credits,job:jobId};
+      if(j.kind==="image"&&S.assets){
+        gprog("Сохраняю картинку в библиотеку");
+        const f=await n8nRun({op:"fetch",url});const r=await n8nResult(f,"Итог файл");
+        if(!r||!r.ok)throw{code:"fetch",message:(r&&r.msg)||"не удалось скачать результат"};
+        const bin=atob(r.b64),u8=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u8[k]=bin.charCodeAt(k);
+        const ref=await saveBlobAsset(new Blob([u8],{type:r.mime}),meta);
+        await S.db.doc("jobs/"+jobId).update({status:"success",credits,asset:ref.id});
+        if(tk){await S.db.doc("assets/"+ref.id).update({used:[{task:tk.id,code:tk.code,title:tk.title,at:new Date().toISOString()}]});await S.db.doc("tasks/"+tk.id).update({assets:[...(tk.assets||[]),ref.id]})}
+      }else{
+        const ref=await S.db.collection("assets").add({...meta,mime:"video/mp4",ext_url:url,temp:j.kind!=="image",tags:meta.tags,location:"",speaker:"",used:[],at:new Date().toISOString()});
+        await S.db.doc("jobs/"+jobId).update({status:"success",credits,asset:ref.id});
+      }
+      toast(j.kind==="image"?"Картинка в библиотеке":"Видео готово: скачайте и загрузите в библиотеку");return;
+    }
+  }
+  throw{code:"timeout"};
+}
+/* --- карусели --- */
+function slidesPrompt(pc){return "Ты дизайнер-редактор каруселей APEC Center. Разложи текст карусели по слайдам 1080×1440. 7–9 слайдов. Один слайд — одна мысль, до 25 слов, цифры отдельно от слов. Пиши на «вы».\nТипы слайдов и поля:\n- cover: kicker (плашка до 4 слов), title (крючок до 8 слов), big (крупная цифра, необязательно), unit (подпись к цифре), sub (одна строка)\n- number: label (до 4 слов), big (цифра), unit, text (до 20 слов)\n- compare: title, left {label, rows:[{v,l}] до 3 строк}, right {label, rows:[{v,l}]} — справа вариант с картой APEC\n- steps: title, steps:[{t,d}] до 6\n- text: title, text (до 30 слов)\n- cta: title (вопрос аудитории), word (кодовое слово КАРТА), text (что человек получит)\nПервый слайд cover, последний cta. Факты только из правил ниже, цифры не выдумывай.\n"+platformCtx()+"\n\nТЕКСТ КАРУСЕЛИ:\n"+pc.body+"\n\nОтвет строго JSON: {\"slides\":[{\"type\":\"cover\",\"kicker\":\"\",\"title\":\"\",\"big\":\"\",\"unit\":\"\",\"sub\":\"\"}]}"}
+const carPieces=()=>S.data.pieces.filter(pc=>{const c=S.data.channels.find(x=>x.name===pc.channel);return c&&c.id==="ig-brand"});
+function loadImg(url){return new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=url})}
+async function paintCar(){
+  const T=M(),C=T.c,box=document.getElementById("car-slides");if(!box||!C.slides)return;
+  await fontsReady();
+  const asset=S.data.assets.find(a=>a.id===C.photo&&a.url),photo=asset?await loadImg(asset.url):null;
+  box.replaceChildren();const n=C.slides.length;
+  C.slides.forEach((s,i)=>{const c=drawSlide(s,i,n,photo,"@apec_center");c.setAttribute("aria-label","Слайд "+(i+1));box.append(c)});
+}
+function carTab(p){
+  const T=M(),C=T.c,ps=carPieces();
+  p.append(h("p",{class:"sub",style:"margin:0"},"Claude раскладывает утверждённый текст карусели по слайдам, кабинет рисует их 1080×1440 в стиле бренда. Готовые слайды можно сохранить в библиотеку или скачать."));
+  if(!ps.length)return p.append(h("div",{class:"empty"},h("b",null,"Нет материалов для карусели. "),"Они появятся, когда у темы выбран канал «Instagram @apec_center» и Claude написал материал на воротах 3."));
+  const cur=ps.find(x=>x.id===C.piece)||ps[0];if(C.piece!==cur.id){C.piece=cur.id;C.slides=cur.slides||null}
+  const imgs=S.data.assets.filter(a=>a.mime&&a.mime.startsWith("image/")&&a.url&&a.kind!=="slide");
+  p.append(h("div",{class:"row",style:"align-items:flex-end"},
+    h("label",{class:"field",style:"flex:1 1 260px"},h("span",null,"Материал"),h("select",{id:"c-piece",onchange:e=>{C.piece=e.target.value;const x=ps.find(z=>z.id===C.piece);C.slides=x&&x.slides||null;render()}},ps.map(x=>{const t=topicRef(x.topic);return h("option",{value:x.id,selected:x.id===cur.id},(t?t.title:x.topic).slice(0,70))}))),
+    h("label",{class:"field"},h("span",null,"Фото на обложку"),h("select",{id:"c-photo",onchange:e=>{C.photo=e.target.value;render()}},h("option",{value:""},"Без фото"),imgs.map(a=>h("option",{value:a.id,selected:C.photo===a.id},(a.name||a.kind).slice(0,40))))),
+    S.sample&&can()&&h("button",{class:"btn",disabled:C.busy,onclick:()=>genSlides(cur)},C.busy?"Claude раскладывает…":C.slides?"Разложить заново":"Разложить по слайдам")));
+  if(!C.slides)return p.append(h("div",{class:"empty"},"Слайдов пока нет. Нажмите «Разложить по слайдам»."));
+  p.append(h("div",{id:"car-slides",style:"display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px"}));
+  p.append(h("div",{class:"row"},
+    S.assets&&can()&&h("button",{class:"btn",disabled:C.busy,onclick:()=>saveSlides(cur)},"Сохранить слайды в библиотеку"),
+    S.downloads&&h("button",{class:"btn ghost",disabled:C.busy,onclick:()=>downloadSlides(cur)},"Скачать PNG по очереди"),
+    h("span",{class:"muted",id:"cprog"},C.prog)));
+  p.append(h("details",null,h("summary",{class:"muted",style:"cursor:pointer"},"Править слайды (JSON)"),h("textarea",{id:"c-json",style:"min-height:200px;font-family:ui-monospace,monospace;font-size:12px;margin-top:6px",oninput:e=>{C.json=e.target.value}},C.json!=null?C.json:JSON.stringify(C.slides,null,1)),
+    h("div",{style:"margin-top:6px"},h("button",{class:"btn ghost sm",onclick:()=>{try{const a=JSON.parse(C.json!=null?C.json:"[]");if(!Array.isArray(a))throw 0;C.slides=a;write(()=>S.db.doc("pieces/"+cur.id).update({slides:a}),"Слайды обновлены");C.json=null;render()}catch{toast("Это не похоже на список слайдов")}}},"Применить"))));
+  setTimeout(paintCar,0);
+}
+async function genSlides(pc){
+  const C=M().c;C.busy=true;render();
+  try{const r=await S.sample.json(slidesPrompt(pc),{cache:false});const sl=((r&&r.slides)||[]).slice(0,10);if(!sl.length)throw{code:"invalid_json"};
+    C.slides=sl;C.json=null;await S.db.doc("pieces/"+pc.id).update({slides:sl});toast("Слайдов: "+sl.length)}
+  catch(e){const m=sampleErr(e);if(m)toast(m)}
+  C.busy=false;render();
+}
+function slideBlobs(){return[...document.querySelectorAll("#car-slides canvas")].map(c=>new Promise(r=>c.toBlob(r,"image/png")))}
+async function saveSlides(pc){
+  const C=M().c,t=topicRef(pc.topic);C.busy=true;render();
+  try{const bl=await Promise.all(slideBlobs());let i=0;
+    for(const b of bl){i++;const cprog=document.getElementById("cprog");if(cprog)cprog.textContent="Сохраняю "+i+" из "+bl.length;
+      await saveBlobAsset(b,{name:(t?t.title.slice(0,40):"Карусель")+" · слайд "+i,kind:"slide",tags:["карусель"].concat(t&&t.code?[t.code]:[]),rights:"own",source:"carousel"})}
+    toast("Слайды в библиотеке: "+bl.length)}catch(e){toast("Не получилось сохранить слайды")}
+  C.busy=false;render();
+}
+async function downloadSlides(pc){
+  const C=M().c;
+  try{const bl=await Promise.all(slideBlobs());for(let i=0;i<bl.length;i++)await S.downloads.save({filename:"apec-"+(topicRef(pc.topic)||{}).code+"-slide-"+(i+1)+".png",data:bl[i]})}
+  catch(e){if(!(e&&e.code==="cancelled"))toast("Сохранение отменено или недоступно")}
 }
 
 /* ---------- 7. Настройки ---------- */
@@ -1075,8 +1385,8 @@ function boot(){
   const sc=lsGet("v2.section");if(sc&&SECTIONS.some(s=>s.id===sc))S.section=sc;
   render();
   const c=window.claude;if(!c||!c.use)return;
-  Promise.all([c.use("db"),c.use("user"),c.use("sample"),c.use("mcp")]).then(([db,user,sample,mcp])=>{
-    S.sample=sample||null;S.mcp=mcp||null;
+  Promise.all([c.use("db"),c.use("user"),c.use("sample"),c.use("mcp"),c.use("assets"),c.use("downloads")]).then(([db,user,sample,mcp,assets,downloads])=>{
+    S.sample=sample||null;S.mcp=mcp||null;S.assets=assets||null;S.downloads=downloads||null;
     if(!db){render();return}S.db=db;
     S.canWrite=user?(user.can("data.write")!==false):true;
     Object.keys(COLS).forEach(listen);render();
