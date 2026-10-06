@@ -267,7 +267,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 
 /* ===== RULE CHANGE ===== */
 .rule{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.rule-card{border-radius:var(--r);padding:clamp(22px,3vw,34px);display:grid;gap:16px;align-content:start;min-width:0}
+.rule-card{border-radius:var(--r);padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:16px;min-width:0}
 .rule-card.before{background:var(--white);border:1px solid var(--line-light)}
 .rule-card.after{background:var(--midnight);color:var(--on-dark)}
 .rule-card h3{font-size:20px}
@@ -276,7 +276,8 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .rule-list li::before{content:"";width:28px;height:28px;border-radius:50%;background:rgba(229,56,59,.12) center/14px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E5383B' stroke-width='3'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E")}
 .after .rule-list li::before{background:rgba(98,164,255,.16) center/14px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2362A4FF' stroke-width='3'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")}
 .rule-list b{font-weight:700}
-.big-num{display:flex;align-items:baseline;gap:12px;padding-top:16px;border-top:1px solid var(--line-light)}
+.big-num{margin-top:auto;display:flex;align-items:center;gap:14px;min-height:96px;padding-top:16px;border-top:1px solid var(--line-light)}
+.big-num b{flex:none;min-width:2.1em}
 .after .big-num{border-color:var(--line-dark)}
 .big-num b{font:600 clamp(44px,5vw,64px)/1 var(--f-sub)}
 .before .big-num b{color:var(--route)}
