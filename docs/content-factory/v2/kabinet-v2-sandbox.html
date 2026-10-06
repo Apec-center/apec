@@ -370,6 +370,12 @@ async function cp(tool,args){
 }
 function mcpErr(e){const c=e&&e.code;
   return c==="server_not_connected"?"Подключите коннектор в настройках Claude":c==="needs_reauth"?"Переподключите коннектор в настройках Claude":c==="not_in_manifest"?"Доступ к коннектору для страницы выключен":c==="crm_403"?"В CRM нужны права администратора":c==="cancelled"?"":"Нет связи с CRM или ChatPlace"}
+const viraleSnap=()=>S.data.stats.find(x=>x.id==="virale");
+const VIRALE_OF={"ig-dima":"dima.expat","ig-aleks":"aleks_rykov","ig-brand":"apec.center"};
+async function refreshVirale(){
+  const l=await cp("virale_accounts_list",{});const arr=Array.isArray(l)?l:[];
+  await S.db.doc("stats/virale").set({at:new Date().toISOString(),accounts:arr.map(a=>({username:String(a.username||""),followers:Number(a.followersCount)||0,videos:Number(a.videosCount)||0,views:Number(a.viewsCount)||0}))});
+}
 const pulseSnap=()=>S.data.stats.find(x=>x.id==="pulse");
 const reelsSnap=()=>S.data.stats.find(x=>x.id==="reels");
 function setProg(t){S.pulse.prog=t;const e=$("#pprog");if(e)e.textContent=t}
@@ -397,12 +403,20 @@ async function loadPulse(){
     }
     const snap={at:new Date().toISOString(),days,total,paid,sum,rows:Object.values(by),codes,partners};
     await S.db.doc("stats/pulse").set(snap);
+    try{setProg("ChatPlace: подписчики и просмотры");await refreshVirale()}catch(e){}
     toast("Пульс обновлён");
   }catch(e){P.err=mcpErr(e)||"Не получилось обновить"}
   P.busy=false;setProg("");render();
 }
 function spark(w){const m=Math.max(1,...w);return h("span",{style:"display:inline-flex;align-items:flex-end;gap:2px;height:22px","aria-label":"Заявки по неделям, от старых к новым: "+[...w].reverse().join(", ")},
   [...w].reverse().map(v=>h("i",{style:`display:block;width:6px;border-radius:2px;background:var(--primary);height:${Math.max(2,Math.round(v/m*22))}px;opacity:${v?1:.25}`})))}
+function reachCells(chId){
+  const v=viraleSnap(),u=VIRALE_OF[chId];
+  if(!u)return[h("td",{class:"muted"},"—"),h("td",{class:"muted"},"—")];
+  const a=v&&(v.accounts||[]).find(x=>x.username===u);
+  if(!a)return[h("td",{class:"muted",colspan:"2"},v?"нет в Virale":"обновите срез")];
+  return[h("td",{class:"num"},nf(a.followers)),h("td",{class:"num"},nf(a.views))];
+}
 function trendChip(w){const a=w[0],b=w[1];if(!a&&!b)return h("span",{class:"chip mute"},"нет заявок");
   if(a>b)return h("span",{class:"chip ok"},"▲ "+a+" за 7 дн. (было "+b+")");if(a<b)return h("span",{class:"chip warn"},"▼ "+a+" за 7 дн. (было "+b+")");return h("span",{class:"chip mute"},"= "+a+" за 7 дн.")}
 function vPulse(p){
@@ -421,12 +435,12 @@ function vPulse(p){
     stat("Выручка",rub(snap.sum),"по отметке «Оплата получена»"),
     stat("Ждёт решения",inboxCount(),"на воротах производства")));
   p.append(h("p",{class:"muted",style:"margin:0"},"Срез от "+new Date(snap.at).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+(snap.days!==P.days?". Период в списке другой, нажмите «Обновить»":"")+"."));
-  const line=(name,status,x)=>h("tr",null,h("td",null,name,status&&[" ",h("span",{class:"chip "+(status==="active"?"ok":status==="planned"?"warn":"mute")},CH_STATUS[status])]),
+  const line=(name,status,x,chId)=>h("tr",null,h("td",null,name,status&&[" ",h("span",{class:"chip "+(status==="active"?"ok":status==="planned"?"warn":"mute")},CH_STATUS[status])]),
     x?[h("td",{class:"num"},nf(x.leads)),h("td",{class:"num"},nf(x.paid)),h("td",{class:"num"},x.leads?(x.paid/x.leads*100).toFixed(1)+"%":"—"),h("td",{class:"num"},rub(x.sum)),h("td",null,spark(x.w)),h("td",null,trendChip(x.w))]
-      :h("td",{colspan:"6",class:"muted"},"Меток этого канала в заявках нет"));
-  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Канал","Заявок","Оплат","Конверсия","Выручка","4 недели","Динамика"].map(x=>h("th",null,x)))),
-    h("tbody",null,chs.map(c=>line(c.name,c.status,rows[c.id])),line("Без метки или другое",null,rows.other||{leads:0,paid:0,sum:0,w:[0,0,0,0]})))));
-  p.append(h("p",{class:"muted",style:"margin:0"},"Reels спикеров пока считаются по аккаунту: бот ChatPlace ставит метку аккаунта, а не ролика. Точная привязка к роликам ниже."));
+      :h("td",{colspan:"6",class:"muted"},"Меток этого канала в заявках нет"),reachCells(chId));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Канал","Заявок","Оплат","Конверсия","Выручка","4 недели","Динамика","Подписчики","Просмотры всего"].map(x=>h("th",null,x)))),
+    h("tbody",null,chs.map(c=>line(c.name,c.status,rows[c.id],c.id)),line("Без метки или другое",null,rows.other||{leads:0,paid:0,sum:0,w:[0,0,0,0]},"")))));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Подписчики и просмотры берутся из ChatPlace (Virale), это итог по аккаунту за всё время. Заявки с Reels спикеров считаются по аккаунту: бот ставит метку аккаунта, а не ролика. Точная привязка к роликам ниже."));
   exactBlock(p);
 }
 /* точная привязка к постам: в переписке ChatPlace у сообщения «Карта» лежит id поста */
@@ -1371,8 +1385,9 @@ async function loadConnections(){
       providers:(((s.ai||{}).providers)||[]).map(x=>({name:String(x.name||""),provider:String(x.provider||""),model:String(x.model||""),base_url:String(x.base_url||""),enabled:!!x.enabled,status:String(x.last_status||""),checked:x.last_checked_at||"",token_set:!!x.token_set,purposes:Array.isArray(x.purposes)?x.purposes:[]})),
       unipile:{enabled:!!(s.messengers&&s.messengers.unipile&&s.messengers.unipile.enabled),key:!!(s.messengers&&s.messengers.unipile&&s.messengers.unipile.api_key_set)},
       yandex:{connected:!!(s.yandex&&s.yandex.connected),host:String((s.yandex&&s.yandex.seo_site_host)||""),search:!!(s.yandex&&s.yandex.search_connected)},
+      bots:await cp("bots_list",{}).then(b=>(Array.isArray(b)?b:[]).map(x=>({name:String(x.name||""),username:String(x.username||""),platform:String((x.platform&&x.platform.label)||"")}))).catch(()=>[]),
       accounts:((ac&&ac.items)||[]).map(a=>({type:String(a.type||""),label:lab(a),enabled:!!a.enabled,status:String(a.status||""),via:String(a.provider||""),last:a.last_inbound_at||""}))};
-    await S.db.doc("stats/connections").set(snap);toast("Подключения обновлены");
+    await S.db.doc("stats/connections").set(snap);try{await refreshVirale()}catch(e){}toast("Подключения обновлены");
   }catch(e){C.err=mcpErr(e)||"Не получилось прочитать настройки CRM"}
   C.busy=false;render();
 }
@@ -1397,17 +1412,24 @@ function connTab(p,snap){
         h("td",null,h("div",{class:"pill-row"},x.purposes.map(k=>h("span",{class:"chip mute"},PURPOSE[k]||k)))),h("td",null,stChip(x.status,x.enabled),!x.token_set&&h("div",{class:"muted",style:"font-size:12px"},"ключ не задан")),h("td",null,dt(x.checked)))))))
       :h("div",{class:"empty"},"В CRM нет подключённых нейросетей."));
     kieCard(p,snap);
-    p.append(h("h2",null,"Каналы и мессенджеры в CRM"));
-    p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Тип","Название","Через","Состояние","Последнее входящее"].map(x=>h("th",null,x)))),
-      h("tbody",null,snap.accounts.map(a=>h("tr",null,h("td",null,ACC_TYPE[a.type]||a.type),h("td",null,a.label||"—"),h("td",null,a.via==="unipile"?"Unipile":"напрямую"),h("td",null,stChip(a.status,a.enabled)),h("td",null,dt(a.last))))))));
-    const ig=snap.accounts.filter(a=>a.type==="instagram");
+    const v=viraleSnap();
+    p.append(h("h2",null,"Instagram через ChatPlace"));
+    p.append((snap.bots||[]).length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Аккаунт","Бот ChatPlace","Аналитика Virale","Подписчики","Ролики","Просмотры всего"].map(x=>h("th",null,x)))),
+      h("tbody",null,snap.bots.filter(x=>x.platform==="instagram").map(bt=>{const u=bt.username.replace(/^@/,""),a=v&&(v.accounts||[]).find(z=>z.username===u);
+        return h("tr",null,h("td",null,h("b",null,bt.username)),h("td",null,h("span",{class:"chip ok"},"Подключён")),h("td",null,a?h("span",{class:"chip ok"},"Есть"):h("span",{class:"chip warn"},v?"Не добавлен":"Обновите")),
+          h("td",{class:"num"},a?nf(a.followers):"—"),h("td",{class:"num"},a?nf(a.videos):"—"),h("td",{class:"num"},a?nf(a.views):"—"))})))):h("div",{class:"empty"},"Ботов ChatPlace не нашлось."));
+    const noVir=(snap.bots||[]).filter(x=>x.platform==="instagram"&&v&&!(v.accounts||[]).some(z=>z.username===x.username.replace(/^@/,"")));
     p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:6px"},h("h2",null,"Что это значит для контента"),
       h("ul",{style:"margin:0;padding-left:18px"},
-        h("li",null,"Instagram: в CRM подключён "+ig.length+" аккаунт"+(ig.length===1?"":"ов")+" через Unipile. У вас три Instagram-канала (@dima.expat, @aleks_rykov, @apec_center), поэтому метрики по каждому пока считаются по заявкам и ChatPlace, а не по охвату."),
-        h("li",null,"Публикация и охват через API Instagram пока недоступны: запрос постов у Unipile вернул ошибку. Публикуем вручную, система отдаёт готовый пакет."),
+        h("li",null,"Instagram: заявки и точную привязку к Reels берём из ChatPlace (боты на трёх аккаунтах), подписчиков и просмотры из Virale. Unipile к данным Instagram не обращается."),
+        noVir.length>0&&h("li",null,"Аналитики Virale нет у "+noVir.map(x=>x.username).join(", ")+": добавьте аккаунт в ChatPlace → Virale, и охват появится в Пульсе."),
+        h("li",null,"Публикуем в Instagram вручную, система отдаёт готовый пакет: текст, медиа, метка."),
         h("li",null,"Telegram: бот @apec_center_bot подключён, публикация в канал идёт через n8n."),
-        h("li",null,"Яндекс: "+(snap.yandex.connected?"подключён":"OAuth не подключён")+(snap.yandex.host?" (сайт "+snap.yandex.host+")":"")+". Метрика и Вебмастер для SEO-статей появятся, когда его подключите в CRM."),
-        h("li",null,"Unipile: "+(snap.unipile.enabled&&snap.unipile.key?"включён, ключ задан":"не настроен")+"."))));
+        h("li",null,"Яндекс: "+(snap.yandex.connected?"подключён":"OAuth не подключён")+(snap.yandex.host?" (сайт "+snap.yandex.host+")":"")+". Метрика и Вебмастер для SEO-статей появятся, когда подключите его в CRM."))));
+    p.append(h("h2",null,"Мессенджеры в CRM"));
+    p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Тип","Название","Через","Состояние","Последнее входящее"].map(x=>h("th",null,x)))),
+      h("tbody",null,snap.accounts.filter(a=>a.type!=="instagram").map(a=>h("tr",null,h("td",null,ACC_TYPE[a.type]||a.type),h("td",null,a.label||"—"),h("td",null,a.via==="unipile"?"Unipile":"напрямую"),h("td",null,stChip(a.status,a.enabled)),h("td",null,dt(a.last))))))));
+    p.append(h("p",{class:"muted",style:"margin:0"},"Unipile: "+(snap.unipile.enabled&&snap.unipile.key?"включён, ключ задан":"не настроен")+". Через него в CRM работают Telegram и WhatsApp."));
   }
   p.append(h("h2",null,"Системы кабинета"));
   const it=S.data.integrations;
