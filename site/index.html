@@ -1570,7 +1570,7 @@ function calc(){
 calc();
 
 /* ===== pains (flip cards) ===== */
-$("pain-grid").innerHTML=PAINS.map(function(p){return '<button class="pain rv" type="button"><span class="pain-in"><span class="pf front"><span class="q">'+p.tag+'<em>'+p.code+'</em></span><h3>«'+p.q+'»</h3><p>'+p.d+'</p><span class="turn">Ответ →</span></span><span class="pf back"><span class="q">'+p.atag+'</span><h3>'+p.a+'</h3><p>'+p.ad+'</p><span class="turn">'+p.link+'</span></span></span></button>'}).join("");
+$("pain-grid").innerHTML=PAINS.map(function(p){return '<button class="pain rv" type="button"><span class="pain-in"><span class="pf front"><span class="q">'+p.tag+'</span><h3>«'+p.q+'»</h3><p>'+p.d+'</p><span class="turn">Ответ →</span></span><span class="pf back"><span class="q">'+p.atag+'</span><h3>'+p.a+'</h3><p>'+p.ad+'</p><span class="turn">'+p.link+'</span></span></span></button>'}).join("");
 [].forEach.call(document.querySelectorAll(".pain"),function(p){p.addEventListener("click",function(){p.classList.toggle("open")})});
 
 /* ===== FAQ ===== */
