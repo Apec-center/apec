@@ -124,20 +124,20 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .top .btn{white-space:nowrap;flex:none}
 .top .btn .s{display:none}
 @media (max-width:400px){.top .btn .l{display:none}.top .btn .s{display:inline}}
-.cur{display:flex;padding:3px;border-radius:999px;border:1px solid var(--line-dark);flex:none}
-.cur button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 14px/1 var(--f-sub);color:var(--on-dark-2);transition:background .2s,color .2s}
-.cur button:hover{color:var(--hi)}
-.cur button[aria-pressed="true"]{background:var(--electric);color:#fff}
-.cur button:focus-visible{outline:2px solid var(--electric-2);outline-offset:1px}
+#cur{display:flex;padding:3px;border-radius:999px;border:1px solid var(--line-dark);flex:none}
+#cur button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 14px/1 var(--f-sub);color:var(--on-dark-2);transition:background .2s,color .2s}
+#cur button:hover{color:var(--hi)}
+#cur button[aria-pressed="true"]{background:var(--electric);color:#fff}
+#cur button:focus-visible{outline:2px solid var(--electric-2);outline-offset:1px}
 .m{white-space:nowrap}
 .skin{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--hi);border:1px solid var(--line-dark);flex:none}
 .skin:hover{border-color:var(--electric-2)}
 .skin svg{width:18px;height:18px}
 .skin:focus-visible{outline:2px solid var(--electric-2);outline-offset:2px}
 @media (max-width:1420px){.nav{display:none}.tel{margin-left:auto}}
-@media (max-width:960px){.tel{display:none}.cur{margin-left:auto}}
-@media (max-width:640px){.tel{display:none}.cur{margin-left:auto}.top .wrap{gap:10px}.cur button{width:28px;height:28px;font-size:13px}}
-@media (max-width:440px){.top .wrap{gap:8px}.top .btn-sm{padding:0 12px;font-size:12.5px;min-height:40px}.cur{padding:2px}.cur button{width:26px;height:26px;font-size:12px}.skin{width:36px;height:36px}.brand .emb{width:36px}}
+@media (max-width:960px){.tel{display:none}#cur{margin-left:auto}}
+@media (max-width:640px){.tel{display:none}#cur{margin-left:auto}.top .wrap{gap:10px}#cur button{width:28px;height:28px;font-size:13px}}
+@media (max-width:440px){.top .wrap{gap:8px}.top .btn-sm{padding:0 12px;font-size:12.5px;min-height:40px}#cur{padding:2px}#cur button{width:26px;height:26px;font-size:12px}.skin{width:36px;height:36px}.brand .emb{width:36px}}
 @media (max-width:640px){.brand span{display:none}}
 
 /* ===== HERO ===== */
@@ -511,7 +511,7 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .app-st li{display:flex;gap:10px;align-items:center;font-size:13px;color:#7F91A4}
 .app-st li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;border:2px solid #3A4A60}
 .app-st li.done{color:#C9D5E6}.app-st li.done::before{background:#62A4FF;border-color:#62A4FF}
-.app-st li.cur{color:#fff;font-weight:600}.app-st li.cur::before{border-color:#62A4FF;box-shadow:0 0 0 4px rgba(98,164,255,.2)}
+.app-st li.now{color:#fff;font-weight:600}.app-st li.now::before{border-color:#62A4FF;box-shadow:0 0 0 4px rgba(98,164,255,.2)}
 @media (max-width:520px){.app-h{grid-template-columns:36px 1fr}.app-h .pill{display:none}.app-h b,.app-h small{white-space:nowrap}}
 .app-h small{display:block;line-height:1.3}
 .app-msg{font-size:12.5px;padding:9px 12px;border-radius:12px 12px 12px 4px;background:#2B5278;color:#E3EAF3}
@@ -1107,7 +1107,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
       <li class="pstep rv">
         <div class="ptxt"><span class="pn">05</span><h3>Сопровождение в приложении APEC Center</h3><p>Весь процесс выпуска карты вы видите в мобильном приложении APEC Center в Telegram: текущий этап, трек-номер, одобренные страны и чат со специалистом. Уведомления о каждом шаге приходят сразу.</p></div>
         <div class="pvis"><div class="pcard app"><div class="app-h"><span class="app-ic" aria-hidden="true"><svg viewBox="0 0 457 309.6"><use href="#emblem"/></svg></span><div><b>APEC Center</b><small>мини-приложение в Telegram</small></div><span class="pill ok">Онлайн</span></div>
-          <ul class="app-st"><li class="done">Досье подано в МИД</li><li class="done">Получен трек-номер</li><li class="cur">Согласование стран · 10 из 16</li><li>Выпуск временной карты</li></ul>
+          <ul class="app-st"><li class="done">Досье подано в МИД</li><li class="done">Получен трек-номер</li><li class="now">Согласование стран · 10 из 16</li><li>Выпуск временной карты</li></ul>
           <div class="app-msg">🔔 Таиланд одобрил въезд по вашей карте</div></div></div>
       </li>
       <li class="pstep rv">
