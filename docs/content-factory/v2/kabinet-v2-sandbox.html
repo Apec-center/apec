@@ -357,7 +357,9 @@ function chanOf(r){
 function payload(r){let p=r&&r.payload;if(p==null){try{p=JSON.parse(((r.content||[]).find(b=>b.type==="text")||{}).text||"null")}catch{p=null}}return p}
 async function crm(method,path,query){
   const r=await S.mcp.callTool(CRM_SRV,"call-api",{method,path,...(query?{query}:{})},{cache:false});
-  let p=payload(r);if(p&&typeof p.body==="string"){try{p=JSON.parse(p.body)}catch{}}
+  let p=payload(r);
+  if(p&&(p.truncated===true||String(p.truncated).toLowerCase()==="true"))throw{code:"crm_truncated"};
+  if(p&&typeof p.body==="string"){try{p=JSON.parse(p.body)}catch{throw{code:"crm_truncated"}}}
   if(p&&p.status>=400)throw{code:"crm_"+p.status};
   return(p&&p.body)||p;
 }
@@ -369,7 +371,7 @@ async function cp(tool,args){
   return payload(r);
 }
 function mcpErr(e){const c=e&&e.code;
-  return c==="server_not_connected"?"Подключите коннектор в настройках Claude":c==="needs_reauth"?"Переподключите коннектор в настройках Claude":c==="not_in_manifest"?"Доступ к коннектору для страницы выключен":c==="crm_403"?"В CRM нужны права администратора":c==="cancelled"?"":"Нет связи с CRM или ChatPlace"}
+  return c==="server_not_connected"?"Подключите коннектор в настройках Claude":c==="needs_reauth"?"Переподключите коннектор в настройках Claude":c==="not_in_manifest"?"Доступ к коннектору для страницы выключен":c==="crm_403"?"В CRM нужны права администратора":c==="crm_truncated"?"Ответ CRM слишком большой, уменьшите период":c==="cancelled"?"":c==="crm_shape"?"CRM вернула неожиданный ответ":"Нет связи с CRM или ChatPlace"}
 const viraleSnap=()=>S.data.stats.find(x=>x.id==="virale");
 const VIRALE_OF={"ig-dima":"dima.expat","ig-aleks":"aleks_rykov","ig-brand":"apec.center"};
 async function refreshVirale(){
@@ -386,9 +388,10 @@ async function loadPulse(){
   const by={},weeks=4,codes={},partners={};let total=0,paid=0,sum=0;igLeadsCache=[];
   const slot=id=>by[id]||(by[id]={id,leads:0,paid:0,sum:0,w:Array(weeks).fill(0)});
   try{
-    for(let pg=1;pg<=60;pg++){
-      setProg("CRM: читаю заявки, страница "+pg);
-      const b=await crm("GET","/api/requests",{page:pg,limit:100});const items=(b&&b.items)||[];let stop=!items.length;
+    for(let pg=1;pg<=160;pg++){
+      setProg("CRM: читаю заявки, страница "+pg+", найдено "+total);
+      const b=await crm("GET","/api/requests",{page:pg,limit:30});if(!b||!Array.isArray(b.items))throw{code:"crm_shape"};
+      const items=b.items;let stop=!items.length;
       for(const r of items){
         if(String(r.created_at)<since){stop=true;continue}
         const ok=isPaid(r),amt=ok?Number(r.product_price||r.amount||0):0,x=slot(chanOf(r));
@@ -399,7 +402,7 @@ async function loadPulse(){
         if(r.partner_id){const k=String(r.partner_id),px=partners[k]||(partners[k]={leads:0,paid:0,sum:0});px.leads++;if(ok){px.paid++;px.sum+=amt}}
         if(/^ig-/.test(chanOf(r))&&r.chatplace_client_id)igLeadsCache.push({cid:String(r.chatplace_client_id),paid:ok,amt});
       }
-      if(stop||items.length<100)break;
+      if(stop||items.length<30)break;
     }
     const snap={at:new Date().toISOString(),days,total,paid,sum,rows:Object.values(by),codes,partners};
     await S.db.doc("stats/pulse").set(snap);
