@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Карта АТЭС: 90 дней в Таиланде без визы и визаранов | APEC Center</title>
+<title>Карта АТЭС: 90 дней в Таиланде без визы — от 4 750 ฿ в год | APEC Center</title>
 <meta name="description" content="С 15 сентября безвиз в Таиланде — 30 дней. С картой АТЭС — до 90 дней за въезд на 5 лет: 4 выезда в год вместо 11. Оформление через МИД РФ дистанционно, без ИП. От 4 750 ฿ в год. Возврат 100% при отказе МИД.">
 <link rel="canonical" href="https://apec.center/">
 <meta property="og:type" content="website">
@@ -59,7 +59,7 @@
 }
 /* Light skin (A/B variant or toggle): dark bands turn into soft steel bands; always-dark components keep their palette */
 :root[data-skin="light"]{--midnight:#EDF1F7;--on-dark:#122338;--on-dark-2:#4A5A70;--line-dark:rgba(31,73,133,.14);--hi:#122338;--panel:#FFFFFF;--electric-2:#2470E0;--plane:#1F4985}
-:root[data-skin="light"] .rule-card.after,:root[data-skin="light"] .res.hl,:root[data-skin="light"] .pf.back,:root[data-skin="light"] .tile.navy,:root[data-skin="light"] .tile.photo,:root[data-skin="light"] .map-box,:root[data-skin="light"] .lk,:root[data-skin="light"] .bp.best,:root[data-skin="light"] .photo-card,:root[data-skin="light"] footer,:root[data-skin="light"] .board,:root[data-skin="light"] .fd{--midnight:#122338;--on-dark:#F7F8FA;--on-dark-2:#A9B7CB;--line-dark:rgba(98,164,255,.18);--hi:#FFFFFF;--panel:rgba(255,255,255,.045);--electric-2:#62A4FF}
+:root[data-skin="light"] .rule-card.after,:root[data-skin="light"] .res.hl,:root[data-skin="light"] .pf.back,:root[data-skin="light"] .tile.navy,:root[data-skin="light"] .tile.photo,:root[data-skin="light"] .map-box,:root[data-skin="light"] .lk,:root[data-skin="light"] .bp.best,:root[data-skin="light"] .photo-card,:root[data-skin="light"] footer,:root[data-skin="light"] .fd{--midnight:#122338;--on-dark:#F7F8FA;--on-dark-2:#A9B7CB;--line-dark:rgba(98,164,255,.18);--hi:#FFFFFF;--panel:rgba(255,255,255,.045);--electric-2:#62A4FF}
 :root[data-skin="light"] .hero{background:radial-gradient(70% 70% at 85% 25%,rgba(40,127,242,.14),transparent 60%),radial-gradient(60% 60% at 5% 100%,rgba(98,164,255,.14),transparent 70%),linear-gradient(180deg,#F7F9FC,#E8EEF6)}
 :root[data-skin="light"] .top.solid{background:rgba(255,255,255,.88)}
 :root[data-skin="light"] .track{background:linear-gradient(180deg,#EDF1F7,#E4EAF3)}
@@ -154,26 +154,6 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 @media (max-width:980px){.hero-grid{grid-template-columns:1fr}}
 
 
-/* departures board (H1) */
-.board{position:relative;margin:6px 0 clamp(26px,3.5vw,40px);border-radius:22px;padding:clamp(12px,1.6vw,18px);background:linear-gradient(180deg,#0B1524,#0E1B2E);border:1px solid rgba(98,164,255,.2);box-shadow:0 40px 80px -40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.05)}
-.board-top{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;padding:2px 6px 12px;font:600 11.5px/1.2 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:#7F93B2}
-.board-top b{color:#F0C27A;font-weight:600}
-.board-top .live{margin-left:auto;display:inline-flex;gap:8px;align-items:center;color:#5FD3A1}
-.board-top .live i{width:7px;height:7px;border-radius:50%;background:#5FD3A1;animation:blink 1.4s infinite}
-@keyframes blink{50%{opacity:.25}}
-.board h1{margin:0}
-.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.rows{display:grid;gap:calc(var(--t)*.12)}
-.row{display:flex;gap:calc(var(--t)*.08)}
-.tl{position:relative;flex:none;width:var(--t);height:calc(var(--t)*1.32);border-radius:calc(var(--t)*.1);background:linear-gradient(180deg,#1B2C46 0 49.5%,#0A1424 49.5% 50.5%,#172740 50.5%);display:grid;place-items:center;font:600 calc(var(--t)*.74)/1 var(--f-sub);color:#F7F8FA;text-transform:uppercase;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
-.tl.blank{background:linear-gradient(180deg,#122036 0 49.5%,#0A1424 49.5% 50.5%,#101C30 50.5%);box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
-.tl.hl{color:#62A4FF}
-.tl.red{color:#FF6B6E}
-.tl span{display:block;transform-origin:50% 50%}
-.tl.f span{animation:flapf .09s linear}
-@keyframes flapf{0%{transform:scaleY(1)}50%{transform:scaleY(.05);filter:brightness(.5)}100%{transform:scaleY(1)}}
-.board-bot{display:flex;flex-wrap:wrap;gap:6px 20px;padding:12px 6px 2px;font:500 11px/1.3 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:#7F93B2}
-.board-bot b{color:#F7F8FA;font-weight:500}
 .hero-sub{font:600 clamp(18px,1.8vw,24px)/1.35 var(--f-sub);color:var(--hi);max-width:30ch}
 .hero-sub em{font-style:normal;color:var(--electric-2)}
 .cta-stack{display:grid;gap:10px;justify-items:start}
@@ -183,7 +163,32 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .btn-lg{min-height:62px;padding:0 32px;font-size:17px}
 .btn .arrow{transition:transform .25s}
 .btn:hover .arrow{transform:translateX(4px)}
-@media (max-width:600px){.board{border-radius:16px;margin-inline:-4px}.board-top{font-size:10px;gap:4px 12px}.board-top .hide-m{display:none}.board-bot{font-size:10px}.btn-lg{width:100%}.cta-stack{justify-items:stretch}}
+@media (max-width:600px){.btn-lg{width:100%}.cta-stack{justify-items:stretch}}
+/* kinetic headline */
+.kick{margin:4px 0 14px}
+.hero .alert{margin-bottom:22px}
+.kin{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(16px,2.4vw,34px);align-items:center;margin:0 0 clamp(26px,3.5vw,44px);line-height:1}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.kin-num{grid-row:span 2;position:relative;display:flex;align-items:flex-start;font:600 clamp(104px,15vw,220px)/.82 var(--f-head);letter-spacing:-.02em;color:var(--electric-2);padding-bottom:.08em}
+:root[data-skin="light"] .kin-num{color:#287FF2}
+.odo{display:inline-block;height:.86em;overflow:hidden;vertical-align:top}
+.odo-col{display:flex;flex-direction:column;transform:translateY(calc(var(--d,6) * -1 * .86em))}
+.odo-col span{height:.86em;line-height:.86}
+.js .odo-col{--d:0;transition:transform 1.5s cubic-bezier(.6,0,.15,1) .9s}
+.js .kin.go .odo-col{--d:6}
+.kin-num>span:not(.odo){display:inline-block;line-height:.86;height:.86em}
+.was{position:absolute;left:.06em;bottom:-.34em;font:600 clamp(11px,1vw,14px)/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--on-dark-2);white-space:nowrap}
+.was s{color:var(--route);text-decoration-thickness:2px}
+.kin-t{align-self:end;font:500 clamp(30px,4.6vw,66px)/1.02 var(--f-head);color:var(--hi)}
+.kin-b{align-self:start;font:500 clamp(20px,2.4vw,34px)/1.15 var(--f-head);color:var(--on-dark-2);margin-top:.25em}
+.kin-b b{font-weight:600;color:var(--hi);background:linear-gradient(transparent 62%,rgba(229,56,59,.45) 62% 90%,transparent 90%)}
+.w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.06em}
+.w>span{display:inline-block}
+.js .w>span{animation:wup .9s cubic-bezier(.2,.8,.2,1) both}
+.js .kin-t .w:nth-child(2)>span{animation-delay:.12s}
+.js .kin-b .w:nth-child(1)>span{animation-delay:.3s}.js .kin-b .w:nth-child(2)>span{animation-delay:.38s}.js .kin-b .w:nth-child(3)>span{animation-delay:.46s}
+@keyframes wup{from{transform:translateY(105%)}to{transform:none}}
+@media (max-width:560px){.kin{column-gap:14px;row-gap:6px}.kin-num{grid-row:auto;font-size:92px}.kin-t{display:contents;font-size:34px}.kin-t .w:first-child{align-self:end;padding-bottom:.12em}.kin-t .w:nth-child(2){grid-column:1/-1;margin-top:.5em}.kin-b{grid-column:1/-1;font-size:20px;margin-top:.1em}.was{bottom:-.55em}}
 /* stats band */
 .stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line-dark)}
 .stats div{padding:22px 0 22px 22px;border-left:1px solid var(--line-dark);display:grid;gap:4px}
@@ -326,9 +331,13 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 
 /* four ways */
 .ways{border-radius:var(--r);padding:clamp(20px,3vw,32px);background:var(--white);border:1px solid var(--line-light);display:grid;gap:4px;margin-bottom:16px}
-.ways-h{font:400 clamp(16px,1.6vw,19px)/1.4 var(--f-body);color:var(--ink-2);margin-bottom:10px}
+.ways-h{display:none;font:400 clamp(16px,1.6vw,19px)/1.4 var(--f-body);color:var(--ink-2);margin-bottom:10px}
 .ways-h b{font:600 1.1em/1.3 var(--f-sub);color:var(--ink)}
-.way{display:grid;grid-template-columns:200px 1fr 130px;grid-template-areas:"n bar p" ". d d";gap:4px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--line-light)}
+.way-head{display:grid;grid-template-columns:200px 1fr 150px 190px;gap:18px;font:600 11px/1 var(--f-sub);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding-bottom:10px}
+.way-head span:nth-child(2){grid-column:3;text-align:right}.way-head span:nth-child(3){text-align:right}
+.way{display:grid;grid-template-columns:200px 1fr 150px 190px;grid-template-areas:"n bar p t" ". d d d";gap:4px 18px;align-items:center;padding:14px 0;border-top:1px solid var(--line-light)}
+.way-t{grid-area:t;font-size:13.5px;color:var(--ink-2);text-align:right}
+.math-cta{margin-top:18px}.math-cta a{font-weight:700;color:var(--electric);text-decoration:none}
 .way-n{grid-area:n;font:600 15px/1.3 var(--f-sub)}
 .way-bar{grid-area:bar;height:14px;border-radius:8px;background:var(--pearl);overflow:hidden}
 .way-bar i{display:block;height:100%;width:var(--w);border-radius:8px;background:linear-gradient(90deg,#E5383B,#FF8A8C);transform-origin:left;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
@@ -339,7 +348,7 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .way.best .way-bar i{background:linear-gradient(90deg,#287FF2,#62A4FF)}
 .way.best .way-n,.way.best .way-p{color:var(--electric)}
 .ways .fine{margin-top:10px}
-@media (max-width:700px){.way{grid-template-columns:1fr auto;grid-template-areas:"n p" "bar bar" "d d";gap:8px 12px}}
+@media (max-width:860px){.way-head{display:none}.way{grid-template-columns:1fr auto;grid-template-areas:"n p" "bar bar" "t t" "d d";gap:8px 12px}.way-t{text-align:left}}
 /* ===== PAINS ===== */
 .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .pain{position:relative;min-height:268px;border-radius:var(--r);perspective:1200px;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left}
@@ -379,6 +388,52 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 @media (max-width:1000px){.mech{grid-template-columns:1fr 1fr}.mstep::after{display:none}}
 @media (max-width:560px){.mech{grid-template-columns:1fr;gap:8px}.mstep{grid-template-columns:38px 1fr;column-gap:14px;row-gap:4px;padding:16px}.mstep .n{grid-row:span 2}}
 
+/* path */
+.path{list-style:none;margin:0;padding:0;display:grid;gap:14px;position:relative}
+.path::before{content:"";position:absolute;left:27px;top:30px;bottom:30px;width:2px;background:repeating-linear-gradient(180deg,var(--electric) 0 6px,transparent 6px 12px);opacity:.5}
+.pstep{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,40px);align-items:center;padding:clamp(18px,2.4vw,26px) clamp(18px,2.4vw,28px) clamp(18px,2.4vw,26px) 76px;border-radius:var(--r);background:var(--white);border:1px solid var(--line-light)}
+.pn{position:absolute;left:10px;top:22px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font:600 13px var(--f-sub);color:#fff;background:linear-gradient(135deg,#1F4985,#287FF2);box-shadow:0 0 0 6px var(--paper)}
+.pstep:last-child .pn{background:var(--route)}
+.ptxt{display:grid;gap:8px;min-width:0}
+.pvis{min-width:0}
+.path{min-width:0}
+.ptxt h3{font-size:clamp(17px,1.6vw,21px)}
+.ptxt p{color:var(--ink-2);font-size:15.5px}
+.pcard{border-radius:16px;padding:16px 18px;background:var(--paper);border:1px solid var(--line-light);display:grid;gap:12px}
+.pc-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font:600 13.5px/1.3 var(--f-sub)}
+.pill{font:600 11.5px/1 var(--f-body);padding:7px 10px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:rgba(31,169,113,.14);color:#12865A}
+.mono{font:500 13px var(--f-mono);color:var(--electric)}
+.checks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.checks li{display:flex;gap:8px;align-items:center;font-size:13.5px;font-weight:600}
+.checks li::before{content:"✓";flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;color:#fff;background:#1FA971}
+.idcard{background:linear-gradient(150deg,#FDFDFB,#F1EFE8);border-color:#E2DCCB}
+.id-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:600 10.5px/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A6E55}
+.id-body{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:center}
+.id-ph{width:54px;height:68px;border-radius:8px;background:linear-gradient(180deg,#D5D9DF,#B9BFC7)}
+.id-body small{display:block;font:600 10px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:#8B8068;margin-top:4px}
+.id-body b{display:block;font:600 14.5px/1.3 var(--f-sub);color:var(--ink);overflow-wrap:anywhere}
+.id-foot{display:flex;gap:8px;flex-wrap:wrap}.id-foot span{font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;background:rgba(31,73,133,.08);color:var(--cobalt)}
+.flowline{display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:10px}
+.fnode{padding:12px 14px;border-radius:12px;background:var(--paper);border:1px solid var(--line-light);font:600 13.5px/1.25 var(--f-sub)}
+.fnode.main{background:var(--midnight);color:#fff;border-color:transparent}
+:root[data-skin="light"] .fnode.main{background:#122338}
+.flowline i{width:34px;height:2px;background:repeating-linear-gradient(90deg,var(--electric) 0 5px,transparent 5px 9px);background-size:18px 2px;animation:flow 1s linear infinite}
+.ccodes{display:flex;flex-wrap:wrap;gap:6px}
+.ccodes span{font:500 12px/1 var(--f-mono);padding:7px 8px;border-radius:7px;border:1px dashed var(--steel);color:#8C98AA}
+.ccodes span.on{border:1px solid var(--electric);color:var(--electric);background:rgba(40,127,242,.08)}
+.deliver{grid-template-columns:auto 1fr auto;align-items:center}
+.deliver small{display:block;font-size:12px;color:var(--ink-2)}
+.deliver b{font:600 15px/1.3 var(--f-sub)}
+.pin{width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--route);position:relative}
+.pin::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#fff}
+.reqs{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}
+.req{border-radius:16px;padding:18px;background:linear-gradient(160deg,rgba(40,127,242,.08),rgba(40,127,242,.02));border:1px solid rgba(40,127,242,.18);display:grid;gap:6px;align-content:start}
+.req svg{width:30px;height:30px;color:var(--electric);margin-bottom:4px}
+.req b{font:600 14.5px/1.3 var(--f-sub)}
+.req span{font-size:13px;color:var(--ink-2);line-height:1.4}
+@media (max-width:900px){.pstep{grid-template-columns:minmax(0,1fr)}.reqs{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.pstep{padding:18px 16px 18px 58px}.pn{left:8px;top:18px;width:32px;height:32px}.path::before{left:23px}.checks{grid-template-columns:1fr}.reqs{grid-template-columns:1fr}.flowline{flex-direction:column;align-items:stretch}.flowline i{width:2px;height:18px;margin-left:20px;background:repeating-linear-gradient(180deg,var(--electric) 0 5px,transparent 5px 9px)}}
 /* ===== BENTO ===== */
 .bento{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(180px,auto);gap:14px}
 .tile{border-radius:var(--r);padding:24px;background:var(--white);border:1px solid var(--line-light);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;min-width:0}
@@ -411,6 +466,11 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .st.soon{background:rgba(226,163,59,.16);color:#F0C27A}
 .st.closed{background:rgba(169,183,203,.14);color:var(--on-dark-2)}
 .ctry-card h3{font-size:22px}
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp2 div{border-radius:12px;padding:10px 12px;background:var(--panel);border:1px solid var(--line-dark);display:grid;gap:4px}
+.cmp2 small{font:600 10.5px/1.2 var(--f-sub);letter-spacing:.08em;text-transform:uppercase;color:var(--on-dark-2)}
+.cmp2 s{font:600 17px/1.2 var(--f-sub);color:var(--on-dark-2)}
+.cmp2 b{font:600 22px/1.1 var(--f-sub);color:var(--hi)}
 .ctry-card .delta{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .ctry-card .delta s{color:var(--on-dark-2);font-size:15px}
 .ctry-card .delta b{font:600 32px/1 var(--f-sub);color:var(--hi)}
@@ -433,7 +493,7 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 
 /* ===== TRACK + CABINET ===== */
 .track{background:linear-gradient(180deg,#1C3449,#122338)}
-.trk{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(24px,4vw,48px);align-items:start}
+.trk{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);align-items:start}
 .trk-c{display:grid;gap:20px;min-width:0}
 .t-day{font:600 clamp(60px,8vw,100px)/1 var(--f-sub);color:var(--electric-2)}
 .t-day small{font:500 16px var(--f-body);color:var(--on-dark-2);margin-left:12px}
@@ -443,6 +503,25 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .t-marks button:focus-visible{outline:2px solid var(--electric-2);outline-offset:3px}
 .t-stage{font:600 21px/1.25 var(--f-sub)}
 .t-desc{color:var(--on-dark-2);max-width:48ch}
+/* Telegram mini-app phone */
+.phone-wrap{display:grid;justify-items:center;gap:12px}
+.phone{width:min(340px,100%);border-radius:44px;padding:12px;background:#0A0F18;box-shadow:0 0 0 2px #2A3446,0 50px 90px -30px rgba(0,0,0,.75);position:relative}
+.ph-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 18px 8px;font:600 12px var(--f-body);color:#fff}
+.ph-island{width:96px;height:26px;border-radius:20px;background:#000}
+.tg-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:10px 14px;background:#17212B;border-radius:28px 28px 0 0;color:#fff}
+.tg-x{font-size:13px;color:#6AB2F2}
+.tg-t{text-align:center;line-height:1.2}.tg-t b{display:block;font:600 14px var(--f-body)}.tg-t small{font-size:11.5px;color:#7F91A4}
+.ma{background:#0E1621;border-radius:0 0 30px 30px;padding:12px;display:grid;gap:10px;min-height:470px;align-content:start}
+.ma-card,.ma-box{border-radius:14px;padding:12px;background:#17212B;display:grid;gap:8px;min-width:0}
+.ma-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ma-top b{display:block;font:600 14px var(--f-sub);color:#fff}.ma-top small{font-size:11.5px;color:#7F91A4}
+.ma-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.ma-box small{font:600 10px/1 var(--f-sub);letter-spacing:.1em;text-transform:uppercase;color:#7F91A4}
+.ma-btn{display:block;text-align:center;padding:12px;border-radius:12px;background:#2AABEE;color:#fff;font:600 14px var(--f-body)}
+.phone .lk-steps{grid-template-columns:repeat(5,1fr)}
+.phone .lk-steps div{font-size:9.5px}
+.phone .lk-track{font-size:13px}
+.phone .lk-msg p{background:#2B5278;max-width:100%}
 /* cabinet mockup */
 .lk{border-radius:18px;background:#0B1626;border:1px solid rgba(98,164,255,.25);box-shadow:0 40px 80px -30px rgba(0,0,0,.7);overflow:hidden;min-width:0}
 .lk-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(98,164,255,.14);background:#0E1B2E}
@@ -494,7 +573,6 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .switch input:checked{background:var(--electric)}
 .switch input:checked::after{transform:translateX(20px)}
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
-.plans.diy{grid-template-columns:repeat(4,1fr)}
 .bp{position:relative;border-radius:var(--r);background:var(--white);border:1px solid var(--line-light);display:flex;flex-direction:column;min-width:0;filter:drop-shadow(0 20px 30px rgba(18,35,56,.06))}
 .bp-main{padding:26px 24px 20px;display:flex;flex-direction:column;gap:16px;flex:1}
 .bp-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font:600 11px/1 var(--f-mono);letter-spacing:.14em;color:var(--ink-2);text-transform:uppercase}
@@ -527,12 +605,16 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .bp.best .bp-docs{background:rgba(255,255,255,.06);color:#D5DFEC}
 .bp.best .bp-docs b{color:#fff}
 .bp.best .bp-stub{border-color:rgba(169,183,203,.3)}
-.bp.self{background:transparent;border-style:dashed;filter:none}
+.bp.self{background:transparent;border-style:dashed;filter:none;margin-bottom:22px}
+.bp.self .bp-main{display:grid;grid-template-columns:.8fr 1.1fr 1fr;gap:16px 28px;align-items:start}
+.self-a{display:grid;gap:14px}
+.bp.self .bp-stub .bp-meta{max-width:520px}
+@media (max-width:900px){.bp.self .bp-main{grid-template-columns:1fr}}
 .bp.self .bp-docs{background:rgba(229,56,59,.05)}
 .badge{position:absolute;top:-13px;left:24px;z-index:2;font:600 11px/1 var(--f-sub);letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;border-radius:999px;background:var(--electric);color:#fff}
 .pnote{margin-top:18px;font-size:14px;color:var(--ink-2)}
-@media (max-width:1100px){.plans,.plans.diy{grid-template-columns:1fr 1fr}}
-@media (max-width:680px){.plans,.plans.diy{grid-template-columns:1fr}.bp.best{order:-1}}
+@media (max-width:1100px){.plans{grid-template-columns:1fr 1fr}}
+@media (max-width:680px){.plans{grid-template-columns:1fr}.bp.best{order:-1}}
 
 /* ===== TRUST ===== */
 .trust-top{display:grid;grid-template-columns:1fr 1.1fr;gap:16px;margin-bottom:16px}
@@ -558,6 +640,16 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .dl dt{font:600 11px/1.6 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A6E55}
 .dl dd{margin:0;font-weight:600}
 .dl a{color:var(--electric)}
+.clause{align-self:center;border-radius:16px;padding:22px;background:#fff;border:1px solid #E2DCCB;box-shadow:0 20px 40px -30px rgba(18,35,56,.4);display:grid;gap:12px;position:relative}
+.clause::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:0 4px 4px 0;background:var(--electric)}
+.clause-h{font:600 11px/1.2 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:#7A6E55}
+.clause-t{font:500 16.5px/1.5 var(--f-serif);font-style:italic;color:#1E2A3B}
+.clause-t b{font-style:normal;font-family:var(--f-sub);font-weight:600}
+.clause-s{font-size:14px;color:#5A6474}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:12px;border-top:1px dashed #D5CDB7}
+.sign small{display:block;font:600 10.5px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A6E55;margin-bottom:22px}
+.sign b{display:block;padding-top:6px;border-top:1px solid #1E2A3B;font:600 13px var(--f-sub)}
+.clause-a{font-weight:700;color:var(--electric);text-decoration:none;font-size:14.5px}
 .seal{justify-self:center;align-self:center;width:210px;height:210px;border-radius:50%;border:4px double rgba(31,73,133,.55);display:grid;place-items:center;color:rgba(31,73,133,.75);transform:rotate(-12deg);position:relative}
 .seal::before{content:"";position:absolute;inset:14px;border-radius:50%;border:1.5px solid rgba(31,73,133,.45)}
 .seal svg.ring{position:absolute;inset:0;width:100%;height:100%}
@@ -624,8 +716,8 @@ details p{padding:0 0 20px;color:var(--ink-2);max-width:62ch;font-size:15.5px}
 .modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px;background:rgba(9,18,30,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .modal .quiz{width:min(560px,100%);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;animation:mup .35s cubic-bezier(.2,.8,.2,1)}
 @keyframes mup{from{transform:translateY(30px) scale(.97);opacity:0}to{transform:none;opacity:1}}
-.x{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--pearl);color:var(--ink);font-size:20px;line-height:1}
-.x:focus-visible{outline:2px solid var(--electric)}
+.qx{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--pearl);color:var(--ink);font-size:20px;line-height:1}
+.qx:focus-visible{outline:2px solid var(--electric)}
 
 /* ===== FINAL ===== */
 .final{background:var(--midnight);overflow:hidden}
@@ -698,16 +790,17 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
   <canvas class="bgmap" id="bgmap" aria-hidden="true"></canvas>
   <div class="wrap">
     <p class="alert"><i aria-hidden="true"></i>С 15 сентября безвиз в Таиланде — 30 дней, продление только раз в год</p>
-    <div class="board" id="board-wrap">
-      <div class="board-top"><span>✈ Вылет · Departures</span><span class="hide-m">Рейс <b>APEC-90</b></span><span>Карта АТЭС · 5 лет</span><span class="live"><i></i>Посадка открыта</span></div>
-      <h1><span class="sr">Карта АТЭС: 90 дней в Таиланде без визы и визаранов</span><span class="rows" id="board" aria-hidden="true"></span></h1>
-      <div class="board-bot"><span>Пункт назначения: <b>Таиланд · Пхукет · Бангкок</b></span><span class="hide-m">Выход: <b>МИД РФ</b></span><span>Время в пути: <b>60–80 дней</b></span></div>
-    </div>
+    <p class="kick">Карта АТЭС (APEC) на 5 лет</p>
+    <h1 class="kin" id="kin"><span class="sr">Карта АТЭС: 90 дней в Таиланде без визы — за 4 750 бат в год</span>
+      <span class="kin-num" aria-hidden="true"><span class="odo"><span class="odo-col" id="odo"><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span><span>0</span><span class="was">вместо <s>30</s> по безвизу</span></span>
+      <span class="kin-t" aria-hidden="true"><span class="w"><span>дней</span></span> <span class="w"><span>в&nbsp;Таиланде</span></span></span>
+      <span class="kin-b" aria-hidden="true"><span class="w"><span>без&nbsp;визы</span></span> <span class="w"><span>—&nbsp;за&nbsp;<b>4&nbsp;750&nbsp;฿</b></span></span> <span class="w"><span>в&nbsp;год</span></span></span>
+    </h1>
     <div class="hero-grid">
       <div class="hero-text">
-        <p class="hero-sub">Безвиз теперь 30 дней. Карта АТЭС даёт <em>90 дней за каждый въезд</em> — 5 лет подряд.</p>
+        <p class="hero-sub">Безвиз теперь 30 дней. Карта АТЭС даёт <em>90 дней за каждый въезд</em> — дешевле, чем бордерраны.</p>
         <div class="price-line">
-          <span class="price-tag"><b class="num">≈ 4 750 ฿</b><span>в год — дешевле бордерранов</span></span>
+          <span class="price-tag"><b class="num">5 лет</b><span>без продлений и переоформления</span></span>
           <span class="price-tag"><b class="num">4 выезда</b><span>в год вместо 11</span></span>
         </div>
         <p class="lead">Оформляем через МИД РФ дистанционно: <b>без ИП, бизнеса и поездки в Россию.</b> Временная карта — через 60–80 дней. Откажет МИД — вернём 100% по договору.</p>
@@ -776,7 +869,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
       </div>
     </div>
     <div class="stats fd-none">
-      <div><b class="num">2000+</b><span>карт АТЭС оформили клиенты</span></div>
+      <div><b class="num">200+</b><span>карт АТЭС оформили клиенты</span></div>
       <div><b class="num">3 года</b><span>безупречной работы</span></div>
       <div><b class="num">90 дней</b><span>в Таиланде за каждый въезд</span></div>
       <div><b class="num">60–80</b><span>дней до временной карты</span></div>
@@ -824,17 +917,178 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
   <span class="stamp blue rv" style="right:6%;top:70px;--rot:-10deg"><small>APEC · Entry</small><b>90 DAYS</b><small>Multiple</small></span>
   <div class="wrap">
     <div class="sec-head rv">
-      <p class="eyebrow">Математика зимовки</p>
-      <h2>Математика зимовки в Тае</h2>
-      <p class="lead">Сравните способы прожить год в Таиланде, а ниже посчитайте свой сезон: сколько выездов, сколько денег и за сколько бордерранов окупится карта. Если по вашим цифрам карта невыгодна — калькулятор так и скажет.</p>
+      <p class="eyebrow">Без эмоций — одни цифры</p>
+      <h2>Математика зимовки в Таиланде</h2>
+      <p class="lead">Четыре способа легально жить в Таиланде, приведённые к одному знаменателю: сколько стоит один год. Многолетние документы разделены на срок их действия.</p>
     </div>
     <div class="ways rv" id="ways">
-      <p class="ways-h"><b>Год в Тае: четыре способа.</b> Без эмоций — одни цифры.</p>
-      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:47%"></i></div><div class="way-p num">≈ 42 000 ฿</div><div class="way-d">~12 выездов в год по ≈ 3 500 ฿ — минивэн каждые 30 дней</div></div>
-      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:50%"></i></div><div class="way-p num">40–45 тыс. ฿</div><div class="way-d">Нужно ходить на учёбу, путешествовать неудобно</div></div>
-      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num">90–95 тыс. ฿</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
-      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:6%"></i></div><div class="way-p num">от 4 750 ฿</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран</div></div>
-      <p class="fine">Цены — примерные по рынку на сентябрь 2026, из нашего разбора «Математика зимовки». Правила чужих виз часто меняются: по ним мы не консультируем. Цена карты — «Стандарт», разделённый на 5 лет.</p>
+      <div class="way-head"><span>Способ</span><span>Стоимость за год</span><span>Цена документа</span></div>
+      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:93%"></i></div><div class="way-p num">≈ 42 000 ฿</div><div class="way-t num">12 выездов × ≈ 3 500 ฿</div><div class="way-d">Выезд каждые 30 дней, продление только раз в году</div></div>
+      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num">40–45 тыс. ฿</div><div class="way-t num">40–45 тыс. ฿ на 1 год</div><div class="way-d">Нужно посещать учёбу, путешествовать неудобно</div></div>
+      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:42%"></i></div><div class="way-p num">≈ 18–19 тыс. ฿</div><div class="way-t num">90–95 тыс. ฿ на 5 лет</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
+      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:16%"></i></div><div class="way-p num">≈ 4 750–7 100 ฿</div><div class="way-t num">60–90 тыс. ₽ на 5 лет</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран по той же карте</div></div>
+      <p class="fine">Цены других вариантов — примерные по рынку на сентябрь 2026. Правила чужих виз часто меняются, по ним мы не консультируем. Карта — тарифы «Стандарт» и «Приоритет», курс 1 ฿ = 2,52 ₽.</p>
+    </div>
+    <p class="math-cta rv"><a href="#calc">Посчитать свой сезон в калькуляторе ↓</a></p>
+  </div>
+</section>
+
+<!-- 5. SOLUTION: how it works legally -->
+<section id="how" data-route="r">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Законный порядок</p>
+      <h2>Как вы получаете карту без своего бизнеса</h2>
+      <p class="lead">Подать заявление на карту в МИД РФ может только компания с реальной внешнеэкономической деятельностью. Поэтому мы оформляем вас <b>внештатным внешнеэкономическим советником</b> такой компании — и подаём документы по официальной процедуре. Это не обходная схема.</p>
+    </div>
+    <ol class="path">
+      <li class="pstep rv">
+        <div class="ptxt"><span class="pn">01</span><h3>Экспресс-аудит паспорта</h3><p>Бесплатно, до 15 минут в рабочее время. Пришлите фото загранпаспорта в Telegram — специалист проверит его на стоп-факторы МИД до любой оплаты.</p></div>
+        <div class="pvis"><div class="pcard"><div class="pc-h"><span>Проверка загранпаспорта</span><span class="pill ok">Паспорт подходит</span></div>
+          <ul class="checks"><li>Гражданство РФ</li><li>Срок действия паспорта</li><li>Стоп-факторы МИД</li><li>Фото и машиночитаемая строка</li></ul></div></div>
+      </li>
+      <li class="pstep rv">
+        <div class="ptxt"><span class="pn">02</span><h3>Вы — внештатный внешнеэкономический советник</h3><p>Компания с реальной ВЭД, аккредитованная для подачи в МИД РФ, включает вас в пул своих советников. Статус формальный: работать на компанию, сдавать отчёты и вести бухгалтерию не нужно.</p></div>
+        <div class="pvis"><div class="pcard idcard"><div class="id-top"><span>ВЭД-компания</span><span>аккредитована для подачи в МИД РФ</span></div>
+          <div class="id-body"><span class="id-ph" aria-hidden="true"></span><div><small>Должность</small><b>Внештатный внешнеэкономический советник</b><small>Сотрудник</small><b>Иванов Иван</b></div></div>
+          <div class="id-foot"><span>Без обязательств</span><span>Без отчётности</span></div></div></div>
+      </li>
+      <li class="pstep rv">
+        <div class="ptxt"><span class="pn">03</span><h3>Подача в МИД через аккредитованный канал</h3><p>Заявление в МИД РФ принимают только через ТПП РФ, РСПП или «Опору России». Мы готовим досье и включаем его в ближайший реестр — подача каждую пятницу.</p></div>
+        <div class="pvis"><div class="flowline"><span class="fnode">ВЭД-компания</span><i></i><span class="fnode">ТПП РФ · РСПП · «Опора»</span><i></i><span class="fnode main">МИД РФ</span></div></div>
+      </li>
+      <li class="pstep rv">
+        <div class="ptxt"><span class="pn">04</span><h3>Проверка странами APEC и трек-номер</h3><p>МИД направляет запросы в консульства. Примерно через 2 месяца приходит трек-номер — вы проверяете его сами в официальном кабинете APEC. К этому моменту обычно одобрены 5–10 стран, включая Таиланд.</p></div>
+        <div class="pvis"><div class="pcard"><div class="pc-h"><span>Трек-номер APEC</span><span class="mono">RU-ABTC-•••-2026</span></div><div class="ccodes"><span class="on">THA</span><span class="on">CHN</span><span class="on">KOR</span><span class="on">MYS</span><span class="on">SGP</span><span class="on">VNM</span><span>TWN</span><span>MEX</span><span>PER</span><span>CHL</span></div></div></div>
+      </li>
+      <li class="pstep rv">
+        <div class="ptxt"><span class="pn">05</span><h3>Карта у вас — в любой стране</h3><p>Временная карта — через 60–80 дней, постоянная — по мере одобрений. Доставка по России и в Таиланд бесплатная, в другие страны — DHL.</p></div>
+        <div class="pvis"><div class="pcard deliver"><span class="pin" aria-hidden="true"></span><div><small>Доставка</small><b>Пхукет, Таиланд</b><small>Курьер · бесплатно</small></div><span class="pill ok">Карта выпущена</span></div></div>
+      </li>
+    </ol>
+    <div class="reqs">
+      <div class="req rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg><b>Гражданство РФ</b><span>Подаём через МИД России, поэтому только гражданам РФ</span></div>
+      <div class="req rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 11 12 4l9 7v9H3z"/><path d="M9 20v-6h6v6"/></svg><b>Временная регистрация подходит</b><span>Постоянная прописка не нужна</span></div>
+      <div class="req rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/><path d="m3 3 18 18"/></svg><b>Без бухгалтерии и отчётов</b><span>Статус советника формальный, обязательств нет</span></div>
+      <div class="req rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 20c0-2.6 1.5-4.8 4-5.3"/></svg><b>Своя карта на каждого взрослого</b><span>Детям карта не оформляется</span></div>
+      <div class="req rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><b>Ехать в Россию не нужно</b><span>Всё онлайн, доставка в любую страну</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. FEARS from the sales book & dialogs -->
+<section id="pains" class="pearl" data-route="l">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Что останавливает</p>
+      <h2>Шесть сомнений, которые мы слышим каждый день</h2>
+      <p class="lead">Собрали из переписок и звонков с клиентами. Наведите или нажмите на карточку — на обороте ответ, который можно проверить.</p>
+    </div>
+    <div class="pains" id="pain-grid"><!--PAINS--></div>
+  </div>
+</section>
+
+<!-- 6. PRODUCT: what the card gives (bento) -->
+<section data-route="r">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Что даёт карта</p>
+      <h2>Один документ на пять лет жизни в Азии</h2>
+    </div>
+    <div class="bento">
+      <div class="tile photo rv"><video class="vid" data-src="video/lane.mp4" poster="img/lane.webp" muted loop playsinline preload="none" aria-hidden="true"></video><img src="img/lane.webp" alt="Пассажир проходит выделенный коридор паспортного контроля без очереди" loading="lazy" width="1600" height="914"><div class="cap"><p class="eyebrow" style="color:#62A4FF">APEC Lane · Fast Track</p><h3 style="font-size:clamp(20px,2.2vw,26px)">Минуты вместо часа в общей очереди</h3><p>Отдельный паспортный контроль в аэропортах стран-участниц, включая Пхукет. Карта работает и на наземных переходах.</p></div></div>
+      <div class="tile navy rv"><span class="big">90</span><h3>дней за въезд</h3><p>В Таиланде — втрое дольше безвиза. Выезд раз в квартал.</p></div>
+      <div class="tile rv"><span class="big">5 лет</span><h3>Многократно</h3><p>Повторные въезды не ограничены.</p></div>
+      <div class="tile rv"><span class="big">Онлайн</span><h3>Из любой точки мира</h3><p>Не нужно быть в России: подача онлайн, карту доставим в любую страну.</p></div>
+      <div class="tile rv"><span class="big">18</span><h3>Стран в карте</h3><p>Китай, Корея, Сингапур, Вьетнам и другие — по той же карте.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. MAP: all 18 + summit -->
+<section id="map" class="dark" data-route="l">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Ещё 17 стран по той же карте</p>
+      <h2>Куда ещё можно ездить по карте АТЭС</h2>
+      <p class="lead">Кроме Таиланда карта действует ещё в 17 странах Азиатско-Тихоокеанского региона. Сейчас для граждан РФ работают 16 из 18. Выберите страну — увидите, сколько дней можно находиться там без карты и сколько с ней.</p>
+    </div>
+    <div class="map-wrap rv">
+      <div class="map-box">
+        <canvas id="mapc" role="img" aria-label="Карта Азиатско-Тихоокеанского региона с 18 странами карты АТЭС"></canvas>
+        <div class="map-legend"><span><i style="background:#62A4FF"></i>работает</span><span><i style="background:#F0C27A"></i>скоро до 90 дней</span><span><i style="background:rgba(216,221,228,.5)"></i>закрыто для РФ сейчас</span><span><i style="background:#E5383B"></i>маршрут</span></div>
+      </div>
+      <div class="map-side">
+        <div class="ctry-card" id="ccard" aria-live="polite"></div>
+        <div class="chips" role="group" aria-label="Фильтр стран" id="cf">
+          <button type="button" data-f="all" aria-pressed="true">Все 18</button>
+          <button type="button" data-f="open" aria-pressed="false">Работают</button>
+          <button type="button" data-f="soon" aria-pressed="false">Скоро 90</button>
+          <button type="button" data-f="closed" aria-pressed="false">Закрыты</button>
+        </div>
+        <div class="clist" id="clist" role="group" aria-label="Страны"></div>
+      </div>
+    </div>
+    <div class="summit rv">
+      <div class="summit-date"><b>23–24</b>августа<br>2026</div>
+      <div><h3>Встреча APEC Business Mobility Group в Даляне</h3><p>Страны APEC объявили, что увеличат срок пребывания для держателей карты до 90 дней. Дата вступления пока не назначена — сообщим клиентам сразу.</p></div>
+      <div class="codes"><span>CHN</span><span>SGP</span><span>HKG</span><span>PHL</span><span>IDN</span></div>
+    </div>
+    <p class="map-note rv">Япония и Австралия входят в APEC, но сейчас не гарантируют ответ по гражданам РФ — эти страны в карте закрыты, мы их не обещаем. Новая Зеландия одобряет дольше остальных. Данные сверены 27.09.2026.</p>
+  </div>
+</section>
+
+<!-- 8. PROCESS: tracker + personal cabinet + registry -->
+<section class="dark track" id="track" data-route="r">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Прозрачный путь</p>
+      <h2>Весь путь — в вашем телефоне</h2>
+      <p class="lead">Двигайте ползунок: так обычно идёт «Приоритет». Статус, трек-номер, одобренные страны и чат со специалистом — в мини-приложении Telegram.</p>
+    </div>
+    <div class="trk rv">
+      <div class="trk-c">
+        <div class="t-day num"><span id="t-day">72</span><small>день после оплаты</small></div>
+        <input type="range" id="t-range" min="0" max="180" value="72" aria-label="День после оплаты">
+        <div class="t-marks" id="t-marks">
+          <button type="button" data-d="0">0 · подача</button>
+          <button type="button" data-d="55">~2 мес · трек</button>
+          <button type="button" data-d="72">60–80 · карта</button>
+          <button type="button" data-d="180">~6 мес</button>
+        </div>
+        <p class="t-stage" id="t-stage"></p>
+        <p class="t-desc" id="t-desc"></p>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone" aria-label="Макет мини-приложения APEC Center в Telegram">
+          <div class="ph-bar"><span>9:41</span><span class="ph-island"></span><span>5G ▮▮▮</span></div>
+          <div class="tg-head"><span class="tg-x">Закрыть</span><div class="tg-t"><b>APEC Center</b><small>мини-приложение</small></div><span class="tg-x">⋯</span></div>
+          <div class="ma">
+            <div class="ma-card"><div class="ma-top"><div><b>Заявка A-1042</b><small>«Приоритет» · Иван И.</small></div><span class="lk-pill" id="lk-pill">Временная карта</span></div>
+              <div class="lk-steps" id="lk-steps"><div>Оплата</div><div>Подача в МИД</div><div>Трек-номер</div><div>Временная карта</div><div>Постоянная</div></div></div>
+            <div class="ma-row"><div class="ma-box"><small>Трек-номер APEC</small><span class="lk-track" id="lk-track">RU-ABTC-•••-2026</span></div><div class="ma-box"><small>Одобрили</small><span class="lk-track" id="lk-count">10 / 18</span></div></div>
+            <div class="ma-box"><small>Страны</small><div class="lk-cc" id="lk-cc"></div></div>
+            <div class="lk-msg" id="lk-msg"></div>
+            <span class="ma-btn">Написать специалисту</span>
+          </div>
+        </div>
+        <p class="lk-note">Макет мини-приложения, данные условные. Пока оно в разработке, те же статусы приходят в чат с ботом.</p>
+      </div>
+    </div>
+    <div class="reg rv">
+      <p><b>Ближайший реестр в МИД</b> закрывается в четверг в 15:00 по Москве, подача — в пятницу. Чтобы попасть в него, документы и оплата нужны до этого времени.</p>
+      <div class="cd num"><span><b id="cd-d">0</b><small>дн</small></span><span><b id="cd-h">0</b><small>ч</small></span><span><b id="cd-m">0</b><small>мин</small></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8b. PERSONAL ROI: season calculator (moved before the offer) -->
+<section id="calc" class="pearl" data-route="l">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <p class="eyebrow">Калькулятор</p>
+      <h2>Посчитайте свой сезон в Таиланде</h2>
+      <p class="lead">Сколько раз придётся выезжать, сколько это стоит и за сколько бордерранов окупится карта. Если по вашим цифрам карта невыгодна — калькулятор так и скажет.</p>
     </div>
     <div class="wm">
       <div class="wm-in rv">
@@ -889,151 +1143,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
   </div>
 </section>
 
-<!-- 4. FEARS from the sales book & dialogs -->
-<section id="pains" data-route="r">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <p class="eyebrow">Что останавливает</p>
-      <h2>Шесть сомнений, которые мы слышим каждый день</h2>
-      <p class="lead">Собрали из переписок и звонков с клиентами. Наведите или нажмите на карточку — на обороте ответ, который можно проверить.</p>
-    </div>
-    <div class="pains" id="pain-grid"><!--PAINS--></div>
-  </div>
-</section>
-
-<!-- 5. SOLUTION: how it works legally -->
-<section id="how" class="pearl" data-route="l">
-  <span class="stamp blue round rv" style="right:5%;top:60px;--rot:14deg"><small>МИД РФ · ТПП</small><b>OK</b><small>Подача по процедуре</small></span>
-  <div class="wrap">
-    <div class="sec-head rv">
-      <p class="eyebrow">Законный порядок</p>
-      <h2>Как вы получаете карту без своего бизнеса</h2>
-      <p class="lead">Самостоятельные заявки чаще всего отклоняют из-за отсутствия реального оборота ВЭД. Мы снимаем этот стоп-фактор: вас включают в пул внешнеэкономических советников аккредитованной компании, и заявку подаёт компания с настоящим оборотом.</p>
-    </div>
-    <div class="mech">
-      <div class="mstep rv"><span class="n">1</span><h3>Экспресс-аудит</h3><p>Проверяем загранпаспорт на стоп-факторы МИД — бесплатно, до 15 минут в рабочее время.</p></div>
-      <div class="mstep rv"><span class="n">2</span><h3>Пул советников ВЭД</h3><p>Вы — международный представитель аккредитованной компании. Статус формальный, без обязательств.</p></div>
-      <div class="mstep rv"><span class="n">3</span><h3>ТПП РФ, РСПП или «Опора»</h3><p>Подать заявление в МИД можно только через эти организации — так и подаём.</p></div>
-      <div class="mstep rv"><span class="n">4</span><h3>МИД и консульства</h3><p>Проверка странами APEC, официальный трек-номер в кабинете APEC.</p></div>
-      <div class="mstep rv"><span class="n">✓</span><h3>Карта на ваше имя</h3><p>Временная — через 60–80 дней, доставка в Таиланд бесплатно.</p></div>
-    </div>
-    <div class="mfoot rv">
-      <span class="tag">Только гражданам РФ</span>
-      <span class="tag">Подходит временная регистрация</span>
-      <span class="tag">Без бухгалтерии и отчётов</span>
-      <span class="tag">Своя карта на каждого взрослого</span>
-      <span class="tag">Ехать в Россию не нужно</span>
-    </div>
-  </div>
-</section>
-
-<!-- 6. PRODUCT: what the card gives (bento) -->
-<section data-route="r">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <p class="eyebrow">Что даёт карта</p>
-      <h2>Один документ на пять лет жизни в Азии</h2>
-    </div>
-    <div class="bento">
-      <div class="tile photo rv"><video class="vid" data-src="video/lane.mp4" poster="img/lane.webp" muted loop playsinline preload="none" aria-hidden="true"></video><img src="img/lane.webp" alt="Пассажир проходит выделенный коридор паспортного контроля без очереди" loading="lazy" width="1600" height="914"><div class="cap"><p class="eyebrow" style="color:#62A4FF">APEC Lane · Fast Track</p><h3 style="font-size:clamp(20px,2.2vw,26px)">Минуты вместо часа в общей очереди</h3><p>Отдельный паспортный контроль в аэропортах стран-участниц, включая Пхукет. Карта работает и на наземных переходах.</p></div></div>
-      <div class="tile navy rv"><span class="big">90</span><h3>дней за въезд</h3><p>В Таиланде — втрое дольше безвиза. Выезд раз в квартал.</p></div>
-      <div class="tile rv"><span class="big">5 лет</span><h3>Многократно</h3><p>Повторные въезды не ограничены.</p></div>
-      <div class="tile rv"><span class="big">0</span><h3>Анкет и консульств</h3><p>На границе — карта и загранпаспорт.</p></div>
-      <div class="tile rv"><span class="big">18</span><h3>Стран в карте</h3><p>Китай, Корея, Сингапур, Вьетнам и другие — по той же карте.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. MAP: all 18 + summit -->
-<section id="map" class="dark" data-route="l">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <p class="eyebrow">Бонус к Таиланду</p>
-      <h2>18 стран в карте: было без неё → стало с ней</h2>
-      <p class="lead">Карта даёт доступ ко всей Азиатско-Тихоокеанской зоне APEC. 16 стран уже работают для граждан РФ, ещё 2 — закрыты сейчас, но остаются в карте. Нажмите на код страны.</p>
-    </div>
-    <div class="map-wrap rv">
-      <div class="map-box">
-        <canvas id="mapc" role="img" aria-label="Карта Азиатско-Тихоокеанского региона с 18 странами карты АТЭС"></canvas>
-        <div class="map-legend"><span><i style="background:#62A4FF"></i>работает</span><span><i style="background:#F0C27A"></i>скоро до 90 дней</span><span><i style="background:rgba(216,221,228,.5)"></i>закрыто для РФ сейчас</span><span><i style="background:#E5383B"></i>маршрут</span></div>
-      </div>
-      <div class="map-side">
-        <div class="ctry-card" id="ccard" aria-live="polite"></div>
-        <div class="chips" role="group" aria-label="Фильтр стран" id="cf">
-          <button type="button" data-f="all" aria-pressed="true">Все 18</button>
-          <button type="button" data-f="open" aria-pressed="false">Работают</button>
-          <button type="button" data-f="soon" aria-pressed="false">Скоро 90</button>
-          <button type="button" data-f="closed" aria-pressed="false">Закрыты</button>
-        </div>
-        <div class="clist" id="clist" role="group" aria-label="Страны"></div>
-      </div>
-    </div>
-    <div class="summit rv">
-      <div class="summit-date"><b>23–24</b>августа<br>2026</div>
-      <div><h3>Встреча APEC Business Mobility Group в Даляне</h3><p>Страны APEC объявили, что увеличат срок пребывания для держателей карты до 90 дней. Дата вступления пока не назначена — сообщим клиентам сразу.</p></div>
-      <div class="codes"><span>CHN</span><span>SGP</span><span>HKG</span><span>PHL</span><span>IDN</span></div>
-    </div>
-    <p class="map-note rv">Япония и Австралия входят в APEC, но сейчас не гарантируют ответ по гражданам РФ — эти страны в карте закрыты, мы их не обещаем. Новая Зеландия одобряет дольше остальных. Данные сверены 27.09.2026.</p>
-  </div>
-</section>
-
-<!-- 8. PROCESS: tracker + personal cabinet + registry -->
-<section class="dark track" id="track" data-route="r">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <p class="eyebrow">Прозрачный путь</p>
-      <h2>Весь путь — в вашем личном кабинете</h2>
-      <p class="lead">Двигайте ползунок: так обычно идёт «Приоритет». Статус, трек-номер, одобренные страны и чат со специалистом — в одном окне.</p>
-    </div>
-    <div class="trk rv">
-      <div class="trk-c">
-        <div class="t-day num"><span id="t-day">72</span><small>день после оплаты</small></div>
-        <input type="range" id="t-range" min="0" max="180" value="72" aria-label="День после оплаты">
-        <div class="t-marks" id="t-marks">
-          <button type="button" data-d="0">0 · подача</button>
-          <button type="button" data-d="55">~2 мес · трек</button>
-          <button type="button" data-d="72">60–80 · карта</button>
-          <button type="button" data-d="180">~6 мес</button>
-        </div>
-        <p class="t-stage" id="t-stage"></p>
-        <p class="t-desc" id="t-desc"></p>
-      </div>
-      <div>
-        <div class="lk" aria-label="Макет личного кабинета клиента">
-          <div class="lk-bar"><i></i><i></i><i></i><span>apec.center/cabinet</span></div>
-          <div class="lk-body">
-            <div class="lk-side">
-              <svg class="emb" viewBox="0 0 457 309.6" aria-hidden="true"><use href="#emblem"/></svg>
-              <a class="on" href="#track">Моя заявка</a>
-              <a href="#track">Документы</a>
-              <a href="#track">Страны</a>
-              <a href="#track">Чат <em id="lk-unread">1</em></a>
-              <a href="#track">Договор</a>
-            </div>
-            <div class="lk-main">
-              <div class="lk-top"><div><b>Заявка A-1042 · «Приоритет»</b><small>Иван И. · загранпаспорт ••• 4821</small></div><span class="lk-pill" id="lk-pill">Временная карта</span></div>
-              <div class="lk-steps" id="lk-steps"><div>Оплата</div><div>Подача в МИД</div><div>Трек-номер</div><div>Временная карта</div><div>Постоянная</div></div>
-              <div class="lk-grid">
-                <div class="lk-box"><small>Трек-номер APEC</small><span class="lk-track" id="lk-track">RU-ABTC-•••-2026</span></div>
-                <div class="lk-box"><small>Одобрили въезд</small><span class="lk-track" id="lk-count">10 / 18</span></div>
-              </div>
-              <div class="lk-box"><small>Страны</small><div class="lk-cc" id="lk-cc"></div></div>
-              <div class="lk-msg" id="lk-msg"></div>
-            </div>
-          </div>
-        </div>
-        <p class="lk-note">Макет кабинета, данные условные. Пока кабинет в разработке, те же статусы приходят в Telegram.</p>
-      </div>
-    </div>
-    <div class="reg rv">
-      <p><b>Ближайший реестр в МИД</b> закрывается в четверг в 15:00 по Москве, подача — в пятницу. Чтобы попасть в него, документы и оплата нужны до этого времени.</p>
-      <div class="cd num"><span><b id="cd-d">0</b><small>дн</small></span><span><b id="cd-h">0</b><small>ч</small></span><span><b id="cd-m">0</b><small>мин</small></span></div>
-    </div>
-  </div>
-</section>
-
 <!-- 9. OFFER: tariffs as boarding passes -->
-<section id="pricing" data-route="l">
+<section id="pricing" data-route="r">
   <div class="wrap">
     <div class="sec-head rv">
       <p class="eyebrow">Тарифы 2026</p>
@@ -1043,13 +1154,12 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     <div class="ptop rv">
       <label class="switch"><input type="checkbox" id="diy"> Сравнить с самостоятельным путём</label>
     </div>
-    <div class="plans" id="plans">
-      <article class="bp self" id="plan-self" hidden>
+    <article class="bp self" id="plan-self" hidden>
         <div class="bp-main">
-          <div class="bp-top"><span>Своими силами</span></div>
+          <div class="self-a"><div class="bp-top"><span>Своими силами</span></div>
           <h3>Самостоятельный путь</h3>
           <div class="price num">40–50 т. <small>₽ взносы</small></div>
-          <p class="per">Плюс ваше время. Взносы при отказе не возвращаются</p>
+          <p class="per">Плюс ваше время. Взносы при отказе не возвращаются</p></div>
           <div class="bp-docs"><b>Что придётся собрать</b>Вступление в ТПП РФ, РСПП или «Опору России», подтверждение реального оборота ВЭД за 12 месяцев, таможенные декларации, документы валютного контроля, штатное расписание, международные контракты, анкеты МИД.</div>
           <ul>
             <li class="x"><span>Нужна своя компания с ВЭД — ИП, фрилансеру и IT обычно отказывают</span></li>
@@ -1059,6 +1169,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         </div>
         <div class="bp-stub"><div class="bp-meta"><div><small>В пути</small><b>8–14 мес</b></div><div><small>Платёж</small><b>Взносы</b></div><div><small>Возврат</small><b>Нет</b></div></div></div>
       </article>
+    <div class="plans" id="plans">
       <article class="bp rv">
         <div class="bp-main">
           <div class="bp-top"><span>Класс · Standard</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
@@ -1120,7 +1231,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
 </section>
 
 <!-- 10. PROOF -->
-<section class="dark" id="trust" data-route="r">
+<section class="dark" id="trust" data-route="l">
   <div class="wrap">
     <div class="sec-head rv">
       <p class="eyebrow">Отзывы и гарантии</p>
@@ -1151,9 +1262,12 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
           <div><dt>Сайт</dt><dd>apec.center — других сайтов у нас нет</dd></div>
         </dl>
       </div>
-      <div class="seal" aria-hidden="true">
-        <svg class="ring" viewBox="0 0 210 210"><defs><path id="sealpath" d="M105 105m-80 0a80 80 0 1 1 160 0a80 80 0 1 1-160 0"/></defs><text font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" letter-spacing="4.2" fill="rgba(31,73,133,.8)"><textPath href="#sealpath">APEC CENTER · МОСКВА · ДОГОВОР · ВОЗВРАТ 100% ·</textPath></text></svg>
-        <svg class="emb" viewBox="0 0 457 309.6"><use href="#emblem"/></svg>
+      <div class="clause">
+        <p class="clause-h">Гарантия возврата · договор-оферта</p>
+        <p class="clause-t">Если МИД РФ или Секретариат АТЭС официально откажут в выдаче карты, исполнитель возвращает <b>100% оплаты в течение 5 рабочих дней</b>.</p>
+        <p class="clause-s">Передумали до закрытия реестра в четверг, 15:00 МСК, — оплату вернём по заявлению.</p>
+        <div class="sign"><div><small>Исполнитель</small><b>ИП Константинов Д.Ю.</b></div><div><small>Заказчик</small><b>Вы</b></div></div>
+        <a class="clause-a" href="https://apec.center/docs/dogovor-oferta.pdf" target="_blank" rel="noopener">Открыть полный текст договора →</a>
       </div>
     </div>
     <div class="facts">
@@ -1166,7 +1280,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
 </section>
 
 <!-- 11. FAQ -->
-<section id="faq" class="pearl" data-route="l">
+<section id="faq" class="pearl" data-route="r">
   <div class="wrap">
     <div class="sec-head rv">
       <p class="eyebrow">Вопросы</p>
@@ -1274,22 +1388,8 @@ $("skin").addEventListener("click",function(){SKIN=SKIN==="light"?"dark":"light"
 /* every bot link carries the variant for A/B attribution in CRM */
 document.addEventListener("click",function(e){var a=e.target.closest('a[href*="t.me/apec_center_bot"]');if(!a)return;var u=a.getAttribute("href");if(!/_v[LD]$/.test(u))a.setAttribute("href",u+"_v"+(SKIN==="light"?"L":"D"))},true);
 
-/* ===== departures board H1 ===== */
-var BOARD={wide:["90 ДНЕЙ В ТАИЛАНДЕ","БЕЗ ВИЗЫ И ВИЗАРАНОВ"],narrow:["90 ДНЕЙ В","ТАИЛАНДЕ","БЕЗ ВИЗЫ И","ВИЗАРАНОВ"]},boardMode="",GLY="АБВГДЕЖЗИКЛМНОПРСТУХЦЧЭЯ0123456789";
-function renderBoard(){var el=$("board"),w=el.parentNode.getBoundingClientRect().width,mode=w/20>=30?"wide":"narrow";if(mode===boardMode)return;boardMode=mode;
-  var rows=BOARD[mode],cols=Math.max.apply(null,rows.map(function(r){return r.length})),t=Math.min(64,Math.floor((w-(cols-1)*w*0.0)/(cols*1.08)));
-  el.style.setProperty("--t",t+"px");
-  el.innerHTML=rows.map(function(r,ri){var cells="";for(var c=0;c<cols;c++){var ch=r[c]||" ";cells+='<span class="tl'+(ch===" "?" blank":"")+(ri===0&&c<2?" hl":"")+'" data-c="'+ch+'"><span>'+(ch===" "?"":ch)+'</span></span>'}return '<span class="row">'+cells+'</span>'}).join("");
-  if(RM)return;
-  var tiles=[].slice.call(el.querySelectorAll(".tl:not(.blank)"));
-  tiles.forEach(function(tl,i){var sp=tl.firstChild,target=tl.dataset.c,n=5+Math.floor(Math.random()*7)+Math.floor(i/3),k=0;sp.textContent="";
-    (function step(){if(k<n){sp.textContent=GLY[Math.floor(Math.random()*GLY.length)];tl.classList.remove("f");void tl.offsetWidth;tl.classList.add("f");k++;setTimeout(step,55)}else{sp.textContent=target;tl.classList.remove("f");void tl.offsetWidth;tl.classList.add("f")}})();
-  });
-  /* story beat: the digits settle on 30 (red), then flip to 90 */
-  var d0=tiles[0],d1=tiles[1];setTimeout(function(){d0.firstChild.textContent="3";d0.classList.add("red");d1.classList.add("red")},1500);
-  setTimeout(function(){var seq="456789",i=0;(function f(){d0.firstChild.textContent=seq[i];d0.classList.remove("f");void d0.offsetWidth;d0.classList.add("f");i++;if(i<seq.length)setTimeout(f,90);else{d0.classList.remove("red");d1.classList.remove("red")}})()},2600);
-}
-renderBoard();
+/* ===== kinetic H1: 30 -> 90 odometer ===== */
+(function(){var k=$("kin");if(RM){k.classList.add("go");return}requestAnimationFrame(function(){requestAnimationFrame(function(){k.classList.add("go")})})})();
 
 /* card */
 function guilloche(svg,back){var g="";
@@ -1374,7 +1474,7 @@ function mapDraw(now){if(!DOTS||!cx2)return;var x=cx2.ctx,w=cx2.w,h=cx2.h,f=mf;x
 function mapResize(){if(!DOTS)return;cx2=setup(mc);mf=fit(cx2.w,cx2.h,14);mapDraw(0)}
 var clist=$("clist"),filter="all";
 function pick(i,user){sel=i;arcT=0;if(user)auto=false;var c=C[i];
-  $("ccard").innerHTML='<span class="cc"><span>'+c.cc+'</span><span class="st '+c.st+'">'+STL[c.st]+'</span></span><h3>'+c.n+'</h3><div class="delta"><s>'+c.w+'</s><span>→</span><b>'+c.a+'</b></div><p>'+c.note+'</p>';
+  $("ccard").innerHTML='<span class="cc"><span>'+c.cc+'</span><span class="st '+c.st+'">'+STL[c.st]+'</span></span><h3>'+c.n+'</h3><div class="cmp2"><div><small>Без карты</small><s>'+c.w+'</s></div><div><small>С картой АТЭС</small><b>'+c.a+'</b></div></div><p>'+c.note+'</p>';
   [].forEach.call(clist.children,function(b){b.setAttribute("aria-pressed",+b.dataset.i===i?"true":"false")})}
 function renderList(){clist.innerHTML="";C.forEach(function(c,i){if(filter!=="all"&&c.st!==filter)return;var b=document.createElement("button");b.type="button";b.dataset.i=i;b.textContent=c.cc;b.title=c.n;b.className=c.st;b.setAttribute("aria-pressed",i===sel?"true":"false");b.addEventListener("click",function(){pick(i,true)});clist.appendChild(b)})}
 $("cf").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;filter=b.dataset.f;[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");renderList();if(clist.firstChild)pick(+clist.firstChild.dataset.i,true)});
@@ -1407,7 +1507,7 @@ track();
 function cd(){var now=Date.now(),msk=new Date(now+3*36e5),add=(4-msk.getUTCDay()+7)%7,t=Date.UTC(msk.getUTCFullYear(),msk.getUTCMonth(),msk.getUTCDate()+add,15)-3*36e5;if(t<=now)t+=7*864e5;var m=Math.floor((t-now)/6e4);$("cd-d").textContent=Math.floor(m/1440);$("cd-h").textContent=Math.floor(m%1440/60);$("cd-m").textContent=m%60}
 cd();setInterval(cd,30000);
 
-$("diy").addEventListener("change",function(e){$("plan-self").hidden=!e.target.checked;$("plans").classList.toggle("diy",e.target.checked)});
+$("diy").addEventListener("change",function(e){$("plan-self").hidden=!e.target.checked;build()});
 
 /* ===== QUIZ ===== */
 var Q=[
@@ -1422,10 +1522,10 @@ function Quiz(root,inModal){this.root=root;this.inModal=inModal;this.a={};this.i
 Quiz.prototype.render=function(){var self=this,r=this.root;
   if(this.i>=Q.length)return this.result();
   var q=Q[this.i];
-  r.innerHTML='<div class="q-head"><small>Вопрос '+(this.i+1)+' из '+Q.length+'</small>'+(this.inModal?'<button class="x" type="button" aria-label="Закрыть">×</button>':'')+'</div><div class="q-prog"><i style="width:'+(this.i/Q.length*100)+'%"></i></div><p class="q-title">'+q.t+'</p>'+(q.h?'<p class="q-hint">'+q.h+'</p>':'')+'<div class="q-opts">'+q.o.map(function(o){return '<button class="q-opt" type="button" data-v="'+o[0]+'"><i></i><span>'+o[1]+(o[2]?'<small>'+o[2]+'</small>':'')+'</span></button>'}).join("")+'</div>'+(this.i?'<button class="q-back" type="button">← Назад</button>':'');
+  r.innerHTML='<div class="q-head"><small>Вопрос '+(this.i+1)+' из '+Q.length+'</small>'+(this.inModal?'<button class="qx" type="button" aria-label="Закрыть">×</button>':'')+'</div><div class="q-prog"><i style="width:'+(this.i/Q.length*100)+'%"></i></div><p class="q-title">'+q.t+'</p>'+(q.h?'<p class="q-hint">'+q.h+'</p>':'')+'<div class="q-opts">'+q.o.map(function(o){return '<button class="q-opt" type="button" data-v="'+o[0]+'"><i></i><span>'+o[1]+(o[2]?'<small>'+o[2]+'</small>':'')+'</span></button>'}).join("")+'</div>'+(this.i?'<button class="q-back" type="button">← Назад</button>':'');
   r.querySelectorAll(".q-opt").forEach(function(b){b.addEventListener("click",function(){self.a[q.k]=b.dataset.v;self.i++;self.render()})});
   var bk=r.querySelector(".q-back");if(bk)bk.addEventListener("click",function(){self.i--;self.render()});
-  var x=r.querySelector(".x");if(x)x.addEventListener("click",closeModal);
+  var x=r.querySelector(".qx");if(x)x.addEventListener("click",closeModal);
   var f=r.querySelector(".q-opt");if(f&&this.inModal)f.focus();
 };
 Quiz.prototype.result=function(){var a=this.a,self=this,r=this.root,lvl,title,text,plan,date;
@@ -1435,7 +1535,7 @@ Quiz.prototype.result=function(){var a=this.a,self=this,r=this.root,lvl,title,te
     text=lvl==="ok"?"Стоп-факторов по вашим ответам нет. Финальный вердикт даёт экспресс-аудит паспорта — бесплатно, до 15 минут в рабочее время.":"Запас по сроку паспорта желателен, но не обязателен. Специалист бесплатно проверит паспорт и скажет точно. Если паспорт закончится раньше карты, перевыпуск — 20 000 ₽.";}
   plan=a.when==="calm"?"Стандарт · 60 000 ₽":"Приоритет · 90 000 ₽";date=a.when==="calm"?"≈ через 6–8 месяцев":"≈ к "+addDays(75);
   var n=a.who==="3"?"3+":a.who||"1",start="quiz_"+(lvl)+"_"+(a.when==="calm"?"std":"pri")+"_"+(a.entry||"x")+"_"+String(n).replace("+","p");
-  r.innerHTML='<div class="q-head"><small>Результат</small>'+(this.inModal?'<button class="x" type="button" aria-label="Закрыть">×</button>':'')+'</div><div class="q-prog"><i style="width:100%"></i></div><div class="q-res"><span class="q-badge '+lvl+'">'+(lvl==="ok"?"✓ Подходит":lvl==="mid"?"Нужна проверка":"Не подходит")+'</span><h3>'+title+'</h3><p>'+text+'</p>'+
+  r.innerHTML='<div class="q-head"><small>Результат</small>'+(this.inModal?'<button class="qx" type="button" aria-label="Закрыть">×</button>':'')+'</div><div class="q-prog"><i style="width:100%"></i></div><div class="q-res"><span class="q-badge '+lvl+'">'+(lvl==="ok"?"✓ Подходит":lvl==="mid"?"Нужна проверка":"Не подходит")+'</span><h3>'+title+'</h3><p>'+text+'</p>'+
    (lvl!=="no"?'<div class="q-sum"><div><small>Тариф</small><b>'+plan+'</b></div><div><small>Временная карта</small><b>'+date+'</b></div><div><small>Заявителей</small><b>'+n+'</b></div><div><small>Ближайший реестр</small><b>четверг, 15:00 МСК</b></div></div>'+
    '<a class="btn btn-primary" href="https://t.me/apec_center_bot?start='+start+'" target="_blank" rel="noopener">Отправить паспорт на бесплатную проверку</a>'+
    '<form class="q-form" novalidate><b style="font:600 15px var(--f-sub)">Или оставьте контакт — специалист напишет сам</b><div class="row"><input name="name" autocomplete="given-name" placeholder="Имя" aria-label="Имя"><input name="contact" autocomplete="tel" placeholder="@telegram или телефон" aria-label="Telegram или телефон"></div><label class="check"><input type="checkbox" name="ok"><span>Согласен на обработку персональных данных по 152-ФЗ (<a href="https://apec.center/consent" target="_blank" rel="noopener">текст согласия</a>)</span></label><p class="err" hidden></p><button class="btn btn-line on-light" type="submit">Жду сообщения специалиста</button></form>':'')+
@@ -1447,7 +1547,7 @@ Quiz.prototype.result=function(){var a=this.a,self=this,r=this.root,lvl,title,te
     /* подключить: POST на вебхук n8n → CRM (воронка «Основная», источник site_quiz, ответы квиза в комментарий) */
     f.outerHTML='<div class="okbox"><b>Заявка принята ✓</b><p style="color:var(--ink-2)">Специалист напишет в рабочее время (7:00–19:00 МСК). Чтобы ускорить проверку, отправьте фото загранпаспорта в бот.</p></div>'});
   r.querySelector(".q-back").addEventListener("click",function(){self.a={};self.i=0;self.render()});
-  var x=r.querySelector(".x");if(x)x.addEventListener("click",closeModal);
+  var x=r.querySelector(".qx");if(x)x.addEventListener("click",closeModal);
 };
 var inline=new Quiz($("quiz-inline"),false);inline.render();
 var modal=$("modal"),mq=new Quiz($("quiz-modal"),true),lastFocus=null;
@@ -1498,7 +1598,7 @@ function update(){if(!total)return;var target=RM?total:introDone?Math.max(heroEn
   plane.style.transform="translate("+p[0]+"px,"+p[1]+"px) rotate("+(p[2]*180/Math.PI)+"deg)"+(target>=total-2?" scale(.85)":"");plane.style.opacity=RM?0:1}
 function intro(t){if(startT===null)startT=t;var k=Math.min(1,(t-startT)/2600),e=1-Math.pow(1-k,3);introLen=heroEnd*e;update();if(k<1)requestAnimationFrame(intro);else{introDone=true;update()}}
 var raf=0;addEventListener("scroll",function(){if(!raf)raf=requestAnimationFrame(function(){raf=0;update()})},{passive:true});
-var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){renderBoard();build();mapResize();drawBg()},150)});
+var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){build();mapResize();drawBg()},150)});
 /* Kie-generated motion loops: load only near the viewport, never with reduced motion or data saver */
 (function(){var saver=navigator.connection&&navigator.connection.saveData;if(RM||saver||!("IntersectionObserver" in window))return;
   var vio=new IntersectionObserver(function(es){es.forEach(function(x){var v=x.target;if(x.isIntersecting){if(!v.src){v.src=v.dataset.src;v.addEventListener("playing",function(){v.classList.add("on")},{once:true})}var p=v.play();if(p&&p.catch)p.catch(function(){})}else if(v.src){v.pause()}})},{rootMargin:"200px 0px"});
