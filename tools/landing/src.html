@@ -143,7 +143,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 /* ===== HERO ===== */
 .hero{background:radial-gradient(80% 70% at 85% 30%,rgba(40,127,242,.30),transparent 60%),radial-gradient(60% 60% at 10% 100%,rgba(31,73,133,.55),transparent 70%),linear-gradient(180deg,#122338,#1C3449);margin-top:-73px;padding-top:calc(73px + clamp(28px,4vw,56px));padding-bottom:0;overflow:hidden}
 .hero canvas.bgmap{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none;mask-image:radial-gradient(75% 85% at 70% 40%,#000,transparent 80%);-webkit-mask-image:radial-gradient(75% 85% at 70% 40%,#000,transparent 80%)}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:start;padding-bottom:clamp(40px,5vw,64px)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:center;padding-bottom:clamp(40px,5vw,64px)}
 .hero-text{display:grid;gap:22px;min-width:0}
 .alert{display:inline-flex;align-items:center;gap:10px;justify-self:start;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(229,56,59,.12);border:1px solid rgba(229,56,59,.42);font-size:13.5px;font-weight:600;color:#FFD9D9;line-height:1.35}
 .alert i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--route);animation:pulse 1.8s infinite}
@@ -266,7 +266,8 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .kb-code.soon{border-color:#C98A1E;color:#A86C10}
 .kb-code.no{border-style:dashed;color:#9AA3B0;border-color:#B8C0CC}
 .kb-mrz{position:absolute;left:5cqw;right:5cqw;bottom:5cqw;font:500 3.1cqw/1.5 var(--f-mono);letter-spacing:.12em;color:#2a2a2a;white-space:nowrap;overflow:hidden}
-.card-hint{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--on-dark-2)}
+.card-zone{position:relative}
+.card-hint{position:absolute;top:100%;margin-top:14px;display:flex;gap:10px;align-items:center;font-size:13px;color:var(--on-dark-2)}
 .card-hint kbd{font:500 12px var(--f-mono);border:1px solid var(--line-dark);border-radius:6px;padding:3px 7px;color:var(--hi)}
 
 /* ===== ROUTE + plane ===== */
