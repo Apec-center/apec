@@ -209,6 +209,20 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 :root[data-skin="light"] .tk b{color:var(--electric)}
 .tk s{font-size:12.5px;color:#7F91A4}
 .tk em{font-style:normal;font:600 10.5px/1 var(--f-sub);letter-spacing:.06em;text-transform:uppercase;color:#F0C27A;padding:4px 6px;border-radius:6px;background:rgba(240,194,122,.12)}
+.kin-was-m{display:none}
+@media (max-width:560px){
+  .kin{display:block;margin-bottom:22px}
+  .kin-num{display:inline-flex;font-size:64px;vertical-align:baseline;margin-right:.12em}
+  .kin-num .was{display:none!important}
+  .kin-t{display:inline;font-size:30px}
+  .kin-t .w{vertical-align:baseline}
+  .kin-t .w:nth-child(2){display:block;margin-top:.15em}
+  .kin-was-m{display:block;margin-top:10px;font:500 15px/1.3 var(--f-body);color:var(--on-dark-2)}
+  .kin-was-m b{font:600 1.1em/1 var(--f-sub);color:var(--hi)}
+  .kin-b{display:block;margin-top:14px;font-size:24px}
+  .kin-b .nv{display:none}
+  .hero .cta-note,.hero .proof,.hero .hide-m{display:none}
+}
 /* stats band */
 .stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line-dark)}
 .stats div{padding:22px 0 22px 22px;border-left:1px solid var(--line-dark);display:grid;gap:4px}
@@ -878,12 +892,13 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
 <section class="hero dark" id="hero" data-route="hero">
   <canvas class="bgmap" id="bgmap" aria-hidden="true"></canvas>
   <div class="wrap">
-    <p class="alert"><i aria-hidden="true"></i>С 15 сентября безвиз в Таиланде — 30 дней, продление только раз в год</p>
+    <p class="alert"><i aria-hidden="true"></i>С 15 сентября безвиз в Таиланде только 30 дней.</p>
     <p class="kick">Карта АТЭС (APEC) на 5 лет</p>
     <h1 class="kin" id="kin"><span class="sr">Карта АТЭС: 90 дней в Таиланде без визы — за 4 750 бат в год</span>
       <span class="kin-num" aria-hidden="true"><span class="odo"><span class="odo-col" id="odo"><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span><span>0</span><span class="was">вместо <b>30</b> дней по безвизу</span></span>
       <span class="kin-t" aria-hidden="true"><span class="w"><span>дней</span></span> <span class="w"><span>в&nbsp;Таиланде</span></span></span>
-      <span class="kin-b" aria-hidden="true"><span class="w"><span>без&nbsp;визы</span></span> <span class="w"><span>—&nbsp;за&nbsp;<b><span class="m" data-rub="12000"></span></b></span></span> <span class="w"><span>в&nbsp;год</span></span></span>
+      <span class="kin-was-m" aria-hidden="true">вместо <b>30</b> дней по безвизу</span>
+      <span class="kin-b" aria-hidden="true"><span class="w nv"><span>без&nbsp;визы</span></span> <span class="w"><span><span class="nv">—&nbsp;</span>за&nbsp;<b><span class="m" data-rub="12000"></span></b></span></span> <span class="w"><span>в&nbsp;год</span></span></span>
     </h1>
     <div class="hero-grid">
       <div class="hero-text">
@@ -891,7 +906,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="cta-stack">
           <div class="cta-row">
             <button class="btn btn-primary btn-lg" type="button" data-quiz>Узнать, подойдёт ли мне карта <span class="arrow" aria-hidden="true">→</span></button>
-            <a class="btn btn-line" href="#math">Сколько я сэкономлю</a>
+            <a class="btn btn-line hide-m" href="#math">Сколько я сэкономлю</a>
           </div>
           <p class="cta-note"><span>5 вопросов</span><span>30 секунд</span><span>бесплатно, без звонка</span></p>
         </div>
