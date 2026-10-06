@@ -287,7 +287,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .after .rule-list li::before{background:rgba(98,164,255,.16) center/14px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2362A4FF' stroke-width='3'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")}
 .rule-list b{font-weight:700}
 .big-num{margin-top:auto;display:flex;align-items:center;gap:14px;min-height:96px;padding-top:16px;border-top:1px solid var(--line-light)}
-.big-num b{flex:none;min-width:2.1em}
+.big-num b{flex:none}
 .after .big-num{border-color:var(--line-dark)}
 .big-num b{font:600 clamp(44px,5vw,64px)/1 var(--f-sub)}
 .before .big-num b{color:var(--route)}
@@ -356,14 +356,14 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .ways{color:var(--ink);border-radius:var(--r);padding:clamp(20px,3vw,32px);background:var(--white);border:1px solid var(--line-light);display:grid;gap:4px;margin-bottom:16px}
 .ways-h{display:none;font:400 clamp(16px,1.6vw,19px)/1.4 var(--f-body);color:var(--ink-2);margin-bottom:10px}
 .ways-h b{font:600 1.1em/1.3 var(--f-sub);color:var(--ink)}
-.way-head{display:grid;grid-template-columns:200px 1fr 150px 190px;gap:18px;font:600 11px/1 var(--f-sub);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding-bottom:10px}
-.way-head span:nth-child(2){grid-column:3;text-align:right}.way-head span:nth-child(3){text-align:right}
-.way{display:grid;grid-template-columns:200px 1fr 150px 190px;grid-template-areas:"n bar p t" ". d d d";gap:4px 18px;align-items:center;padding:14px 0;border-top:1px solid var(--line-light)}
+.way-head{display:grid;grid-template-columns:230px 1fr 175px 200px;gap:18px;font:600 11px/1 var(--f-sub);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding-bottom:10px}
+.way-head span{white-space:nowrap}.way-head span:nth-child(2){grid-column:3;text-align:right}.way-head span:nth-child(3){text-align:right}
+.way{display:grid;grid-template-columns:230px 1fr 175px 200px;grid-template-areas:"n bar p t" ". d d d";gap:4px 18px;align-items:center;padding:14px 0;border-top:1px solid var(--line-light)}
 .way-t{grid-area:t;font-size:13.5px;color:var(--ink-2);text-align:right}
 .math-cta{margin-top:18px}.math-cta a{font-weight:700;color:var(--electric-2);text-decoration:none}
 .ways .fine{color:var(--ink-2)}
 .pf.front{color:var(--ink)}
-.way-n{grid-area:n;font:600 15px/1.3 var(--f-sub)}
+.way-n{grid-area:n;font:600 15px/1.3 var(--f-sub);white-space:nowrap}
 .way-bar{grid-area:bar;height:14px;border-radius:8px;background:var(--pearl);overflow:hidden}
 .way-bar i{position:relative;display:block;height:100%;width:var(--w);border-radius:8px;background:linear-gradient(90deg,#E5383B,#FF8A8C);transform-origin:left}
 .way-bar i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);opacity:0}
@@ -379,7 +379,7 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .way.best .way-bar i{background:linear-gradient(90deg,#287FF2,#62A4FF)}
 .way.best .way-n,.way.best .way-p{color:var(--electric)}
 .ways .fine{margin-top:10px}
-@media (max-width:860px){.way-head{display:none}.way{grid-template-columns:1fr auto;grid-template-areas:"n p" "bar bar" "t t" "d d";gap:8px 12px}.way-t{text-align:left}}
+@media (max-width:860px){.way-n{white-space:normal}.way-head{display:none}.way{grid-template-columns:1fr auto;grid-template-areas:"n p" "bar bar" "t t" "d d";gap:8px 12px}.way-t{text-align:left}}
 /* ===== PAINS ===== */
 .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .pain{position:relative;min-height:268px;border-radius:var(--r);perspective:1200px;cursor:pointer;border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left}
@@ -981,10 +981,10 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     </div>
     <div class="ways rv" id="ways">
       <div class="way-head"><span>Способ</span><span>Стоимость за год</span><span>Цена документа</span></div>
-      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:93%"></i></div><div class="way-p num">≈ <span class="m" data-thb="42000"></span></div><div class="way-t num">12 выездов × ≈ <span class="m" data-thb="3500"></span></div><div class="way-d">Выезд каждые 30 дней, продление только раз в году</div></div>
-      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num"><span class="m" data-thb="40000" data-thb2="45000"></span></div><div class="way-t num"><span class="m" data-thb="40000" data-thb2="45000"></span> на 1 год</div><div class="way-d">Нужно посещать учёбу, путешествовать неудобно</div></div>
-      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:42%"></i></div><div class="way-p num">≈ <span class="m" data-thb="18000" data-thb2="19000"></span></div><div class="way-t num"><span class="m" data-thb="90000" data-thb2="95000"></span> на 5 лет</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
-      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:16%"></i></div><div class="way-p num">≈ <span class="m" data-rub="12000" data-rub2="18000"></span></div><div class="way-t num"><span class="m" data-rub="60000" data-rub2="90000"></span> на 5 лет</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран по той же карте</div></div>
+      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:93%"></i></div><div class="way-p num">от <span class="m" data-thb="42000"></span></div><div class="way-t num"><span class="m" data-thb="3500"></span> × 12 выездов</div><div class="way-d">Выезд каждые 30 дней, продление только раз в году</div></div>
+      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num">от <span class="m" data-thb="40000"></span></div><div class="way-t num">от <span class="m" data-thb="40000"></span> на 1 год</div><div class="way-d">Нужно посещать учёбу, путешествовать неудобно</div></div>
+      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:42%"></i></div><div class="way-p num">от <span class="m" data-thb="18000"></span></div><div class="way-t num">от <span class="m" data-thb="90000"></span> на 5 лет</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
+      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:16%"></i></div><div class="way-p num">от <span class="m" data-rub="12000"></span></div><div class="way-t num">от <span class="m" data-rub="60000"></span> на 5 лет</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран по той же карте</div></div>
       <p class="fine">Цены других вариантов — примерные по рынку на сентябрь 2026. Правила чужих виз часто меняются, по ним мы не консультируем. Карта — тарифы «Стандарт» и «Приоритет». <span class="rate-note"></span></p>
     </div>
     <p class="math-cta rv"><a href="#calc">Посчитать свой сезон в калькуляторе ↓</a></p>
