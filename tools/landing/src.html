@@ -31,7 +31,7 @@
       "offers": [
         {"@type": "Offer", "name": "Стандарт", "price": "60000", "priceCurrency": "RUB"},
         {"@type": "Offer", "name": "Приоритет", "price": "90000", "priceCurrency": "RUB"},
-        {"@type": "Offer", "name": "Сплит", "price": "120000", "priceCurrency": "RUB"}
+        {"@type": "Offer", "name": "Семейный (2 заявителя, −10% на второго)", "price": "171000", "priceCurrency": "RUB"}
       ]},
     {"@type": "FAQPage", "mainEntity": [/*FAQLD*/]}
   ]
@@ -735,6 +735,16 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .bp.best li::before{border-color:var(--electric-2)}
 .bp.best .bp-docs{background:rgba(255,255,255,.06);color:#D5DFEC}
 .bp.best .bp-docs b{color:#fff}
+.fam-calc{display:grid;gap:7px}
+.fam-calc b{margin-bottom:2px}
+.fc-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;color:var(--ink-2)}
+.fc-row > span:last-child{font:600 14px/1.2 var(--f-sub);color:var(--ink);white-space:nowrap}
+.fc-row i{font:600 11px/1 var(--f-mono);font-style:normal;margin-left:6px;padding:3px 6px;border-radius:6px;background:rgba(40,127,242,.1);color:var(--electric)}
+.fc-row i.off{background:rgba(229,56,59,.1);color:#D02F32}
+.fc-row > span:first-child{white-space:nowrap}
+.fc-row.tot{border-top:1px dashed var(--line-light);padding-top:8px;margin-top:2px;color:var(--ink);font-weight:600}
+.fc-row.tot > span:last-child{color:var(--electric);font-size:16px}
+.badge.fam{background:linear-gradient(135deg,#E5383B,#FF6B6E)}
 .bp.best .bp-stub{border-color:rgba(169,183,203,.3)}
 .bp.self{background:transparent;border-style:dashed;filter:none;margin-bottom:22px}
 .bp.self .bp-main{display:grid;grid-template-columns:.8fr 1.1fr 1fr;gap:16px 28px;align-items:start}
@@ -761,13 +771,15 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .review small b{color:var(--hi);font-weight:600}
 .stars{color:#F0C27A;letter-spacing:2px;font-size:13px}
 .reviews>a{font-size:14px;font-weight:700;color:var(--electric-2);text-decoration:none}
-.dossier{position:relative;border-radius:var(--r);padding:clamp(22px,3vw,34px);background:#F4F1E8;color:#1E2A3B;display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(20px,3vw,40px);overflow:hidden}
+.dossier{position:relative;border-radius:var(--r);padding:clamp(22px,3vw,34px);background:#F4F1E8;color:#1E2A3B;display:grid;grid-template-columns:1.45fr 1fr;gap:clamp(20px,3vw,40px);overflow:hidden;align-items:center}
+.dl dd{white-space:nowrap}
+@media (max-width:1180px){.dl dd{white-space:normal}}
 .dossier::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(18,35,56,.035) 0 1px,transparent 1px 30px);pointer-events:none}
 .dossier>*{position:relative}
 .dossier h3{font-size:20px;margin-bottom:6px}
 .dossier .eyebrow{color:#7A6E55}
 .dl{display:grid;gap:0;margin:16px 0 0}
-.dl div{display:grid;grid-template-columns:170px 1fr;gap:14px;padding:11px 0;border-bottom:1px dashed #D5CDB7;font-size:14.5px}
+.dl div{display:grid;grid-template-columns:128px 1fr;gap:12px;padding:11px 0;border-bottom:1px dashed #D5CDB7;font-size:14.5px}
 .dl dt{font:600 11px/1.6 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A6E55}
 .dl dd{margin:0;font-weight:600}
 .dl a{color:var(--electric)}
@@ -777,9 +789,9 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .clause-t{font:500 16.5px/1.5 var(--f-serif);font-style:italic;color:#1E2A3B}
 .clause-t b{font-style:normal;font-family:var(--f-sub);font-weight:600}
 .clause-s{font-size:14px;color:#5A6474}
-.sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:12px;border-top:1px dashed #D5CDB7}
+.sign{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;padding-top:12px;border-top:1px dashed #D5CDB7}
 .sign small{display:block;font:600 10.5px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7A6E55;margin-bottom:22px}
-.sign b{display:block;padding-top:6px;border-top:1px solid #1E2A3B;font:600 13px var(--f-sub)}
+.sign b{display:block;padding-top:6px;border-top:1px solid #1E2A3B;font:600 13px var(--f-sub);white-space:nowrap}
 .signed{position:relative}
 .signed img{position:absolute;left:58%;bottom:4px;width:50px;height:auto;transform:rotate(-4deg);pointer-events:none}
 .clause-a{font-weight:700;color:var(--electric);text-decoration:none;font-size:14.5px}
@@ -1352,22 +1364,27 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
           <a class="btn btn-primary" href="https://t.me/apec_center_bot?start=site_priority" target="_blank" rel="noopener">Выбрать «Приоритет»</a></div>
       </article>
       <article class="bp rv">
+        <span class="badge fam">Новый тариф</span>
         <div class="bp-main">
-          <div class="bp-top"><span>Класс · Split</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
-          <h3>Сплит</h3>
-          <div class="price num"><span class="m" data-rub="120000" data-big="1"></span></div>
-          <p class="per"><span class="m" data-rub="60000"></span> + <span class="m" data-rub="40000"></span> + <span class="m" data-rub="20000"></span> по этапам</p>
-          <div class="bp-docs"><b>Упрощённая подача</b><!--DOCS_PRI--></div>
+          <div class="bp-top"><span>Класс · Family</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
+          <h3>Семейный</h3>
+          <div class="price num"><span class="m" data-rub="171000" data-fam="tot" data-big="1"></span></div>
+          <p class="per">за двоих · <span class="m" data-rub="85500" data-fam="half"></span> с человека</p>
+          <div class="bp-docs fam-calc"><b>Как считается</b>
+            <div class="fc-row"><span>1-й заявитель <i>100%</i></span><span class="m" data-rub="90000" data-fam="p1"></span></div>
+            <div class="fc-row"><span>2-й заявитель <i class="off">−10%</i></span><span><span class="m" data-rub="81000" data-fam="p2"></span></span></div>
+            <div class="fc-row tot"><span>Итого за двоих</span><span class="m" data-rub="171000" data-fam="tot"></span></div>
+          </div>
           <ul>
-            <li><span>Скорость как у «Приоритета» — <b>60–80 дней</b></span></li>
-            <li><span>1-й платёж — при договоре</span></li>
-            <li><span>2-й — когда пришёл трек-номер</span></li>
-            <li><span>3-й — при выпуске временной карты</span></li>
-            <li><span>Платите по мере результата</span></li>
+            <li><span>Всё, что в «Приоритете», <b>для каждого из двоих</b></span></li>
+            <li><span>Временные карты через <b>60–80 дней</b></span></li>
+            <li><span>Упрощённая подача по двум документам</span></li>
+            <li><span>Экономия <b><span class="m" data-rub="9000" data-fam="save"></span></b> на втором заявителе</span></li>
+            <li><span>Возврат 100% при отказе МИД</span></li>
           </ul>
         </div>
-        <div class="bp-stub"><div class="bp-meta"><div><small>В пути</small><b>60–80 дн</b></div><div><small>Платёж</small><b>3 этапа</b></div><div><small>Подойдёт</small><b>Частями</b></div></div>
-          <a class="btn btn-line on-light" href="https://t.me/apec_center_bot?start=site_split" target="_blank" rel="noopener">Выбрать «Сплит»</a></div>
+        <div class="bp-stub"><div class="bp-meta"><div><small>В пути</small><b>60–80 дн</b></div><div><small>Заявители</small><b>2</b></div><div><small>Подойдёт</small><b>Паре, семье</b></div></div>
+          <a class="btn btn-line on-light" href="https://t.me/apec_center_bot?start=site_family" target="_blank" rel="noopener">Выбрать «Семейный»</a></div>
       </article>
     </div>
     <p class="pnote rv">Доставка карты по России и в Таиланд бесплатная. Перевыпуск на новый загранпаспорт или при утере — <span class="m" data-rub="20000"></span>. Для групп от трёх человек — индивидуальные условия.</p>
@@ -1409,7 +1426,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
       <div class="clause">
         <p class="clause-h">Гарантия возврата · договор-оферта</p>
         <p class="clause-t">Если МИД РФ или Секретариат АТЭС официально откажут в выдаче карты, исполнитель возвращает <b>100% оплаты в течение 5 рабочих дней</b>.</p>
-        <p class="clause-s">Передумали до закрытия реестра в четверг, 15:00 МСК, — оплату вернём по заявлению.</p>
+        <p class="clause-s">Передумали до закрытия реестра в четверг, 15:00 МСК, — оплату вернём немедленно.</p>
         <div class="sign"><div class="signed"><small>Исполнитель</small><img src="img/signature.png" alt="Подпись исполнителя" width="116" height="150" loading="lazy"><b>ИП Константинов Д.Ю.</b></div><div><small>Заказчик</small><b>Вы</b></div></div>
         <a class="clause-a" href="https://apec.center/docs/dogovor-oferta.pdf" target="_blank" rel="noopener">Открыть полный текст договора →</a>
       </div>
@@ -1417,7 +1434,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     <div class="facts">
       <div class="fact rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><h3>Трек в кабинете APEC</h3><p>Регистрацию заявки проверяете сами в официальном кабинете APEC.</p></div>
       <div class="fact rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><h3>Возврат 100% за 5 дней</h3><p>При официальном отказе МИД РФ или Секретариата АТЭС.</p></div>
-      <div class="fact rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Передумали — вернём</h3><p>До закрытия реестра в четверг 15:00 МСК — по заявлению.</p></div>
+      <div class="fact rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Передумали — вернём</h3><p>До закрытия реестра в четверг 15:00 МСК — незамедлительно.</p></div>
       <div class="fact rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg><h3>Белая оплата</h3><p>Счёт, карта, СБП, баты, USDT или наличные — с чеком.</p></div>
     </div>
   </div>
@@ -1500,7 +1517,10 @@ function cv(rub,c){return rub/RATE[c||CUR]}
 function money(rub,c,o){c=c||CUR;o=o||{};var v=fmt(rnd(cv(rub,c),c)).replace(/ /g,"\u00a0");if(o.big)return c==="USD"?'<small>$</small>'+v:v+' <small>'+SYM[c]+'</small>';return c==="USD"?"$"+v:v+"\u00a0"+SYM[c]}
 function moneyR(a,b,c,o){c=c||CUR;o=o||{};var x=fmt(rnd(cv(a,c),c)).replace(/ /g,"\u00a0"),y=fmt(rnd(cv(b,c),c)).replace(/ /g,"\u00a0");if(o.big)return c==="USD"?'<small>$</small>'+x+"–"+y:x+"–"+y+' <small>'+SYM[c]+'</small>';return c==="USD"?"$"+x+"–"+y:x+"–"+y+"\u00a0"+SYM[c]}
 function alt(){return CUR==="RUB"?"THB":"RUB"}
+function famV(c){var p1=rnd(cv(90000,c),c),st=c==="THB"?100:1,p2=Math.round(p1*.9/st)*st,t=p1+p2;return{p1:p1,p2:p2,tot:t,half:t/2,save:p1-p2}}
+function fmtV(v,c,big){var x=fmt(v).replace(/ /g,"\u00a0");if(big)return c==="USD"?'<small>$</small>'+x:x+' <small>'+SYM[c]+'</small>';return c==="USD"?"$"+x:x+"\u00a0"+SYM[c]}
 function renderMoney(root){[].forEach.call((root||document).querySelectorAll(".m"),function(el){var d=el.dataset,a=d.rub?+d.rub:+d.thb*RATE.THB,b=d.rub2?+d.rub2:d.thb2?+d.thb2*RATE.THB:0;el.innerHTML=b?moneyR(a,b,null,{big:d.big}):money(a,null,{big:d.big})});
+  var fv=famV(CUR);[].forEach.call(document.querySelectorAll(".m[data-fam]"),function(el){el.innerHTML=fmtV(fv[el.dataset.fam],CUR,el.dataset.big)});
   [].forEach.call(document.querySelectorAll(".rate-note"),function(el){el.textContent="Курс ЦБ на "+RATE.date+": 1 ฿ = "+String(Math.round(RATE.THB*100)/100).replace(".",",")+" ₽, $1 = "+String(Math.round(RATE.USD*100)/100).replace(".",",")+" ₽."})}
 function mtok(t){return t.replace(/\{R:(\d+)\}/g,function(_,n){return '<span class="m" data-rub="'+n+'"></span>'})}
 
