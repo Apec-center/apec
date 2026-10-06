@@ -113,11 +113,11 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 /* ===== header ===== */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;transition:background .3s, border-color .3s;border-bottom:1px solid transparent}
 .top.solid{background:rgba(18,35,56,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line-dark)}
-.top .wrap{display:flex;align-items:center;gap:26px;height:72px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--hi)}
-.brand .emb{width:58px;flex:none}
-.brand span{font:500 12px/1 var(--f-head);letter-spacing:.08em;white-space:nowrap}
-.nav{display:flex;gap:22px;margin-left:auto;font-size:14.5px;font-weight:500;white-space:nowrap}
+.top .wrap{display:flex;align-items:center;gap:20px;height:72px;max-width:1360px}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;color:var(--hi)}
+.brand .emb{width:40px;flex:none}
+.brand span{font:500 16px/1 var(--f-head);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;margin-top:3px}
+.nav{display:flex;gap:18px;margin-left:auto;font-size:14px;font-weight:500;white-space:nowrap}
 .nav a{text-decoration:none;color:var(--on-dark-2);transition:color .2s}
 .nav a:hover{color:var(--hi)}
 .tel{color:var(--hi);text-decoration:none;font:600 15px/1 var(--f-sub);white-space:nowrap}
@@ -126,7 +126,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .skin:hover{border-color:var(--electric-2)}
 .skin svg{width:18px;height:18px}
 .skin:focus-visible{outline:2px solid var(--electric-2);outline-offset:2px}
-@media (max-width:1320px){.nav{display:none}.tel{margin-left:auto}}
+@media (max-width:1300px){.nav{display:none}.tel{margin-left:auto}}
 @media (max-width:640px){.tel{display:none}.skin{margin-left:auto}.top .wrap{gap:12px}}
 @media (max-width:400px){.brand span{display:none}}
 
@@ -811,7 +811,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
 
 <header class="top" id="top-bar">
   <div class="wrap">
-    <a class="brand" href="#hero" aria-label="APEC Center — на главную"><svg class="emb" viewBox="0 0 457 309.6" aria-hidden="true"><use href="#emblem"/></svg><span>APEC CENTER</span></a>
+    <a class="brand" href="#hero" aria-label="APEC Center — на главную"><svg class="emb" viewBox="0 0 457 309.6" aria-hidden="true"><use href="#emblem"/></svg><span>APEC Center</span></a>
     <nav class="nav" aria-label="Разделы">
       <a href="#math">Математика зимовки</a>
       <a href="#how">Как оформляем</a>
