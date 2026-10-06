@@ -1,0 +1,408 @@
+<title>Контент APEC v2 · песочница</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&display=swap">
+<style>
+/* Раскладка: узкая колонка разделов слева, рабочая область справа; на телефоне колонка уходит в полосу сверху. Токены из дизайн-системы CRM. */
+:root{
+  --primary:#5D87FF; --primary-h:#4a76f0; --primary-l:#ECF2FF;
+  --success:#26AE74; --success-l:#E6F7EF; --warning:#FFAE1F; --warning-l:#FEF5E5; --warning-t:#A86C00;
+  --error-t:#E4572E; --error-l:#FDEDE8; --violet:#7460EE; --violet-l:#EFEBFD;
+  --text:#2A3547; --text-2:#5A6A85; --text-3:#7C8FAC; --border:#E5EAEF; --input:#DFE5EF;
+  --bg:#F6F7F9; --hover:#F6F9FC; --card:#fff; --navy:#122338; --on-navy:#EBEAEC;
+  --font:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif; --display:'Unbounded','Onest',system-ui,sans-serif;
+  --r:12px; color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --primary-h:#7A9CFF; --primary-l:rgba(93,135,255,.18);
+  --success-l:rgba(38,174,116,.18); --warning-l:rgba(255,174,31,.16); --warning-t:#FFC861;
+  --error-l:rgba(250,137,107,.16); --error-t:#FF9B80; --violet:#9C8CFF; --violet-l:rgba(116,96,238,.24);
+  --text:#EAEFF4; --text-2:#A7B3C8; --text-3:#8394B0; --border:#333F55; --input:#3E4B63;
+  --bg:#202936; --hover:#2F3A50; --card:#2A3447; --navy:#17263B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --primary-h:#7A9CFF; --primary-l:rgba(93,135,255,.18);
+  --success-l:rgba(38,174,116,.18); --warning-l:rgba(255,174,31,.16); --warning-t:#FFC861;
+  --error-l:rgba(250,137,107,.16); --error-t:#FF9B80; --violet:#9C8CFF; --violet-l:rgba(116,96,238,.24);
+  --text:#EAEFF4; --text-2:#A7B3C8; --text-3:#8394B0; --border:#333F55; --input:#3E4B63;
+  --bg:#202936; --hover:#2F3A50; --card:#2A3447; --navy:#17263B; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--font)}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);height:100%}
+.rail{background:var(--navy);color:var(--on-navy);display:flex;flex-direction:column;gap:4px;padding:16px 12px;overflow-y:auto}
+.brand{font:700 15px var(--display);letter-spacing:.02em;padding:4px 10px 14px}
+.brand small{display:block;font:500 11px var(--font);opacity:.65;letter-spacing:0;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;background:none;border:0;color:inherit;padding:9px 10px;border-radius:8px;cursor:pointer;opacity:.82}
+.nav button:hover{background:rgba(255,255,255,.08);opacity:1}
+.nav button[aria-current=page]{background:var(--primary);color:#fff;opacity:1}
+.nav .sep{height:1px;background:rgba(255,255,255,.14);margin:8px 6px}
+.badge{background:var(--warning);color:#3d2a00;border-radius:99px;font-size:11px;font-weight:700;padding:0 7px;min-width:20px;text-align:center}
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding:12px 4px 0;font-size:12px}
+.rail-foot label{display:flex;flex-direction:column;gap:3px;opacity:.85}
+.rail select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:inherit;border-radius:8px;padding:6px 8px}
+.rail select option{color:#2A3547}
+.main{overflow-y:auto;min-width:0}
+.page{max-width:1080px;margin:0 auto;padding:24px 20px 56px;display:flex;flex-direction:column;gap:18px}
+h1{font:700 20px var(--display);margin:0}
+h2{font:600 15px var(--font);margin:0}
+.sub{color:var(--text-2);margin:2px 0 0;max-width:68ch}
+.head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;color:var(--text-2);white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--primary);border-color:var(--primary);font-weight:600}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--primary);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--primary-h)}
+.btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--input)}
+.btn.ghost:hover{background:var(--hover)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.sm{padding:4px 10px;font-size:12px}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field>span{font-size:12px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em}
+.field small{color:var(--text-3)}
+input[type=text],select,textarea{background:var(--card);border:1px solid var(--input);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{min-height:84px;resize:vertical}
+.chip{display:inline-block;border-radius:99px;padding:1px 9px;font-size:12px;font-weight:600;background:var(--primary-l);color:var(--primary)}
+.chip.ok{background:var(--success-l);color:var(--success)}
+.chip.warn{background:var(--warning-l);color:var(--warning-t)}
+.chip.mute{background:var(--hover);color:var(--text-2)}
+.chip.vio{background:var(--violet-l);color:var(--violet)}
+.empty{border:1px dashed var(--input);border-radius:var(--r);padding:20px;color:var(--text-2)}
+.empty b{color:var(--text)}
+.muted{color:var(--text-2)}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-size:12px;color:var(--text-2);text-transform:uppercase;letter-spacing:.04em}
+.scroll{overflow-x:auto}
+.kanban{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:10px;overflow-x:auto;padding-bottom:6px}
+.col{background:var(--hover);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:120px}
+.col h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-2);display:flex;justify-content:space-between}
+.col.gate{outline:2px solid var(--warning)}
+.item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px}
+.mx{display:grid;gap:6px;min-width:620px}
+.mx div{min-width:0}
+.cellbox{border:1px solid var(--border);border-radius:8px;padding:10px;background:var(--card);min-height:56px}
+.cellbox.zero{border-style:dashed;color:var(--text-3)}
+.kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 12px}
+.kv dt{color:var(--text-2)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:8px 16px;border-radius:8px;z-index:9}
+@media (max-width:760px){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .rail{flex-direction:row;align-items:center;gap:8px;padding:8px 12px;overflow-x:auto;overflow-y:hidden}
+  .brand{padding:0 8px 0 0;white-space:nowrap}.brand small{display:none}
+  .nav{flex-direction:row}.nav button{white-space:nowrap}.nav .sep{display:none}
+  .rail-foot{margin:0;flex-direction:row;padding:0}.rail-foot label span{display:none}
+  .kv{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <aside class="rail">
+    <div class="brand">APEC · Контент<small>v2 · песочница</small></div>
+    <nav class="nav" id="nav" aria-label="Разделы"></nav>
+    <div class="rail-foot">
+      <label><span>Смотреть как</span><select id="role" aria-label="Роль"></select></label>
+      <label><span>Тема</span><select id="theme" aria-label="Тема"><option value="">Как в системе</option><option value="light">Светлая</option><option value="dark">Тёмная</option></select></label>
+    </div>
+  </aside>
+  <main class="main"><div class="page" id="page"></div></main>
+</div>
+
+<script>
+"use strict";
+/* ---------- справочники ---------- */
+const SECTIONS=[
+  {id:"strategy",name:"Стратегия",freq:"раз в месяц"},
+  {id:"pulse",name:"Пульс",freq:"ежедневно"},
+  {id:"matrix",name:"Матрица",freq:"раз в месяц + по сигналам"},
+  {id:"production",name:"Производство",freq:"ежедневно"},
+  {id:"creators",name:"Креаторы",freq:"ежедневно"},
+  {id:"media",name:"Медиа-студия",freq:"ежедневно"},
+  {id:"settings",name:"Настройки",freq:"по необходимости"}
+];
+const ROLES={
+  producer:{name:"Продюсер",see:["strategy","pulse","matrix","production","creators","media","settings"],edit:true},
+  editor:{name:"Редактор",see:["pulse","matrix","production","media"],edit:true},
+  speaker:{name:"Спикер",see:["creators","production"],edit:false},
+  ambassador:{name:"Амбассадор",see:["creators"],edit:false},
+  analyst:{name:"Таргетолог / аналитик",see:["pulse","matrix"],edit:false}
+};
+const STAGES=["Безразличие","Осознание проблемы","Выбор решения","Выбор поставщика","Готов купить"];
+const PESO={P:"Paid · реклама",E:"Earned · упоминания",S:"Shared · соцсети",O:"Owned · свои площадки"};
+const CH_STATUS={active:"Ведём",planned:"Позже",absent:"Нет"};
+/* стадии темы; gate = ворота, на которых тема ждёт решения продюсера */
+const FLOW=[
+  {id:"idea",name:"Темы на период",gate:1,next:"hooks"},
+  {id:"hooks",name:"Пишем тезисы и хуки",who:"Claude"},
+  {id:"hooks_review",name:"Тезисы и хуки",gate:2,next:"script",back:"hooks"},
+  {id:"script",name:"Пишем сценарий",who:"Claude"},
+  {id:"script_review",name:"Финальный сценарий",gate:3,next:"production",back:"script"},
+  {id:"production",name:"Производство"},
+  {id:"ready",name:"Готово к выпуску"},
+  {id:"published",name:"Опубликовано"}
+];
+const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
+
+/* ---------- состояние ---------- */
+const S={role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[]}};
+const $=s=>document.querySelector(s);
+function h(tag,attrs,...kids){const e=document.createElement(tag);
+  for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
+  for(const k of kids.flat()){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(String(k)))}return e}
+function lsGet(k){try{return localStorage.getItem(k)}catch{return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch{}}
+function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body.append(e);setTimeout(()=>e.remove(),2200)}
+const can=()=>ROLES[S.role].edit&&S.canWrite;
+
+/* ---------- данные (db) ---------- */
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations"};
+function listen(name){
+  S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
+}
+async function write(fn,okMsg){
+  try{await fn();if(okMsg)toast(okMsg)}catch(e){toast(e&&e.code==="invalid_argument"?"Нет прав на запись":"Не сохранилось, попробуйте ещё раз")}
+}
+const col=n=>S.db.collection(COLS[n]);
+
+/* ---------- каркас ---------- */
+function inboxCount(){return S.data.topics.filter(t=>{const f=FLOW.find(x=>x.id===t.stage);return f&&f.gate}).length}
+function renderNav(){
+  const nav=$("#nav");nav.replaceChildren();
+  const vis=SECTIONS.filter(s=>ROLES[S.role].see.includes(s.id));
+  vis.forEach(s=>{
+    if(s.id==="settings")nav.append(h("div",{class:"sep"}));
+    const n=s.id==="production"&&inboxCount()?h("span",{class:"badge",title:"Ждёт вашего решения"},inboxCount()):null;
+    nav.append(h("button",{"aria-current":S.section===s.id?"page":null,onclick:()=>go(s.id)},s.name,n));
+  });
+}
+function go(id){S.section=id;lsSet("v2.section",id);render();$(".main").scrollTop=0}
+function render(){
+  const vis=ROLES[S.role].see;if(!vis.includes(S.section))S.section=vis[0];
+  renderNav();
+  const p=$("#page");p.replaceChildren();
+  ({strategy:vStrategy,pulse:vPulse,matrix:vMatrix,production:vProduction,creators:vCreators,media:vMedia,settings:vSettings})[S.section](p);
+  if(!S.db)p.prepend(h("div",{class:"empty"},h("b",null,"База не подключена. "),"Откройте страницу в Claude, чтобы видеть и менять данные."));
+  else if(!can()&&ROLES[S.role].edit)p.prepend(h("div",{class:"empty"},"У вас доступ только на чтение. Чтобы менять данные, нужен доступ «Участник» или выше."));
+}
+function head(title,sub,right){return h("div",{class:"head"},h("div",null,h("h1",null,title),sub&&h("p",{class:"sub"},sub)),right)}
+function tabs(key,items,paint,p){
+  const cur=S.tab[key]||items[0][0];
+  p.append(h("div",{class:"tabs",role:"tablist"},items.map(([id,name])=>h("button",{role:"tab","aria-selected":cur===id,onclick:()=>{S.tab[key]=id;render()}},name))));
+  paint(cur,p);
+}
+function later(stage,what){return h("div",{class:"empty"},h("b",null,what),h("br"),"Появится на этапе "+stage+" плана сборки. Структура и данные под него уже заложены.")}
+
+/* ---------- 1. Стратегия ---------- */
+const PLATFORM_FIELDS=[
+  ["mission","Миссия редакции","Кому служим, что даём, какой результат получает человек."],
+  ["positioning","Позиционирование","Для кого, что за категория, чем отличаемся, почему нам верить."],
+  ["roof","Главное сообщение","Одно предложение, «крыша» message house."],
+  ["tov","Тон голоса","Как говорим: 3–4 принципа, на «вы» или «ты», эталонные фразы."],
+  ["values","Ценности","Во что верим и чего никогда не делаем."]
+];
+function vStrategy(p){
+  const ver=[...S.data.strategy_versions].sort((a,b)=>b.n-a.n);
+  const act=ver[0];
+  p.append(head("Стратегия","Бренд-платформа хранится полями. Из них собирается пакет для каждого промпта и проверки судьи.",
+    h("div",{class:"row"},act?h("span",{class:"chip ok"},"Действует версия "+act.n):h("span",{class:"chip warn"},"Версий пока нет"))));
+  tabs("strategy",[["platform","Платформа"],["channels","Смыслы и каналы"],["versions","Версии"]],(t,p)=>{
+    if(t==="platform")platform(p,act);
+    if(t==="channels")channelsTab(p);
+    if(t==="versions")versionsTab(p,ver);
+  },p);
+}
+function platform(p,act){
+  const d=draftValue(act);
+  const form=h("form",{class:"card",style:"display:flex;flex-direction:column;gap:14px",onsubmit:e=>e.preventDefault()});
+  PLATFORM_FIELDS.forEach(([k,n,hint])=>form.append(h("label",{class:"field"},h("span",null,n),h("textarea",{id:"pf-"+k,disabled:!can(),oninput:e=>{d[k]=e.target.value}},d[k]||""),h("small",null,hint))));
+  p.append(form);
+  p.append(h("div",{class:"card"},h("h2",null,"Message house: опоры и доказательства"),
+    h("p",{class:"muted",style:"margin:4px 0 12px"},"3–4 опоры. Каждая станет рубрикой, а доказательства подмешиваются в генерацию."),
+    pillarsEditor(d)));
+  p.append(h("div",{class:"card"},h("h2",null,"Запреты стайлгайда"),
+    h("p",{class:"muted",style:"margin:4px 0 10px"},"Из книги продаж в CRM. Судья блокирует текст с этими формулировками."),
+    h("div",{class:"pill-row"},CRM_RULES.forbid.map(x=>h("span",{class:"chip warn"},x)))));
+  p.append(h("div",{class:"row"},
+    h("button",{class:"btn",disabled:!can(),onclick:()=>saveVersion(d,act)},"Утвердить как версию "+((act?act.n:0)+1)),
+    h("span",{class:"muted"},"Правки в диалоге с Claude появятся на этапе 2.")));
+}
+let _draft=null;
+function draftValue(act){if(!_draft)_draft=JSON.parse(JSON.stringify(act||{pillars:[]}));if(!_draft.pillars)_draft.pillars=[];return _draft}
+function pillarsEditor(d){
+  const box=h("div",{style:"display:flex;flex-direction:column;gap:10px"});
+  const paint=()=>{box.replaceChildren();
+    d.pillars.forEach((pl,i)=>box.append(h("div",{class:"item"},
+      h("input",{type:"text",id:"pl-t-"+i,placeholder:"Опора, например «Деньги и сроки»",value:pl.title||"",disabled:!can(),oninput:e=>{pl.title=e.target.value}}),
+      h("textarea",{id:"pl-p-"+i,placeholder:"Доказательства: цифры, кейсы, документы",disabled:!can(),oninput:e=>{pl.proof=e.target.value}},pl.proof||""),
+      can()&&h("div",null,h("button",{class:"btn ghost sm",onclick:()=>{d.pillars.splice(i,1);paint()}},"Убрать")))));
+    if(!d.pillars.length)box.append(h("div",{class:"empty"},h("b",null,"Опор пока нет. "),"Добавьте первую или дождитесь интервью с Claude на этапе 2."));
+    if(can()&&d.pillars.length<4)box.append(h("div",null,h("button",{class:"btn ghost sm",onclick:()=>{d.pillars.push({title:"",proof:""});paint()}},"Добавить опору")));
+  };paint();return box;
+}
+function saveVersion(d,act){
+  const filled=PLATFORM_FIELDS.some(([k])=>(d[k]||"").trim())||d.pillars.some(x=>(x.title||"").trim());
+  if(!filled){toast("Заполните хотя бы одно поле");return}
+  const n=(act?act.n:0)+1;
+  write(()=>col("strategy_versions").doc("v"+n).set({n,at:new Date().toISOString(),mission:d.mission||"",positioning:d.positioning||"",roof:d.roof||"",tov:d.tov||"",values:d.values||"",pillars:d.pillars}),"Версия "+n+" сохранена").then(()=>{_draft=null});
+}
+function versionsTab(p,ver){
+  if(!ver.length)return p.append(h("div",{class:"empty"},h("b",null,"История пуста. "),"После первого утверждения здесь появятся версии. Каждая тема запомнит, на какой версии создана."));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Версия","Дата","Главное сообщение","Опор"].map(x=>h("th",null,x)))),
+    h("tbody",null,ver.map(v=>h("tr",null,h("td",null,"v"+v.n),h("td",null,new Date(v.at).toLocaleDateString("ru-RU")),h("td",null,v.roof||"—"),h("td",null,(v.pillars||[]).length)))))));
+}
+function channelsTab(p){
+  const chs=S.data.channels;
+  p.append(h("p",{class:"sub"},"Карта каналов по модели PESO: где мы есть, где можем быть, где нет. Метрики по каналам живут в Пульсе."));
+  const grid=h("div",{class:"grid"});
+  Object.entries(PESO).forEach(([k,name])=>{
+    const list=chs.filter(c=>c.peso===k);
+    grid.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},h("h2",null,name),
+      list.length?list.map(c=>h("div",{class:"item"},
+        h("div",{class:"row",style:"justify-content:space-between"},h("b",null,c.name),h("span",{class:"chip "+(c.status==="active"?"ok":c.status==="planned"?"warn":"mute")},CH_STATUS[c.status])),
+        c.role&&h("span",{class:"muted"},c.role),
+        can()&&h("select",{id:"chs-"+c.id,"aria-label":"Статус канала "+c.name,onchange:e=>write(()=>col("channels").doc(c.id).update({status:e.target.value}),"Статус обновлён")},
+          Object.entries(CH_STATUS).map(([v,n])=>h("option",{value:v,selected:c.status===v},n))))):h("span",{class:"muted"},"Каналов нет")));
+  });
+  p.append(grid);
+  if(can())p.append(addChannel());
+}
+function addChannel(){
+  const f=h("form",{class:"card row",onsubmit:e=>{e.preventDefault();const n=f.name.value.trim();if(!n)return;
+    write(()=>col("channels").add({name:n,peso:f.peso.value,status:f.status.value,role:f.role.value.trim()}),"Канал добавлен");f.reset()}},
+    h("label",{class:"field",style:"flex:1 1 160px"},h("span",null,"Новый канал"),h("input",{type:"text",id:"nc-name",name:"name",placeholder:"Например, Rutube"})),
+    h("label",{class:"field"},h("span",null,"Тип"),h("select",{id:"nc-peso",name:"peso"},Object.entries(PESO).map(([k,v])=>h("option",{value:k},v)))),
+    h("label",{class:"field"},h("span",null,"Статус"),h("select",{id:"nc-status",name:"status"},Object.entries(CH_STATUS).map(([k,v])=>h("option",{value:k},v)))),
+    h("label",{class:"field",style:"flex:2 1 200px"},h("span",null,"Роль канала"),h("input",{type:"text",id:"nc-role",name:"role",placeholder:"охват, доверие, заявка"})),
+    h("button",{class:"btn",type:"submit"},"Добавить"));
+  return f;
+}
+
+/* ---------- 2. Пульс ---------- */
+function vPulse(p){
+  const chs=S.data.channels,t=S.data.topics;
+  p.append(head("Пульс","Сводка по всем каналам. Заявки и оплаты подключаем к каждому каналу на этапе 3, пока показываем то, что уже есть в системе."));
+  p.append(h("div",{class:"grid"},
+    stat("Каналов в работе",chs.filter(c=>c.status==="active").length,"из "+chs.length+" на карте"),
+    stat("Тем в производстве",t.filter(x=>!["published"].includes(x.stage)).length,"всего "+t.length),
+    stat("Ждёт решения",inboxCount(),"на воротах"),
+    stat("Опубликовано",t.filter(x=>x.stage==="published").length,"тем")));
+  p.append(h("h2",null,"Каналы"));
+  p.append(chs.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Канал","Тип","Статус","Заявки","Оплаты"].map(x=>h("th",null,x)))),
+    h("tbody",null,chs.map(c=>h("tr",null,h("td",null,c.name),h("td",null,PESO[c.peso]),h("td",null,h("span",{class:"chip "+(c.status==="active"?"ok":c.status==="planned"?"warn":"mute")},CH_STATUS[c.status])),h("td",{class:"muted"},"этап 3"),h("td",{class:"muted"},"этап 3")))))):h("div",{class:"empty"},"Каналов на карте нет. Добавьте их в Стратегии."));
+}
+function stat(l,v,s){return h("div",{class:"card"},h("div",{class:"muted"},l),h("div",{style:"font:700 28px var(--display);font-variant-numeric:tabular-nums;margin:4px 0"},v),h("div",{class:"muted"},s))}
+
+/* ---------- 3. Матрица ---------- */
+function vMatrix(p){
+  const seg=S.data.segments;
+  p.append(head("Матрица","Сегмент × ступень лестницы Ханта. В ячейке будут смысл, углы, триггеры, хуки и доказательства. Темы привязываются к ячейкам."));
+  p.append(h("div",{class:"card scroll"},h("div",{class:"mx",style:`grid-template-columns:150px repeat(${STAGES.length},minmax(110px,1fr))`},
+    h("div"),STAGES.map((s,i)=>h("div",{class:"muted",style:"font-size:12px;font-weight:600"},(i+1)+". "+s)),
+    seg.map(sg=>[h("div",{style:"font-weight:600"},sg.name),STAGES.map((_,i)=>{const n=S.data.topics.filter(t=>t.segment===sg.id&&t.stage_idx===i).length;
+      return h("div",{class:"cellbox"+(n?"":" zero")},n?n+" тем":"пусто")})])
+  )));
+  p.append(later(4,"Сигналы рынка и генерация тем из ячеек"));
+}
+
+/* ---------- 4. Производство ---------- */
+function vProduction(p){
+  p.append(head("Производство","Три ворота: темы на период, тезисы и хуки, финальный сценарий. Без пройденных ворот публикации нет."));
+  const t=S.data.topics;
+  const waiting=t.filter(x=>{const f=FLOW.find(y=>y.id===x.stage);return f&&f.gate});
+  p.append(h("div",{class:"card"},h("h2",null,"Ждёт вашего решения · "+waiting.length),
+    waiting.length?h("div",{style:"display:flex;flex-direction:column;gap:8px;margin-top:10px"},waiting.map(x=>topicRow(x))):h("p",{class:"muted",style:"margin:6px 0 0"},"Всё разобрано.")));
+  if(can())p.append(addTopic());
+  p.append(h("div",{class:"kanban"},FLOW.map(f=>h("div",{class:"col"+(f.gate?" gate":"")},
+    h("h3",null,h("span",null,(f.gate?"Ворота "+f.gate+" · ":"")+f.name),h("span",null,t.filter(x=>x.stage===f.id).length)),
+    t.filter(x=>x.stage===f.id).map(x=>topicCard(x,f))))));
+  p.append(later(5,"Календарь, таблица и превью, судья перед воротами, пакетное утверждение"));
+}
+function topicRow(x){const f=FLOW.find(y=>y.id===x.stage);return h("div",{class:"row",style:"justify-content:space-between"},h("span",null,h("b",null,x.title)," ",h("span",{class:"chip warn"},"Ворота "+f.gate)),topicActions(x,f))}
+function topicCard(x,f){return h("div",{class:"item"},h("b",null,x.title),
+  x.channels&&h("div",{class:"pill-row"},x.channels.map(c=>h("span",{class:"chip mute"},c))),
+  f.who&&h("span",{class:"chip vio"},"Ждёт: "+f.who),
+  x.strategy_v&&h("span",{class:"muted",style:"font-size:12px"},"Стратегия v"+x.strategy_v),
+  topicActions(x,f))}
+function topicActions(x,f){
+  if(!can())return null;
+  const set=(stage,m)=>write(()=>col("topics").doc(x.id).update({stage,history:[...(x.history||[]),{at:new Date().toISOString(),from:x.stage,to:stage}]}),m);
+  const b=[];
+  if(f.gate){b.push(h("button",{class:"btn sm",onclick:()=>set(f.next,"Утверждено")},"Утвердить"));
+    if(f.back)b.push(h("button",{class:"btn ghost sm",onclick:()=>set(f.back,"Возвращено на доработку")},"Вернуть"));}
+  else if(f.who){const nx=FLOW[FLOW.indexOf(f)+1];b.push(h("button",{class:"btn ghost sm",title:"Пока вручную. Claude будет делать это сам на этапе 5.",onclick:()=>set(nx.id,"Передано на ворота")},"Готово, на ворота"))}
+  else if(f.id==="production")b.push(h("button",{class:"btn ghost sm",onclick:()=>set("ready","Готово к выпуску")},"Готово"));
+  else if(f.id==="ready")b.push(h("button",{class:"btn ghost sm",onclick:()=>set("published","Отмечено опубликованным")},"Опубликовано"));
+  b.push(h("button",{class:"btn ghost sm","aria-label":"Удалить тему "+x.title,onclick:()=>write(()=>col("topics").doc(x.id).delete(),"Удалено")},"Удалить"));
+  return h("div",{class:"row"},b);
+}
+function addTopic(){
+  const act=[...S.data.strategy_versions].sort((a,b)=>b.n-a.n)[0];
+  const act_ch=S.data.channels.filter(c=>c.status==="active");
+  const f=h("form",{class:"card row",onsubmit:e=>{e.preventDefault();const title=f.title.value.trim();if(!title)return;
+    const chs=[...f.querySelectorAll("input[type=checkbox]:checked")].map(i=>i.value);
+    const seg=S.data.segments.find(s=>s.id===f.segment.value);
+    write(()=>col("topics").add({title,stage:"idea",channels:chs,segment:seg?seg.id:"",stage_idx:Number(f.ladder.value),strategy_v:act?act.n:0,created_at:new Date().toISOString(),history:[]}),"Тема добавлена на ворота 1");f.reset()}},
+    h("label",{class:"field",style:"flex:2 1 260px"},h("span",null,"Новая тема"),h("input",{type:"text",id:"nt-title",name:"title",placeholder:"Сколько стоят визараны за сезон"})),
+    h("label",{class:"field"},h("span",null,"Сегмент"),h("select",{id:"nt-seg",name:"segment"},h("option",{value:""},"Не выбран"),S.data.segments.map(s=>h("option",{value:s.id},s.name)))),
+    h("label",{class:"field"},h("span",null,"Ступень"),h("select",{id:"nt-ladder",name:"ladder"},STAGES.map((s,i)=>h("option",{value:i},(i+1)+". "+s)))),
+    h("fieldset",{style:"border:0;padding:0;margin:0;display:flex;gap:10px;flex-wrap:wrap;flex:1 1 100%"},act_ch.map(c=>h("label",{class:"row",style:"gap:4px"},h("input",{type:"checkbox",value:c.name}),c.name))),
+    h("button",{class:"btn",type:"submit"},"Добавить"));
+  return f;
+}
+
+/* ---------- 5–6. Креаторы и медиа ---------- */
+function vCreators(p){
+  p.append(head("Креаторы","Отдельный вход для Димы, Алекса и будущих амбассадоров: что снимаю, бриф, сдача, мои коды и статистика."));
+  p.append(h("div",{class:"grid"},
+    ["Дима · @dima.expat — цифры, говорящая голова","Алекс · @aleks_rykov — жизнь на Пхукете, локации"].map(n=>h("div",{class:"card"},h("b",null,n.split(" — ")[0]),h("div",{class:"muted"},n.split(" — ")[1]),h("div",{style:"margin-top:8px"},h("span",{class:"chip mute"},"Заданий нет"))))));
+  p.append(later(6,"Брифы из матрицы, сдача на ревью, персональные ссылки и коды, выплаты"));
+}
+function vMedia(p){
+  p.append(head("Медиа-студия","Карусели, картинки и видео-перебивки под сценарий. Медиатека на тегах с отметкой «где использовано»."));
+  p.append(h("div",{class:"grid"},
+    ["Библиотека","Генерация","Шаблоны бренда"].map((n,i)=>h("div",{class:"card"},h("b",null,n),h("div",{class:"muted"},["Свои съёмки с Пхукета и ИИ-ассеты, теги, права, версии","Очередь kie.ai: модель, промпт, статус, кредиты","Карусели 1080×1440, Unbounded и Montserrat"][i])))));
+  p.append(later(7,"Хранилище, теги и бюджет генерации"));
+}
+
+/* ---------- 7. Настройки ---------- */
+function vSettings(p){
+  p.append(head("Настройки","Подключённые аккаунты и API, роли, словарь меток."));
+  p.append(h("h2",null,"Подключения"));
+  const it=S.data.integrations;
+  p.append(it.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Система","Для чего","Состояние"].map(x=>h("th",null,x)))),
+    h("tbody",null,it.map(i=>h("tr",null,h("td",null,h("b",null,i.name)),h("td",null,i.purpose),h("td",null,h("span",{class:"chip "+(i.state==="ok"?"ok":i.state==="todo"?"warn":"mute")},i.note||i.state))))))):h("div",{class:"empty"},"Подключений пока нет."));
+  p.append(h("h2",null,"Словарь меток"));
+  p.append(h("div",{class:"card"},h("dl",{class:"kv",style:"margin:0"},
+    h("dt",null,"utm_source"),h("dd",null,"instagram, telegram, youtube, site, dzen, vcru"),
+    h("dt",null,"utm_medium"),h("dd",null,"social, organic, referral, cpc"),
+    h("dt",null,"utm_campaign"),h("dd",null,"короткое имя темы периода, латиницей"),
+    h("dt",null,"utm_content"),h("dd",null,"код публикации, например T001-TG"),
+    h("dt",null,"utm_term"),h("dd",null,"автор: dima, aleks, код амбассадора"))));
+  p.append(h("h2",null,"Роли"));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Роль"),h("th",null,"Видит"),h("th",null,"Меняет"))),
+    h("tbody",null,Object.values(ROLES).map(r=>h("tr",null,h("td",null,r.name),h("td",null,r.see.map(id=>SECTIONS.find(s=>s.id===id).name).join(", ")),h("td",null,r.edit?"да":"нет")))))));
+}
+
+/* ---------- запуск ---------- */
+function boot(){
+  const rs=$("#role");Object.entries(ROLES).forEach(([k,v])=>rs.append(h("option",{value:k},v.name)));
+  const r=lsGet("v2.role");if(r&&ROLES[r])S.role=r;rs.value=S.role;
+  rs.addEventListener("change",()=>{S.role=rs.value;lsSet("v2.role",S.role);render()});
+  const th=$("#theme"),t=lsGet("v2.theme")||"";th.value=t;if(t)document.documentElement.dataset.theme=t;
+  th.addEventListener("change",()=>{lsSet("v2.theme",th.value);if(th.value)document.documentElement.dataset.theme=th.value;else delete document.documentElement.dataset.theme});
+  const sc=lsGet("v2.section");if(sc&&SECTIONS.some(s=>s.id===sc))S.section=sc;
+  render();
+  const c=window.claude;if(!c||!c.use)return;
+  Promise.all([c.use("db"),c.use("user")]).then(([db,user])=>{
+    if(!db)return;S.db=db;
+    S.canWrite=user?(user.can("data.write")!==false):true;
+    Object.keys(COLS).forEach(listen);render();
+  }).catch(()=>{});
+}
+boot();
+</script>
