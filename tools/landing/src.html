@@ -1391,7 +1391,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
 <div class="modal" id="modal" hidden><div class="quiz" id="quiz-modal" role="dialog" aria-modal="true" aria-label="Проверка шансов на карту АТЭС"></div></div>
 
 <script>
-(function(){
+function MAIN(){
 "use strict";
 var $=function(id){return document.getElementById(id)};
 var RM=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1660,7 +1660,10 @@ if(document.readyState==="complete")setTimeout(start,60);else addEventListener("
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(total)build()});
 document.querySelectorAll("details").forEach(function(){});
 document.addEventListener("toggle",function(){clearTimeout(rt);rt=setTimeout(build,350)},true);
-})();
+}
+/* boot: on a live hot-swap the DOM is replaced, so restart cleanly instead of keeping stale observers */
+(function(){var booted=false;function start(){if(booted){location.reload();return}booted=true;MAIN()}
+  var h=window.claude&&window.claude.hot;if(h&&typeof h.ready==="function")h.ready(start);else start()})();
 </script>
 </body>
 </html>
