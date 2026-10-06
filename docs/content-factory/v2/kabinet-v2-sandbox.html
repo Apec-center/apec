@@ -138,7 +138,7 @@ const SECTIONS=[
 ];
 const ROLES={
   producer:{name:"Продюсер",see:["strategy","pulse","matrix","production","creators","media","settings"],edit:true},
-  editor:{name:"Редактор",see:["pulse","matrix","production","media"],edit:true},
+  editor:{name:"Редактор",see:["pulse","matrix","production","creators","media"],edit:true},
   speaker:{name:"Спикер",see:["creators","production"],edit:false},
   ambassador:{name:"Амбассадор",see:["creators"],edit:false},
   analyst:{name:"Таргетолог / аналитик",see:["pulse","matrix"],edit:false}
@@ -160,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[]}};
+const S={cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[],creators:[],tasks:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -171,7 +171,7 @@ function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body
 const can=()=>ROLES[S.role].edit&&S.canWrite;
 
 /* ---------- данные (db) ---------- */
-const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals",pieces:"pieces"};
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals",pieces:"pieces",creators:"creators",tasks:"tasks"};
 function listen(name){
   S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
 }
@@ -377,7 +377,7 @@ let igLeadsCache=[];
 async function loadPulse(){
   const P=S.pulse;if(P.busy||!S.mcp)return;P.busy=true;P.err="";render();
   const days=P.days,now=Date.now(),since=new Date(now-days*864e5).toISOString();
-  const by={},weeks=4;let total=0,paid=0,sum=0;igLeadsCache=[];
+  const by={},weeks=4,codes={},partners={};let total=0,paid=0,sum=0;igLeadsCache=[];
   const slot=id=>by[id]||(by[id]={id,leads:0,paid:0,sum:0,w:Array(weeks).fill(0)});
   try{
     for(let pg=1;pg<=60;pg++){
@@ -388,11 +388,14 @@ async function loadPulse(){
         const ok=isPaid(r),amt=ok?Number(r.product_price||r.amount||0):0,x=slot(chanOf(r));
         total++;x.leads++;if(ok){paid++;sum+=amt;x.paid++;x.sum+=amt}
         const wk=Math.floor((now-Date.parse(r.created_at))/(7*864e5));if(wk>=0&&wk<weeks)x.w[wk]++;
+        const cm=[r.utm_content,r.last_utm_content,r.start_param,r.last_start_param].join(" ").toLowerCase().match(/t\d{3}-[a-z]+/);
+        if(cm){const cx=codes[cm[0]]||(codes[cm[0]]={leads:0,paid:0,sum:0});cx.leads++;if(ok){cx.paid++;cx.sum+=amt}}
+        if(r.partner_id){const k=String(r.partner_id),px=partners[k]||(partners[k]={leads:0,paid:0,sum:0});px.leads++;if(ok){px.paid++;px.sum+=amt}}
         if(/^ig-/.test(chanOf(r))&&r.chatplace_client_id)igLeadsCache.push({cid:String(r.chatplace_client_id),paid:ok,amt});
       }
       if(stop||items.length<100)break;
     }
-    const snap={at:new Date().toISOString(),days,total,paid,sum,rows:Object.values(by)};
+    const snap={at:new Date().toISOString(),days,total,paid,sum,rows:Object.values(by),codes,partners};
     await S.db.doc("stats/pulse").set(snap);
     toast("Пульс обновлён");
   }catch(e){P.err=mcpErr(e)||"Не получилось обновить"}
@@ -744,7 +747,7 @@ function approve(t,m){
   const f=FLOW.find(x=>x.id===t.stage);if(!f||!f.gate)return;
   if(t.stage==="hooks_review"&&!(t.hooks_sel||[]).length){toast("Отметьте хотя бы один хук");return}
   if(t.stage==="script_review"&&!piecesOf(t.id).length){toast("Материалов пока нет");return}
-  moveTopic(t,f.next).then(()=>toast(m||"Утверждено"));
+  moveTopic(t,f.next).then(()=>{toast(m||"Утверждено");if(f.next==="production")issueTasks(topicRef(t.id)||t)});
 }
 function giveBack(t){
   const f=FLOW.find(x=>x.id===t.stage),c=(S.pr.ret[t.id]||"").trim();
@@ -829,6 +832,9 @@ function topicDetail(x){
   if(ps.length){
     box.append(h("div",null,h("h2",{style:"margin-bottom:8px"},"Материалы по каналам"),h("div",{style:"display:flex;flex-direction:column;gap:12px"},ps.map(pc=>pieceCard(x,pc)))));
   }
+  if(["production","ready","published"].includes(x.stage)){const tk=S.data.tasks.filter(z=>z.topic===x.id);
+    box.append(h("div",{class:"row"},h("span",{class:"muted"},"Задания креаторам: "+tk.length),can()&&!tk.length&&piecesOf(x.id).length>0&&h("button",{class:"btn sm",onclick:()=>issueTasks(x)},"Выдать задания"),
+      tk.length>0&&h("button",{class:"btn ghost sm",onclick:()=>{S.section="creators";S.tab.creators="tasks";render()}},"Открыть в «Креаторах»")))}
   if(f.gate){
     box.append(h("div",{class:"card",style:"background:var(--warning-l);border-color:var(--warning);display:flex;flex-direction:column;gap:10px"},h("b",null,"Ворота "+f.gate+": "+f.name),
       can()&&[h("div",{class:"row"},h("button",{class:"btn",onclick:()=>approve(x)},"Утвердить"),x.stage==="hooks_review"&&h("span",{class:"muted"},"Отметьте хуки галочками выше.")),
@@ -873,11 +879,164 @@ function addTopic(){
 }
 
 /* ---------- 5–6. Креаторы и медиа ---------- */
+/* ---------- 5. Креаторы ---------- */
+const TASK_ST={assigned:["Новое","warn"],submitted:["На ревью","vio"],revision:["На правках","warn"],approved:["Одобрено","ok"],rejected:["Отклонено","mute"],published:["Опубликовано","ok"]};
+const SUF={"ig-dima":"IGD","ig-aleks":"IGA","ig-brand":"IGB","tg":"TG","yt":"YT","dzen":"DZ","vcru":"VC","seo":"SEO","meta-ads":"AD","refs":"RF"};
+const UTM_SRC={"ig-dima":["instagram","social"],"ig-aleks":["instagram","social"],"ig-brand":["instagram","social"],"tg":["telegram","social"],"yt":["youtube","social"],"dzen":["dzen","social"],"vcru":["vcru","social"],"seo":["site","organic"],"meta-ads":["meta","cpc"],"refs":["partner","referral"]};
+const CYR={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"zh","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"c","ч":"ch","ш":"sh","щ":"sch","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya"};
+const slug=t=>String(t||"").toLowerCase().split("").map(c=>CYR[c]!==undefined?CYR[c]:c).join("").replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,30)||"tema";
+const taskSt=t=>TASK_ST[t.status]||["?","mute"];
+const canTask=()=>S.canWrite&&["producer","editor","speaker","ambassador"].includes(S.role);
+const creatorOf=id=>S.data.creators.find(c=>c.id===id);
+function copyText(t){try{navigator.clipboard.writeText(t).then(()=>toast("Скопировано"),()=>toast("Не удалось скопировать, выделите текст вручную"))}catch{toast("Не удалось скопировать, выделите текст вручную")}}
+function linkFor(code,chId,cr,topic){
+  const u=UTM_SRC[chId]||["site","social"];
+  const q="utm_source="+u[0]+"&utm_medium="+u[1]+"&utm_campaign="+slug(topic.title)+"&utm_content="+code.toLowerCase()+"&utm_term="+(cr?slug(cr.handle||cr.name):"team");
+  return{link:"https://apec.center/?"+q,bot:chId==="tg"?"https://t.me/apec_center_bot?start="+code:""};
+}
+/* после ворот 3: каждому материалу — задание, код публикации и метки */
+async function issueTasks(t){
+  const ps=piecesOf(t.id);if(!ps.length){toast("Сначала нужны материалы");return}
+  try{
+    let code=t.code;
+    if(!code){const mx=Math.max(0,...S.data.topics.map(x=>parseInt(String(x.code||"").slice(1))||0));code="T"+String(mx+1).padStart(3,"0");await S.db.doc("topics/"+t.id).update({code})}
+    let n=0;
+    for(const pc of ps){
+      if(S.data.tasks.some(z=>z.id===pc.id))continue;
+      const ch=S.data.channels.find(c=>c.name===pc.channel)||{id:""},cr=S.data.creators.find(c=>(c.channels||[]).includes(ch.id));
+      const pub=code+"-"+(SUF[ch.id]||"X"),lk=linkFor(pub,ch.id,cr&&cr.type!=="team"?cr:null,t);
+      const hk=(t.brief&&t.brief.hooks||[]).filter((_,i)=>(t.hooks_sel||[]).includes(i)).map(x=>x.text);
+      await S.db.doc("tasks/"+pc.id).set({topic:t.id,title:t.title,channel:pc.channel,channel_id:ch.id,creator:cr?cr.id:"",code:pub,link:lk.link,bot:lk.bot,hooks:hk,body:pc.body,due:t.due||"",status:"assigned",created_at:new Date().toISOString(),history:[]});n++;
+    }
+    toast(n?"Заданий выдано: "+n:"Задания уже выданы");
+  }catch(e){toast("Не получилось выдать задания")}
+}
+async function setTask(tk,patch,msg){
+  await write(()=>S.db.doc("tasks/"+tk.id).update({...patch,history:[...(tk.history||[]),{at:new Date().toISOString(),from:tk.status,to:patch.status||tk.status,...(patch.review&&patch.review.comment?{comment:patch.review.comment}:{})}]}),msg);
+  if(patch.status==="published"){const all=S.data.tasks.filter(z=>z.topic===tk.topic&&z.id!==tk.id);const t=topicRef(tk.topic);
+    if(t&&all.every(z=>z.status==="published")&&t.stage!=="published")moveTopic(t,"published",null,"все материалы вышли")}
+}
+function scriptOf(body){const m=String(body||"").match(/СУФЛЁР[^\n]*\n([\s\S]*?)(?:\n\s*\n[А-ЯЁ][А-ЯЁ ()]{3,}[:(]|$)/);return(m?m[1]:body||"").trim()}
 function vCreators(p){
-  p.append(head("Креаторы","Отдельный вход для Димы, Алекса и будущих амбассадоров: что снимаю, бриф, сдача, мои коды и статистика."));
-  p.append(h("div",{class:"grid"},
-    ["Дима · @dima.expat — цифры, говорящая голова","Алекс · @aleks_rykov — жизнь на Пхукете, локации"].map(n=>h("div",{class:"card"},h("b",null,n.split(" — ")[0]),h("div",{class:"muted"},n.split(" — ")[1]),h("div",{style:"margin-top:8px"},h("span",{class:"chip mute"},"Заданий нет"))))));
-  p.append(later(6,"Брифы из матрицы, сдача на ревью, персональные ссылки и коды, выплаты"));
+  const isCr=S.role==="speaker"||S.role==="ambassador";
+  p.append(head("Креаторы",isCr?"Ваши задания, ссылки и статистика.":"Задания из утверждённых сценариев, ревью сданного и список креаторов."));
+  if(S.cr.tp)p.append(teleprompter());
+  if(isCr)return creatorHome(p);
+  const rev=S.data.tasks.filter(t=>t.status==="submitted").length;
+  tabs("creators",[["review","На ревью"+(rev?" · "+rev:"")],["tasks","Все задания · "+S.data.tasks.length],["people","Креаторы · "+S.data.creators.length]],(t,pp)=>{
+    if(t==="review")reviewTab(pp);if(t==="tasks")tasksTab(pp);if(t==="people")peopleTab(pp)},p);
+}
+function statusChip(tk){const[n,c]=taskSt(tk);return h("span",{class:"chip "+c},n)}
+function reviewTab(p){
+  const list=S.data.tasks.filter(t=>t.status==="submitted");
+  if(!list.length)return p.append(h("div",{class:"empty"},h("b",null,"Сданного пока нет. "),"Когда креатор сдаст материал, он появится здесь с кнопками «Одобрить», «На правки» и «Отклонить»."));
+  list.forEach(tk=>{const cr=creatorOf(tk.creator),C=S.cr;
+    p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},
+      h("div",{class:"row",style:"justify-content:space-between"},h("div",null,h("b",null,tk.title)," ",h("span",{class:"chip mute"},tk.channel.replace(/\s*[(@].*$/,"")),h("span",{class:"muted"}," · "+(cr?cr.name:"без креатора")+" · "+tk.code)),statusChip(tk)),
+      h("div",null,h("b",null,"Сдано: "),tk.submission&&tk.submission.url?h("a",{href:tk.submission.url,target:"_blank",rel:"noopener",style:"color:var(--primary);overflow-wrap:anywhere"},tk.submission.url):"без ссылки",tk.submission&&tk.submission.note&&h("div",{class:"muted"},tk.submission.note)),
+      h("details",null,h("summary",{class:"muted",style:"cursor:pointer"},"Утверждённый текст"),h("div",{style:"white-space:pre-wrap;margin-top:6px"},tk.body)),
+      canTask()&&h("div",{style:"display:flex;flex-direction:column;gap:8px"},
+        h("label",{class:"field"},h("span",null,"Комментарий (обязателен для правок и отказа)"),h("textarea",{id:"rv-"+tk.id,oninput:e=>{C.ret[tk.id]=e.target.value}},C.ret[tk.id]||"")),
+        h("div",{class:"row"},h("button",{class:"btn",onclick:()=>setTask(tk,{status:"approved",review:{decision:"approved",comment:(C.ret[tk.id]||"").trim(),at:new Date().toISOString()}},"Одобрено")},"Одобрить"),
+          h("button",{class:"btn ghost",onclick:()=>{const c=(C.ret[tk.id]||"").trim();if(!c){toast("Напишите, что исправить");return}setTask(tk,{status:"revision",review:{decision:"revision",comment:c,at:new Date().toISOString()}},"Отправлено на правки").then(()=>{delete C.ret[tk.id];render()})}},"На правки"),
+          h("button",{class:"btn ghost",onclick:()=>{const c=(C.ret[tk.id]||"").trim();if(!c){toast("Напишите причину");return}setTask(tk,{status:"rejected",review:{decision:"rejected",comment:c,at:new Date().toISOString()}},"Отклонено").then(()=>{delete C.ret[tk.id];render()})}},"Отклонить")))));
+  });
+}
+function tasksTab(p){
+  const list=[...S.data.tasks].sort((a,b)=>String(a.due||"9").localeCompare(String(b.due||"9")));
+  if(!list.length)return p.append(h("div",{class:"empty"},h("b",null,"Заданий пока нет. "),"Они появляются сами, когда тема проходит ворота 3 в Производстве."));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Код","Тема","Канал","Креатор","Статус","Срок","Ссылка"].map(x=>h("th",null,x)))),
+    h("tbody",null,list.map(tk=>{const cr=creatorOf(tk.creator);return h("tr",null,h("td",null,h("span",{class:"chip mute"},tk.code)),h("td",null,tk.title),h("td",null,tk.channel.replace(/\s*[(@].*$/,"")),h("td",null,cr?cr.name:"—"),h("td",null,statusChip(tk)),h("td",null,tk.due||"—"),
+      h("td",null,tk.status==="approved"&&canTask()?pubForm(tk):tk.published_url?h("a",{href:tk.published_url,target:"_blank",rel:"noopener",style:"color:var(--primary)"},"пост"):"—"))})))));
+}
+function pubForm(tk){
+  return h("div",{class:"row",style:"flex-wrap:nowrap"},h("input",{type:"text",id:"pu-"+tk.id,placeholder:"Ссылка на пост",value:S.cr.pub[tk.id]||"","aria-label":"Ссылка на опубликованный пост",style:"min-width:140px",oninput:e=>{S.cr.pub[tk.id]=e.target.value}}),
+    h("button",{class:"btn sm",onclick:()=>{const u=(S.cr.pub[tk.id]||"").trim();setTask(tk,{status:"published",published_url:u,published_at:new Date().toISOString()},"Отмечено опубликованным").then(()=>{delete S.cr.pub[tk.id];render()})}},"Вышло"));
+}
+function peopleTab(p){
+  const snap=pulseSnap(),cs=S.data.creators;
+  p.append(h("div",{class:"grid"},cs.map(c=>{const tk=S.data.tasks.filter(z=>z.creator===c.id);const st=statsOf(c,snap);
+    return h("div",{class:"card",style:"display:flex;flex-direction:column;gap:8px"},h("div",{class:"row",style:"justify-content:space-between"},h("b",null,c.name),h("span",{class:"chip "+(c.type==="speaker"?"":c.type==="team"?"mute":"vio")},({speaker:"Спикер",ambassador:"Амбассадор",team:"Команда"})[c.type]||c.type)),
+      c.handle&&h("span",{class:"muted"},c.handle),
+      h("div",{class:"pill-row"},(c.channels||[]).map(id=>h("span",{class:"chip mute"},((S.data.channels.find(x=>x.id===id)||{}).name||id).replace(/\s*[(@].*$/,"")))),
+      h("div",{class:"muted"},"Заданий: "+tk.length+" · на ревью: "+tk.filter(z=>z.status==="submitted").length),
+      st&&h("div",{class:"muted"},"Заявок "+nf(st.leads)+" · оплат "+nf(st.paid)+" · "+rub(st.sum)),
+      c.type==="ambassador"&&h("span",{class:"chip "+(c.consent?"ok":"warn")},c.consent?"Согласие на использование есть":"Нет письменного согласия"),
+      c.terms&&h("span",{class:"muted"},"Условия: "+c.terms),
+      canTask()&&S.role==="producer"&&h("div",{class:"row"},c.type==="ambassador"&&h("button",{class:"btn ghost sm",onclick:()=>write(()=>S.db.doc("creators/"+c.id).update({consent:!c.consent}))},c.consent?"Снять отметку согласия":"Отметить согласие"),
+        c.type!=="team"&&h("button",{class:"btn ghost sm",onclick:()=>write(()=>S.db.doc("creators/"+c.id).delete(),"Удалено")},"Удалить")))})));
+  if(canTask()&&S.role==="producer")p.append(addCreator());
+}
+function statsOf(c,snap){
+  if(!snap)return null;let r={leads:0,paid:0,sum:0},any=false;
+  S.data.tasks.filter(t=>t.creator===c.id).forEach(t=>{const x=(snap.codes||{})[t.code.toLowerCase()];if(x){any=true;r.leads+=x.leads;r.paid+=x.paid;r.sum+=x.sum}});
+  if(c.partner_id){const x=(snap.partners||{})[String(c.partner_id)];if(x){any=true;r.leads+=x.leads;r.paid+=x.paid;r.sum+=x.sum}}
+  return any?r:{leads:0,paid:0,sum:0};
+}
+function addCreator(){
+  const f=h("form",{class:"card row",onsubmit:e=>{e.preventDefault();const n=f.nm.value.trim();if(!n)return;
+    const chs=[...f.querySelectorAll("input[type=checkbox]:checked")].map(i=>i.value);
+    write(()=>S.db.collection("creators").add({name:n,handle:f.hd.value.trim(),type:f.tp.value,channels:chs,partner_id:f.pid.value.trim(),terms:f.tr.value.trim(),consent:false}),"Креатор добавлен");f.reset()}},
+    h("label",{class:"field",style:"flex:1 1 160px"},h("span",null,"Новый креатор"),h("input",{type:"text",id:"nc2-name",name:"nm",placeholder:"Имя"})),
+    h("label",{class:"field"},h("span",null,"Ник"),h("input",{type:"text",id:"nc2-handle",name:"hd",placeholder:"@ник"})),
+    h("label",{class:"field"},h("span",null,"Роль"),h("select",{id:"nc2-type",name:"tp"},h("option",{value:"ambassador"},"Амбассадор"),h("option",{value:"speaker"},"Спикер"))),
+    h("label",{class:"field"},h("span",null,"Партнёр в CRM (id)"),h("input",{type:"text",id:"nc2-pid",name:"pid",placeholder:"необязательно"})),
+    h("label",{class:"field",style:"flex:1 1 200px"},h("span",null,"Условия"),h("input",{type:"text",id:"nc2-terms",name:"tr",placeholder:"например, 10% с оплат"})),
+    h("fieldset",{style:"border:0;padding:0;margin:0;display:flex;gap:10px;flex-wrap:wrap;flex:1 1 100%"},S.data.channels.map(c=>h("label",{class:"row",style:"gap:4px"},h("input",{type:"checkbox",value:c.id}),c.name.replace(/\s*[(@].*$/,"")))),
+    h("button",{class:"btn",type:"submit"},"Добавить"));
+  return f;
+}
+/* кабинет креатора: свои задания, суфлёр, сдача, ссылки и статистика */
+function creatorHome(p){
+  const want=S.role==="speaker"?"speaker":"ambassador",mine=S.data.creators.filter(c=>c.type===want);
+  let me=creatorOf(S.cr.me);if(!me||me.type!==want){me=mine[0]||null;S.cr.me=me?me.id:""}
+  if(!mine.length)return p.append(h("div",{class:"empty"},h("b",null,"Вас пока нет в списке креаторов. "),"Попросите продюсера добавить вас, и здесь появятся ваши задания."));
+  if(mine.length>1)p.append(h("label",{class:"field",style:"max-width:280px"},h("span",null,"Я"),h("select",{id:"cr-me",onchange:e=>{S.cr.me=e.target.value;lsSet("v2.me",S.cr.me);render()}},mine.map(c=>h("option",{value:c.id,selected:c.id===S.cr.me},c.name)))));
+  const tks=S.data.tasks.filter(t=>t.creator===me.id),act=tks.filter(t=>["assigned","revision"].includes(t.status));
+  tabs("creator",[["tasks","Мои задания"+(act.length?" · "+act.length:"")],["links","Мои ссылки и коды"],["stats","Моя статистика"]],(t,pp)=>{
+    if(t==="tasks")myTasks(pp,tks);if(t==="links")myLinks(pp,tks);if(t==="stats")myStats(pp,me,tks)},p);
+}
+function myTasks(p,tks){
+  const order=["revision","assigned","submitted","approved","published","rejected"];
+  const list=[...tks].sort((a,b)=>order.indexOf(a.status)-order.indexOf(b.status));
+  if(!list.length)return p.append(h("div",{class:"empty"},h("b",null,"Заданий пока нет. "),"Они появятся, когда продюсер утвердит сценарий."));
+  list.forEach(tk=>{const C=S.cr,isRef=tk.status==="revision";
+    const sub=C.sub[tk.id]||(C.sub[tk.id]={url:"",note:""});
+    p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},
+      h("div",{class:"row",style:"justify-content:space-between"},h("div",null,h("b",null,tk.title)," ",h("span",{class:"chip mute"},tk.channel.replace(/\s*[(@].*$/,""))),h("div",{class:"row"},statusChip(tk),tk.due&&h("span",{class:"muted"},"Срок "+tk.due)),
+        h("div",{class:"row"},/Reels|Shorts/.test(tk.channel)&&h("button",{class:"btn ghost sm",onclick:()=>{C.tp=scriptOf(tk.body);render();window.scrollTo&&$(".main").scrollTo({top:0})}},"Суфлёр"),h("button",{class:"btn ghost sm",onclick:()=>copyText(tk.body)},"Копировать текст"))),
+      isRef&&tk.review&&h("div",{class:"empty",style:"border-color:var(--warning);color:var(--text)"},h("b",null,"Правки: "),tk.review.comment),
+      tk.status==="rejected"&&tk.review&&h("div",{class:"empty"},h("b",null,"Отклонено: "),tk.review.comment),
+      (tk.hooks||[]).length>0&&h("div",{class:"pill-row"},tk.hooks.map((x,i)=>h("span",{class:"chip vio"},"Хук "+"AB"[i]+": "+x))),
+      h("details",{open:tk.status==="assigned"||isRef},h("summary",{class:"muted",style:"cursor:pointer"},"Текст и бриф"),h("div",{style:"white-space:pre-wrap;margin-top:6px"},tk.body)),
+      ["assigned","revision"].includes(tk.status)&&canTask()&&h("div",{style:"display:flex;flex-direction:column;gap:8px"},
+        h("label",{class:"field"},h("span",null,"Ссылка на готовый материал (диск, черновик поста)"),h("input",{type:"text",id:"su-"+tk.id,value:sub.url,oninput:e=>{sub.url=e.target.value}})),
+        h("label",{class:"field"},h("span",null,"Комментарий"),h("textarea",{id:"sn-"+tk.id,style:"min-height:56px",oninput:e=>{sub.note=e.target.value}},sub.note)),
+        h("div",null,h("button",{class:"btn",onclick:()=>{if(!sub.url.trim()&&!sub.note.trim()){toast("Добавьте ссылку или комментарий");return}setTask(tk,{status:"submitted",submission:{url:sub.url.trim(),note:sub.note.trim(),at:new Date().toISOString()}},"Сдано на ревью").then(()=>{delete C.sub[tk.id];render()})}},"Сдать на ревью"))),
+      tk.status==="approved"&&canTask()&&h("div",null,h("b",null,"Одобрено. После выхода вставьте ссылку на пост:"),pubForm(tk))));
+  });
+}
+function myLinks(p,tks){
+  if(!tks.length)return p.append(h("div",{class:"empty"},"Ссылки появятся вместе с заданиями."));
+  p.append(h("p",{class:"sub",style:"margin:0"},"Используйте именно эти ссылки и коды: по ним заявки и оплаты попадают в вашу статистику. Для Instagram точная привязка к ролику идёт через слово КАРТА в комментарии."));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Код","Канал","Ссылка",""].map(x=>h("th",null,x)))),
+    h("tbody",null,tks.map(tk=>h("tr",null,h("td",null,h("span",{class:"chip mute"},tk.code)),h("td",null,tk.channel.replace(/\s*[(@].*$/,"")),
+      h("td",{style:"overflow-wrap:anywhere;max-width:420px"},tk.bot||tk.link),h("td",null,h("button",{class:"btn ghost sm",onclick:()=>copyText(tk.bot||tk.link)},"Копировать"))))))));
+}
+function myStats(p,me,tks){
+  const snap=pulseSnap();
+  if(!snap)return p.append(h("div",{class:"empty"},h("b",null,"Статистики пока нет. "),"Её считает продюсер из CRM в разделе «Пульс»."));
+  const tot=statsOf(me,snap);
+  p.append(h("div",{class:"grid"},stat("Заявок",nf(tot.leads),"по вашим кодам за "+snap.days+" дней"),stat("Оплатили",nf(tot.paid),tot.leads?(tot.paid/tot.leads*100).toFixed(1)+"% заявок":"—"),stat("Выручка",rub(tot.sum),"по оплатам")));
+  p.append(tks.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Код","Канал","Заявок","Оплат","Выручка"].map(x=>h("th",null,x)))),
+    h("tbody",null,tks.map(tk=>{const x=(snap.codes||{})[tk.code.toLowerCase()]||{leads:0,paid:0,sum:0};return h("tr",null,h("td",null,h("span",{class:"chip mute"},tk.code)),h("td",null,tk.channel.replace(/\s*[(@].*$/,"")),h("td",{class:"num"},nf(x.leads)),h("td",{class:"num"},nf(x.paid)),h("td",{class:"num"},rub(x.sum)))})))):null);
+  p.append(h("p",{class:"muted",style:"margin:0"},"Срез от "+new Date(snap.at).toLocaleDateString("ru-RU")+". Заявки с ваших Reels, пришедшие по слову КАРТА без кода, видны продюсеру в Пульсе по аккаунту."));
+}
+function teleprompter(){
+  const C=S.cr;if(!C.tpSize)C.tpSize=34;
+  return h("div",{style:"position:fixed;inset:0;z-index:20;background:#000;color:#fff;display:flex;flex-direction:column"},
+    h("div",{class:"row",style:"padding:12px 16px;gap:8px;justify-content:space-between"},h("div",{class:"row"},h("button",{class:"btn ghost sm","aria-label":"Меньше",onclick:()=>{C.tpSize=Math.max(18,C.tpSize-4);render()}},"A−"),h("button",{class:"btn ghost sm","aria-label":"Больше",onclick:()=>{C.tpSize=Math.min(72,C.tpSize+4);render()}},"A+")),h("button",{class:"btn",onclick:()=>{C.tp=null;render()}},"Закрыть")),
+    h("div",{style:`flex:1;overflow-y:auto;padding:16px 24px 120px;font-size:${C.tpSize}px;line-height:1.35;white-space:pre-wrap;font-weight:600`},C.tp));
 }
 function vMedia(p){
   p.append(head("Медиа-студия","Карусели, картинки и видео-перебивки под сценарий. Медиатека на тегах с отметкой «где использовано»."));
@@ -912,6 +1071,7 @@ function boot(){
   rs.addEventListener("change",()=>{S.role=rs.value;lsSet("v2.role",S.role);render()});
   const th=$("#theme"),t=lsGet("v2.theme")||"";th.value=t;if(t)document.documentElement.dataset.theme=t;
   th.addEventListener("change",()=>{lsSet("v2.theme",th.value);if(th.value)document.documentElement.dataset.theme=th.value;else delete document.documentElement.dataset.theme});
+  const me0=lsGet("v2.me");if(me0)S.cr.me=me0;
   const sc=lsGet("v2.section");if(sc&&SECTIONS.some(s=>s.id===sc))S.section=sc;
   render();
   const c=window.claude;if(!c||!c.use)return;
