@@ -97,6 +97,7 @@ th{font-size:12px;font-weight:600;color:var(--text-2);text-transform:uppercase;l
 .cellbox.zero{border-style:dashed;color:var(--text-3)}
 .kv{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 12px}
 .kv dt{color:var(--text-2)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .statnum{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;margin:4px 0}
 .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--toast-bg);color:#fff;padding:8px 16px;border-radius:8px;box-shadow:var(--pop);z-index:9}
 @media (max-width:900px){
@@ -159,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[]}};
+const S={mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -170,7 +171,7 @@ function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body
 const can=()=>ROLES[S.role].edit&&S.canWrite;
 
 /* ---------- данные (db) ---------- */
-const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations"};
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats"};
 function listen(name){
   S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
 }
@@ -339,17 +340,132 @@ function addChannel(){
 }
 
 /* ---------- 2. Пульс ---------- */
+const CRM_SRV="APEC_MPC",CP_SRV="Chatopalce_io";
+const CP_BOTS={"01a0aa71-563d-735e-98bd-b10a6086e8ed":"dima.expat","01a08a81-5339-7287-a4e5-e68c46827292":"aleks_rykov","01a0e6a2-c642-731a-856b-cb0d2eb3f941":"apec.center"};
+const rub=n=>Number(n||0).toLocaleString("ru-RU")+" ₽";
+const nf=n=>Number(n||0).toLocaleString("ru-RU");
+const isPaid=r=>{const v=r&&r.deal_values;return !!(v&&!Array.isArray(v)&&Array.isArray(v.payment_received)&&v.payment_received.includes("yes"))};
+/* канал заявки по меткам; всё без понятной метки уходит в «other» */
+function chanOf(r){
+  if(r.partner_id)return"refs";
+  const s=[r.utm_content,r.last_utm_content,r.start_param,r.last_start_param].join(" ").toLowerCase();
+  if(/ig_dima/.test(s))return"ig-dima";if(/ig_aleks/.test(s))return"ig-aleks";if(/ig_apec/.test(s))return"ig-brand";
+  if(/meta_ads/.test(s))return"meta-ads";if(/-tg\b/.test(s))return"tg";
+  if(/site_|kod_|pkg_|unknown_site/.test(s)||r.source==="сайт")return"seo";
+  return"other";
+}
+function payload(r){let p=r&&r.payload;if(p==null){try{p=JSON.parse(((r.content||[]).find(b=>b.type==="text")||{}).text||"null")}catch{p=null}}return p}
+async function crm(method,path,query){
+  const r=await S.mcp.callTool(CRM_SRV,"call-api",{method,path,...(query?{query}:{})},{cache:false});
+  let p=payload(r);if(p&&typeof p.body==="string"){try{p=JSON.parse(p.body)}catch{}}
+  if(p&&p.status>=400)throw{code:"crm_"+p.status};
+  return(p&&p.body)||p;
+}
+/* id постов длиннее безопасного целого JS: берём их строкой из сырого текста ответа */
+async function cp(tool,args){
+  const r=await S.mcp.callTool(CP_SRV,tool,args,{cache:false});
+  const t=((r&&r.content||[]).find(x=>x.type==="text")||{}).text;
+  if(t){try{return JSON.parse(t.replace(/"mediaId":\s*(\d{10,})/g,'"mediaId":"$1"'))}catch{}}
+  return payload(r);
+}
+function mcpErr(e){const c=e&&e.code;
+  return c==="server_not_connected"?"Подключите коннектор в настройках Claude":c==="needs_reauth"?"Переподключите коннектор в настройках Claude":c==="not_in_manifest"?"Доступ к коннектору для страницы выключен":c==="crm_403"?"В CRM нужны права администратора":c==="cancelled"?"":"Нет связи с CRM или ChatPlace"}
+const pulseSnap=()=>S.data.stats.find(x=>x.id==="pulse");
+const reelsSnap=()=>S.data.stats.find(x=>x.id==="reels");
+function setProg(t){S.pulse.prog=t;const e=$("#pprog");if(e)e.textContent=t}
+let igLeadsCache=[];
+async function loadPulse(){
+  const P=S.pulse;if(P.busy||!S.mcp)return;P.busy=true;P.err="";render();
+  const days=P.days,now=Date.now(),since=new Date(now-days*864e5).toISOString();
+  const by={},weeks=4;let total=0,paid=0,sum=0;igLeadsCache=[];
+  const slot=id=>by[id]||(by[id]={id,leads:0,paid:0,sum:0,w:Array(weeks).fill(0)});
+  try{
+    for(let pg=1;pg<=60;pg++){
+      setProg("CRM: читаю заявки, страница "+pg);
+      const b=await crm("GET","/api/requests",{page:pg,limit:100});const items=(b&&b.items)||[];let stop=!items.length;
+      for(const r of items){
+        if(String(r.created_at)<since){stop=true;continue}
+        const ok=isPaid(r),amt=ok?Number(r.product_price||r.amount||0):0,x=slot(chanOf(r));
+        total++;x.leads++;if(ok){paid++;sum+=amt;x.paid++;x.sum+=amt}
+        const wk=Math.floor((now-Date.parse(r.created_at))/(7*864e5));if(wk>=0&&wk<weeks)x.w[wk]++;
+        if(/^ig-/.test(chanOf(r))&&r.chatplace_client_id)igLeadsCache.push({cid:String(r.chatplace_client_id),paid:ok,amt});
+      }
+      if(stop||items.length<100)break;
+    }
+    const snap={at:new Date().toISOString(),days,total,paid,sum,rows:Object.values(by)};
+    await S.db.doc("stats/pulse").set(snap);
+    toast("Пульс обновлён");
+  }catch(e){P.err=mcpErr(e)||"Не получилось обновить"}
+  P.busy=false;setProg("");render();
+}
+function spark(w){const m=Math.max(1,...w);return h("span",{style:"display:inline-flex;align-items:flex-end;gap:2px;height:22px","aria-label":"Заявки по неделям, от старых к новым: "+[...w].reverse().join(", ")},
+  [...w].reverse().map(v=>h("i",{style:`display:block;width:6px;border-radius:2px;background:var(--primary);height:${Math.max(2,Math.round(v/m*22))}px;opacity:${v?1:.25}`})))}
+function trendChip(w){const a=w[0],b=w[1];if(!a&&!b)return h("span",{class:"chip mute"},"нет заявок");
+  if(a>b)return h("span",{class:"chip ok"},"▲ "+a+" за 7 дн. (было "+b+")");if(a<b)return h("span",{class:"chip warn"},"▼ "+a+" за 7 дн. (было "+b+")");return h("span",{class:"chip mute"},"= "+a+" за 7 дн.")}
 function vPulse(p){
-  const chs=S.data.channels,t=S.data.topics;
-  p.append(head("Пульс","Сводка по всем каналам. Заявки и оплаты подключаем к каждому каналу на этапе 3, пока показываем то, что уже есть в системе."));
+  const P=S.pulse,snap=pulseSnap(),chs=S.data.channels;
+  p.append(head("Пульс","Заявки и оплаты из CRM по каналам. Источник канала определяется по меткам заявки.",
+    h("div",{class:"row"},
+      h("select",{id:"pd","aria-label":"Период",style:"width:auto",onchange:e=>{P.days=Number(e.target.value);render()}},[7,30,60,90].map(d=>h("option",{value:d,selected:P.days===d},"за "+d+" дней"))),
+      S.mcp&&can()&&h("button",{class:"btn",disabled:P.busy,onclick:loadPulse},P.busy?"Считаю…":"Обновить из CRM"))));
+  p.append(h("p",{class:"muted",id:"pprog",style:"margin:0"},P.prog));
+  if(P.err)p.append(h("div",{class:"empty"},P.err));
+  if(!snap){p.append(h("div",{class:"empty"},h("b",null,"Среза ещё нет. "),S.mcp?(can()?"Нажмите «Обновить из CRM», кабинет посчитает заявки и оплаты за выбранный период.":"Срез появится, когда его обновит продюсер."):"Откройте страницу в Claude с подключённой CRM, чтобы посчитать срез."));return}
+  const rows=Object.fromEntries(snap.rows.map(r=>[r.id,r]));
   p.append(h("div",{class:"grid"},
-    stat("Каналов в работе",chs.filter(c=>c.status==="active").length,"из "+chs.length+" на карте"),
-    stat("Тем в производстве",t.filter(x=>!["published"].includes(x.stage)).length,"всего "+t.length),
-    stat("Ждёт решения",inboxCount(),"на воротах"),
-    stat("Опубликовано",t.filter(x=>x.stage==="published").length,"тем")));
-  p.append(h("h2",null,"Каналы"));
-  p.append(chs.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Канал","Тип","Статус","Заявки","Оплаты"].map(x=>h("th",null,x)))),
-    h("tbody",null,chs.map(c=>h("tr",null,h("td",null,c.name),h("td",null,PESO[c.peso]),h("td",null,h("span",{class:"chip "+(c.status==="active"?"ok":c.status==="planned"?"warn":"mute")},CH_STATUS[c.status])),h("td",{class:"muted"},"этап 3"),h("td",{class:"muted"},"этап 3")))))):h("div",{class:"empty"},"Каналов на карте нет. Добавьте их в Стратегии."));
+    stat("Заявок",nf(snap.total),"за "+snap.days+" дней"),
+    stat("Оплатили",nf(snap.paid),snap.total?(snap.paid/snap.total*100).toFixed(1)+"% заявок":"—"),
+    stat("Выручка",rub(snap.sum),"по отметке «Оплата получена»"),
+    stat("Ждёт решения",inboxCount(),"на воротах производства")));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Срез от "+new Date(snap.at).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})+(snap.days!==P.days?". Период в списке другой, нажмите «Обновить»":"")+"."));
+  const line=(name,status,x)=>h("tr",null,h("td",null,name,status&&[" ",h("span",{class:"chip "+(status==="active"?"ok":status==="planned"?"warn":"mute")},CH_STATUS[status])]),
+    x?[h("td",{class:"num"},nf(x.leads)),h("td",{class:"num"},nf(x.paid)),h("td",{class:"num"},x.leads?(x.paid/x.leads*100).toFixed(1)+"%":"—"),h("td",{class:"num"},rub(x.sum)),h("td",null,spark(x.w)),h("td",null,trendChip(x.w))]
+      :h("td",{colspan:"6",class:"muted"},"Меток этого канала в заявках нет"));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Канал","Заявок","Оплат","Конверсия","Выручка","4 недели","Динамика"].map(x=>h("th",null,x)))),
+    h("tbody",null,chs.map(c=>line(c.name,c.status,rows[c.id])),line("Без метки или другое",null,rows.other||{leads:0,paid:0,sum:0,w:[0,0,0,0]})))));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Reels спикеров пока считаются по аккаунту: бот ChatPlace ставит метку аккаунта, а не ролика. Точная привязка к роликам ниже."));
+  exactBlock(p);
+}
+/* точная привязка к постам: в переписке ChatPlace у сообщения «Карта» лежит id поста */
+const isMediaId=f=>f&&f.typeName!=="storyReply"&&/^\d{10,}$/.test(String(f.url||""));
+async function exactReels(){
+  const P=S.pulse;if(P.busy||!S.mcp||!igLeadsCache.length)return;P.busy=true;P.err="";render();
+  try{
+    const map={};(await S.db.collection("reelmap").get()).docs.forEach(d=>{map[d.id]=d.data().media});
+    const need=new Set(igLeadsCache.map(l=>l.cid).filter(c=>!(c in map)));const chatOf={};
+    const sinceTs=Date.now()/1000-(P.days+1)*86400;let last=null,lastTs=null,pages=0;
+    while(need.size&&pages<60){const a={limit:100};if(last){a.lastItemId=last;a.lastItemTimestamp=Number(lastTs)}
+      const r=await cp("chats_list",a);const items=(r&&r.items)||[];pages++;setProg("ChatPlace: ищу переписки, страница "+pages);
+      for(const c of items)if(need.has(c.clientId))chatOf[c.clientId]=c.id;
+      if(!r||!r.hasNextItems||!items.length||Object.keys(chatOf).length>=need.size)break;
+      if(Number(items[items.length-1].lastMessageAt)<sinceTs)break;last=r.lastItemId;lastTs=r.lastItemTimestamp}
+    const list=Object.entries(chatOf).slice(0,400);let i=0;
+    for(const[cid,chat]of list){i++;setProg("ChatPlace: читаю переписки "+i+" из "+list.length);let media="";
+      for(let pg=1;pg<=3&&!media;pg++){const ms=await cp("chats_messages",{chatId:chat,limit:50,page:pg});const arr=Array.isArray(ms)?ms:((ms&&ms.items)||[]);if(!arr.length)break;
+        const hit=arr.filter(m=>m.side==="client"&&(m.mediaFiles||[]).some(isMediaId)).sort((a,b)=>a.createdAt-b.createdAt)[0];
+        if(hit)media=String(hit.mediaFiles.find(isMediaId).url);if(arr.length<50)break}
+      map[cid]=media||"-";await S.db.doc("reelmap/"+cid).set({media:map[cid]})}
+    setProg("ChatPlace: сверяю с постами аккаунтов");const cat={};
+    for(const bot of Object.keys(CP_BOTS)){try{const l=await cp("automations_triggers_list_instagram_media",{botId:bot});
+      (Array.isArray(l)?l:[]).forEach(m=>cat[String(m.mediaId)]={url:m.permalink||"",caption:String(m.caption||"").split("\n")[0].slice(0,120),date:m.timestamp?new Date(m.timestamp*1000).toISOString().slice(0,10):"",account:CP_BOTS[bot]})}catch(e){}}
+    const agg={};let none=0;
+    for(const l of igLeadsCache){const m=map[l.cid];if(!m||m==="-"){none++;continue}
+      const x=agg[m]||(agg[m]={media:m,url:"",caption:"Пост не найден в списке ChatPlace",date:"",account:"",...(cat[m]||{}),leads:0,paid:0,sum:0});x.leads++;if(l.paid){x.paid++;x.sum+=l.amt}}
+    const rows=Object.values(agg).sort((a,b)=>b.paid-a.paid||b.leads-a.leads).slice(0,40);
+    await S.db.doc("stats/reels").set({at:new Date().toISOString(),days:P.days,total:igLeadsCache.length,none,rows});
+    toast("Привязка к постам готова");
+  }catch(e){P.err=mcpErr(e)||"Не получилось привязать"}
+  P.busy=false;setProg("");render();
+}
+function exactBlock(p){
+  const r=reelsSnap(),P=S.pulse;
+  p.append(h("div",{class:"row",style:"justify-content:space-between"},h("h2",null,"Reels и посты: точно по комментарию"),
+    S.mcp&&can()&&h("button",{class:"btn ghost",disabled:P.busy||!igLeadsCache.length,title:igLeadsCache.length?"":"Сначала обновите срез из CRM",onclick:exactReels},"Привязать к постам")));
+  if(!r)return p.append(h("div",{class:"empty"},"Привязки пока нет. Сначала «Обновить из CRM», затем «Привязать к постам». Это читает переписки ChatPlace и занимает минуту-две."));
+  p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Пост","Дата","Заявок","Оплат","Выручка"].map(x=>h("th",null,x)))),
+    h("tbody",null,r.rows.map(x=>h("tr",null,h("td",null,x.url?h("a",{href:x.url,target:"_blank",rel:"noopener",style:"color:var(--primary)"},x.caption||x.media):x.caption,x.account&&h("div",{class:"muted"},"@"+x.account)),
+      h("td",{class:"num"},x.date||""),h("td",{class:"num"},nf(x.leads)),h("td",{class:"num"},nf(x.paid)),h("td",{class:"num"},rub(x.sum))))))));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Привязано "+nf(r.total-r.none)+" из "+nf(r.total)+" заявок из Instagram за "+r.days+" дней. Остальные пришли не из комментария: директ, сторис, ссылка в профиле."));
 }
 function stat(l,v,s){return h("div",{class:"card"},h("div",{class:"muted"},l),h("div",{class:"statnum"},v),h("div",{class:"muted"},s))}
 
@@ -454,8 +570,8 @@ function boot(){
   const sc=lsGet("v2.section");if(sc&&SECTIONS.some(s=>s.id===sc))S.section=sc;
   render();
   const c=window.claude;if(!c||!c.use)return;
-  Promise.all([c.use("db"),c.use("user"),c.use("sample")]).then(([db,user,sample])=>{
-    S.sample=sample||null;
+  Promise.all([c.use("db"),c.use("user"),c.use("sample"),c.use("mcp")]).then(([db,user,sample,mcp])=>{
+    S.sample=sample||null;S.mcp=mcp||null;
     if(!db){render();return}S.db=db;
     S.canWrite=user?(user.can("data.write")!==false):true;
     Object.keys(COLS).forEach(listen);render();
