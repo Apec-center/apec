@@ -113,7 +113,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 /* ===== header ===== */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;transition:background .3s, border-color .3s;border-bottom:1px solid transparent}
 .top.solid{background:rgba(18,35,56,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line-dark)}
-.top .wrap{display:flex;align-items:center;gap:20px;height:72px;max-width:1360px}
+.top .wrap{display:flex;align-items:center;gap:20px;height:72px;max-width:1440px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;color:var(--hi)}
 .brand .emb{width:40px;flex:none}
 .brand span{font:500 16px/1 var(--f-head);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;margin-top:3px}
@@ -122,13 +122,23 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .nav a:hover{color:var(--hi)}
 .tel{color:var(--hi);text-decoration:none;font:600 15px/1 var(--f-sub);white-space:nowrap}
 .top .btn{white-space:nowrap;flex:none}
+.top .btn .s{display:none}
+@media (max-width:400px){.top .btn .l{display:none}.top .btn .s{display:inline}}
+.cur{display:flex;padding:3px;border-radius:999px;border:1px solid var(--line-dark);flex:none}
+.cur button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:600 14px/1 var(--f-sub);color:var(--on-dark-2);transition:background .2s,color .2s}
+.cur button:hover{color:var(--hi)}
+.cur button[aria-pressed="true"]{background:var(--electric);color:#fff}
+.cur button:focus-visible{outline:2px solid var(--electric-2);outline-offset:1px}
+.m{white-space:nowrap}
 .skin{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--hi);border:1px solid var(--line-dark);flex:none}
 .skin:hover{border-color:var(--electric-2)}
 .skin svg{width:18px;height:18px}
 .skin:focus-visible{outline:2px solid var(--electric-2);outline-offset:2px}
-@media (max-width:1300px){.nav{display:none}.tel{margin-left:auto}}
-@media (max-width:640px){.tel{display:none}.skin{margin-left:auto}.top .wrap{gap:12px}}
-@media (max-width:400px){.brand span{display:none}}
+@media (max-width:1420px){.nav{display:none}.tel{margin-left:auto}}
+@media (max-width:960px){.tel{display:none}.cur{margin-left:auto}}
+@media (max-width:640px){.tel{display:none}.cur{margin-left:auto}.top .wrap{gap:10px}.cur button{width:28px;height:28px;font-size:13px}}
+@media (max-width:440px){.top .wrap{gap:8px}.top .btn-sm{padding:0 12px;font-size:12.5px;min-height:40px}.cur{padding:2px}.cur button{width:26px;height:26px;font-size:12px}.skin{width:36px;height:36px}.brand .emb{width:36px}}
+@media (max-width:640px){.brand span{display:none}}
 
 /* ===== HERO ===== */
 .hero{background:radial-gradient(80% 70% at 85% 30%,rgba(40,127,242,.30),transparent 60%),radial-gradient(60% 60% at 10% 100%,rgba(31,73,133,.55),transparent 70%),linear-gradient(180deg,#122338,#1C3449);margin-top:-73px;padding-top:calc(73px + clamp(28px,4vw,56px));padding-bottom:0;overflow:hidden}
@@ -821,8 +831,9 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
       <a href="#faq">Вопросы</a>
     </nav>
     <a class="tel" href="tel:88001000943">8 800 100-09-43</a>
+    <div class="cur" id="cur" role="group" aria-label="Валюта цен"><button type="button" data-c="THB" aria-pressed="true">฿</button><button type="button" data-c="USD" aria-pressed="false">$</button><button type="button" data-c="RUB" aria-pressed="false">₽</button></div>
     <button class="skin" id="skin" type="button" aria-label="Переключить светлую и тёмную тему"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></button>
-    <button class="btn btn-primary btn-sm" type="button" data-quiz>Подойдёт ли мне?</button>
+    <button class="btn btn-primary btn-sm" type="button" data-quiz><span class="l">Подойдёт ли мне?</span><span class="s">Подойдёт?</span></button>
   </div>
 </header>
 
@@ -844,7 +855,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     <h1 class="kin" id="kin"><span class="sr">Карта АТЭС: 90 дней в Таиланде без визы — за 4 750 бат в год</span>
       <span class="kin-num" aria-hidden="true"><span class="odo"><span class="odo-col" id="odo"><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></span></span><span>0</span><span class="was">вместо <b>30</b> дней по безвизу</span></span>
       <span class="kin-t" aria-hidden="true"><span class="w"><span>дней</span></span> <span class="w"><span>в&nbsp;Таиланде</span></span></span>
-      <span class="kin-b" aria-hidden="true"><span class="w"><span>без&nbsp;визы</span></span> <span class="w"><span>—&nbsp;за&nbsp;<b>4&nbsp;750&nbsp;฿</b></span></span> <span class="w"><span>в&nbsp;год</span></span></span>
+      <span class="kin-b" aria-hidden="true"><span class="w"><span>без&nbsp;визы</span></span> <span class="w"><span>—&nbsp;за&nbsp;<b><span class="m" data-rub="12000"></span></b></span></span> <span class="w"><span>в&nbsp;год</span></span></span>
     </h1>
     <div class="hero-grid">
       <div class="hero-text">
@@ -970,11 +981,11 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
     </div>
     <div class="ways rv" id="ways">
       <div class="way-head"><span>Способ</span><span>Стоимость за год</span><span>Цена документа</span></div>
-      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:93%"></i></div><div class="way-p num">≈ 42 000 ฿</div><div class="way-t num">12 выездов × ≈ 3 500 ฿</div><div class="way-d">Выезд каждые 30 дней, продление только раз в году</div></div>
-      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num">40–45 тыс. ฿</div><div class="way-t num">40–45 тыс. ฿ на 1 год</div><div class="way-d">Нужно посещать учёбу, путешествовать неудобно</div></div>
-      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:42%"></i></div><div class="way-p num">≈ 18–19 тыс. ฿</div><div class="way-t num">90–95 тыс. ฿ на 5 лет</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
-      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:16%"></i></div><div class="way-p num">≈ 4 750–7 100 ฿</div><div class="way-t num">60–90 тыс. ₽ на 5 лет</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран по той же карте</div></div>
-      <p class="fine">Цены других вариантов — примерные по рынку на сентябрь 2026. Правила чужих виз часто меняются, по ним мы не консультируем. Карта — тарифы «Стандарт» и «Приоритет», курс 1 ฿ = 2,52 ₽.</p>
+      <div class="way"><div class="way-n">Бордерраны по безвизу</div><div class="way-bar"><i style="--w:93%"></i></div><div class="way-p num">≈ <span class="m" data-thb="42000"></span></div><div class="way-t num">12 выездов × ≈ <span class="m" data-thb="3500"></span></div><div class="way-d">Выезд каждые 30 дней, продление только раз в году</div></div>
+      <div class="way"><div class="way-n">Учебная виза</div><div class="way-bar"><i style="--w:100%"></i></div><div class="way-p num"><span class="m" data-thb="40000" data-thb2="45000"></span></div><div class="way-t num"><span class="m" data-thb="40000" data-thb2="45000"></span> на 1 год</div><div class="way-d">Нужно посещать учёбу, путешествовать неудобно</div></div>
+      <div class="way"><div class="way-n">Долгосрочная DTV</div><div class="way-bar"><i style="--w:42%"></i></div><div class="way-p num">≈ <span class="m" data-thb="18000" data-thb2="19000"></span></div><div class="way-t num"><span class="m" data-thb="90000" data-thb2="95000"></span> на 5 лет</div><div class="way-d">Оформляется из страны гражданства, получить сложно</div></div>
+      <div class="way best"><div class="way-n">Карта АТЭС</div><div class="way-bar"><i style="--w:16%"></i></div><div class="way-p num">≈ <span class="m" data-rub="12000" data-rub2="18000"></span></div><div class="way-t num"><span class="m" data-rub="60000" data-rub2="90000"></span> на 5 лет</div><div class="way-d">4 выезда в год, Fast Track и ещё 17 стран по той же карте</div></div>
+      <p class="fine">Цены других вариантов — примерные по рынку на сентябрь 2026. Правила чужих виз часто меняются, по ним мы не консультируем. Карта — тарифы «Стандарт» и «Приоритет». <span class="rate-note"></span></p>
     </div>
     <p class="math-cta rv"><a href="#calc">Посчитать свой сезон в калькуляторе ↓</a></p>
   </div>
@@ -1160,23 +1171,23 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="field">
           <span class="lbl" id="run-l">Как вы обычно делаете визаран</span>
           <div class="chips" role="group" aria-labelledby="run-l" id="runtype">
-            <button type="button" data-c="8000" aria-pressed="false">Наземный бордерран<small>≈ 8 000 ₽</small></button>
-            <button type="button" data-c="20000" aria-pressed="true">Перелёт в соседнюю страну<small>≈ 20 000 ₽</small></button>
-            <button type="button" data-c="35000" aria-pressed="false">Вдвоём, с отелем<small>≈ 35 000 ₽</small></button>
+            <button type="button" data-c="8000" aria-pressed="false">Наземный бордерран<small>≈ <span class="m" data-rub="8000"></span></small></button>
+            <button type="button" data-c="20000" aria-pressed="true">Перелёт в соседнюю страну<small>≈ <span class="m" data-rub="20000"></span></small></button>
+            <button type="button" data-c="35000" aria-pressed="false">Вдвоём, с отелем<small>≈ <span class="m" data-rub="35000"></span></small></button>
           </div>
         </div>
         <div class="field">
           <label for="cost">Или впишите свою стоимость одного выезда</label>
-          <div class="money"><input id="cost" inputmode="numeric" value="20 000"><span>₽ <span id="cost-thb" class="num"></span></span></div>
+          <div class="money"><input id="cost" inputmode="numeric" value="20 000" aria-describedby="cost-sym"><span><span id="cost-sym">₽</span> <span id="cost-thb" class="num"></span></span></div>
         </div>
         <div class="field">
           <span class="lbl" id="plan-l">Тариф для сравнения</span>
           <div class="chips" role="group" aria-labelledby="plan-l" id="plan">
-            <button type="button" data-p="60000" aria-pressed="true">Стандарт · 60 000 ₽</button>
-            <button type="button" data-p="90000" aria-pressed="false">Приоритет · 90 000 ₽</button>
+            <button type="button" data-p="60000" aria-pressed="true">Стандарт · <span class="m" data-rub="60000"></span></button>
+            <button type="button" data-p="90000" aria-pressed="false">Приоритет · <span class="m" data-rub="90000"></span></button>
           </div>
         </div>
-        <p class="fine">Правила для граждан РФ на 27.09.2026: безвиз 30 дней + одно продление на 30 дней в году; по карте — до 90 дней за въезд. Курс 1 ฿ = 2,52 ₽ на 06.10.2026.</p>
+        <p class="fine">Правила для граждан РФ на 27.09.2026: безвиз 30 дней + одно продление на 30 дней в году; по карте — до 90 дней за въезд. <span class="rate-note"></span></p>
       </div>
       <div class="wm-out" aria-live="polite">
         <div class="passport rv">
@@ -1214,8 +1225,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="bp-main">
           <div class="self-a"><div class="bp-top"><span>Своими силами</span></div>
           <h3>Самостоятельный путь</h3>
-          <div class="price num">40–50 т. <small>₽ взносы</small></div>
-          <p class="per">Плюс ваше время. Взносы при отказе не возвращаются</p></div>
+          <div class="price num"><span class="m" data-rub="40000" data-rub2="50000" data-big="1"></span></div>
+          <p class="per">Взносы ассоциациям плюс ваше время. При отказе не возвращаются</p></div>
           <div class="bp-docs"><b>Что придётся собрать</b>Вступление в ТПП РФ, РСПП или «Опору России», подтверждение реального оборота ВЭД за 12 месяцев, таможенные декларации, документы валютного контроля, штатное расписание, международные контракты, анкеты МИД.</div>
           <ul>
             <li class="x"><span>Нужна своя компания с ВЭД — ИП, фрилансеру и IT обычно отказывают</span></li>
@@ -1230,8 +1241,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="bp-main">
           <div class="bp-top"><span>Класс · Standard</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
           <h3>Стандарт</h3>
-          <div class="price num">60 000 <small>₽</small></div>
-          <p class="per">≈ 4 750 ฿ / 1 000 ₽ в месяц за 5 лет</p>
+          <div class="price num"><span class="m" data-rub="60000" data-big="1"></span></div>
+          <p class="per">≈ <span class="m" data-rub="12000"></span> в год · <span class="m" data-rub="1000"></span> в месяц</p>
           <div class="bp-docs"><b>Полный пакет документов</b><!--DOCS_STD--></div>
           <ul>
             <li><span>Очередная подача, временная карта через <b>6–8 месяцев</b></span></li>
@@ -1249,8 +1260,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="bp-main">
           <div class="bp-top"><span>Класс · Priority</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true" style="color:#62A4FF"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
           <h3>Приоритет</h3>
-          <div class="price num">90 000 <small>₽</small></div>
-          <p class="per">≈ 7 100 ฿ / 1 500 ₽ в месяц за 5 лет</p>
+          <div class="price num"><span class="m" data-rub="90000" data-big="1"></span></div>
+          <p class="per">≈ <span class="m" data-rub="18000"></span> в год · <span class="m" data-rub="1500"></span> в месяц</p>
           <div class="bp-docs"><b>Упрощённая подача</b><!--DOCS_PRI--></div>
           <ul>
             <li><span><b>Приоритетная подача:</b> трек ~через 2 месяца</span></li>
@@ -1267,8 +1278,8 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
         <div class="bp-main">
           <div class="bp-top"><span>Класс · Split</span><svg class="plane" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M61 32c0-2-3-3.2-6.5-3.2H39L24.5 9h-5.2l7.9 19.8H14.6L9.4 21.6H5.2L8.6 32l-3.4 10.4h4.2l5.2-7.2h12.6L19.3 55h5.2L39 35.2h15.5C58 35.2 61 34 61 32z"/></svg></div>
           <h3>Сплит</h3>
-          <div class="price num">120 000 <small>₽</small></div>
-          <p class="per">60 000 + 40 000 + 20 000 ₽ по этапам</p>
+          <div class="price num"><span class="m" data-rub="120000" data-big="1"></span></div>
+          <p class="per"><span class="m" data-rub="60000"></span> + <span class="m" data-rub="40000"></span> + <span class="m" data-rub="20000"></span> по этапам</p>
           <div class="bp-docs"><b>Упрощённая подача</b><!--DOCS_PRI--></div>
           <ul>
             <li><span>Скорость как у «Приоритета» — <b>60–80 дней</b></span></li>
@@ -1282,7 +1293,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
           <a class="btn btn-line on-light" href="https://t.me/apec_center_bot?start=site_split" target="_blank" rel="noopener">Выбрать «Сплит»</a></div>
       </article>
     </div>
-    <p class="pnote rv">Доставка карты по России и в Таиланд бесплатная. Перевыпуск на новый загранпаспорт или при утере — 20 000 ₽. Скидок нет: цена одинакова для всех.</p>
+    <p class="pnote rv">Доставка карты по России и в Таиланд бесплатная. Перевыпуск на новый загранпаспорт или при утере — <span class="m" data-rub="20000"></span>. Скидок нет: цена одинакова для всех.</p>
   </div>
 </section>
 
@@ -1404,7 +1415,17 @@ var $=function(id){return document.getElementById(id)};
 var RM=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 function plural(n,a,b,c){n=Math.abs(n)%100;var m=n%10;if(n>10&&n<20)return c;if(m>1&&m<5)return b;if(m==1)return a;return c}
 function fmt(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g," ")}
-var THB=2.52425;
+/* ===== currency: all amounts are stored in RUB; rates from the CRM (ЦБ) on build date ===== */
+var RATE=/*RATES*/{RUB:1,THB:2.52425,USD:84.9309,date:"06.10.2026"},SYM={RUB:"₽",THB:"฿",USD:"$"};
+var CUR=(function(){try{return localStorage.getItem("apec_cur")}catch(e){return null}})();if(!RATE[CUR]||CUR==="date")CUR="THB";
+function rnd(v,c){var a=Math.abs(v),st=c==="RUB"?(a>=10000?1000:100):c==="THB"?(a>=10000?100:50):(a>=1000?10:5);return Math.round(v/st)*st}
+function cv(rub,c){return rub/RATE[c||CUR]}
+function money(rub,c,o){c=c||CUR;o=o||{};var v=fmt(rnd(cv(rub,c),c)).replace(/ /g,"\u00a0");if(o.big)return c==="USD"?'<small>$</small>'+v:v+' <small>'+SYM[c]+'</small>';return c==="USD"?"$"+v:v+"\u00a0"+SYM[c]}
+function moneyR(a,b,c,o){c=c||CUR;o=o||{};var x=fmt(rnd(cv(a,c),c)).replace(/ /g,"\u00a0"),y=fmt(rnd(cv(b,c),c)).replace(/ /g,"\u00a0");if(o.big)return c==="USD"?'<small>$</small>'+x+"–"+y:x+"–"+y+' <small>'+SYM[c]+'</small>';return c==="USD"?"$"+x+"–"+y:x+"–"+y+"\u00a0"+SYM[c]}
+function alt(){return CUR==="RUB"?"THB":"RUB"}
+function renderMoney(root){[].forEach.call((root||document).querySelectorAll(".m"),function(el){var d=el.dataset,a=d.rub?+d.rub:+d.thb*RATE.THB,b=d.rub2?+d.rub2:d.thb2?+d.thb2*RATE.THB:0;el.innerHTML=b?moneyR(a,b,null,{big:d.big}):money(a,null,{big:d.big})});
+  [].forEach.call(document.querySelectorAll(".rate-note"),function(el){el.textContent="Курс ЦБ на "+RATE.date+": 1 ฿ = "+String(Math.round(RATE.THB*100)/100).replace(".",",")+" ₽, $1 = "+String(Math.round(RATE.USD*100)/100).replace(".",",")+" ₽."})}
+function mtok(t){return t.replace(/\{R:(\d+)\}/g,function(_,n){return '<span class="m" data-rub="'+n+'"></span>'})}
 
 /* 18 economies. st: open | soon (open, ABMG Dalian 23–24.08.2026 announced 90) | closed. Data per sales book, 27.09.2026 */
 var C=[
@@ -1470,8 +1491,8 @@ if(!RM&&matchMedia("(hover:hover) and (pointer:fine)").matches){
 var S={m:6,cost:20000,plan:60000};
 function chipGroup(id,key,attr,cb){var g=$(id);g.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(g.children,function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");S[key]=+b.dataset[attr];if(cb)cb();calc()})}
 var costIn=$("cost");
-chipGroup("season","m","m");chipGroup("plan","plan","p");chipGroup("runtype","cost","c",function(){costIn.value=fmt(S.cost)});
-costIn.addEventListener("input",function(){var v=String(costIn.value).replace(/\D/g,"").slice(0,7);costIn.value=v?fmt(+v):"";S.cost=+v||0;[].forEach.call($("runtype").children,function(x){x.setAttribute("aria-pressed",+x.dataset.c===S.cost?"true":"false")});calc()});
+chipGroup("season","m","m");chipGroup("plan","plan","p");chipGroup("runtype","cost","c",function(){costIn.value=fmt(rnd(cv(S.cost),CUR))});
+costIn.addEventListener("input",function(){var v=String(costIn.value).replace(/\D/g,"").slice(0,7);costIn.value=v?fmt(+v):"";S.cost=(+v||0)*RATE[CUR];[].forEach.call($("runtype").children,function(x){x.setAttribute("aria-pressed",+x.dataset.c===S.cost?"true":"false")});calc()});
 /* exits inside the season (not counting the final flight home). Year-round = steady state */
 function runsWithout(m){if(m>=12)return 11;var d=m*30.4;return Math.max(0,Math.ceil((d-60)/30-.1))}
 function runsWith(m){if(m>=12)return 4;var d=m*30.4;return Math.max(0,Math.ceil(d/90-.1)-1)}
@@ -1487,9 +1508,9 @@ function calc(){
   $("months").innerHTML=mm.map(function(x){return "<span>"+x+"</span>"}).join("");
   var y5wo=wo*5,y5wi=wi*5,mWo=y5wo*S.cost,mWi=y5wi*S.cost+S.plan,save=mWo-mWi;
   $("r-runs").textContent=y5wo+" → "+y5wi;
-  $("r-money").textContent=fmt(mWo)+" ₽";$("r-money-s").textContent="на визараны без карты, ≈ "+fmt(mWo/THB)+" ฿";
-  $("r-save").textContent=(save>0?fmt(save):"0")+" ₽";$("r-save-s").textContent=save>0?"с учётом цены карты, ≈ "+fmt(save/THB)+" ฿":"по этим цифрам выгоды нет";
-  var cost=S.cost?S.plan/S.cost:0;$("cost-thb").textContent=S.cost?"≈ "+fmt(S.cost/THB)+" ฿":"";
+  $("r-money").textContent=money(mWo);$("r-money-s").textContent="на визараны без карты, ≈ "+money(mWo,alt());
+  $("r-save").textContent=money(Math.max(0,save));$("r-save-s").textContent=save>0?"с учётом цены карты, ≈ "+money(save,alt()):"по этим цифрам выгоды нет";
+  var cost=S.cost?S.plan/S.cost:0;$("cost-sym").textContent=SYM[CUR];$("cost-thb").textContent=S.cost?"≈ "+money(S.cost,alt()):"";
   var v=$("verdict");v.classList.toggle("warn",save<=0);
   v.innerHTML=save>0?"Карта окупается за <b>"+(Math.ceil(cost*10)/10).toString().replace(".",",")+" "+plural(Math.ceil(cost),"визаран","визарана","визаранов")+"</b>. Дальше каждый сезон — минус "+(wo-wi)+" "+plural(wo-wi,"выезд","выезда","выездов")+", плюс "+Math.max(0,(wo-wi)*2)+" дней жизни, которые не уходят на дорогу и очереди."
     :"По вашим цифрам карта не окупается одним Таиландом. Она нужна, если вы живёте в Таиланде дольше или ездите по региону: Корея без K-ETA, Тайвань и Сингапур без визы.";
@@ -1504,8 +1525,8 @@ $("pain-grid").innerHTML=PAINS.map(function(p){return '<button class="pain rv" t
 var flist=$("faq-list");
 var faqAll=false;
 function renderFaq(t){var items=FAQ.filter(function(f){return t==="all"||f.t===t});var more=$("faq-all");if(t==="all"&&!faqAll&&items.length>8){items=items.slice(0,8);more.hidden=false}else more.hidden=true;var half=Math.ceil(items.length/2);
-  function col(a){return '<div>'+a.map(function(f,i){return '<details><summary>'+f.q+'</summary><p>'+f.a+'</p></details>'}).join("")+'</div>'}
-  flist.innerHTML=col(items.slice(0,half))+col(items.slice(half))}
+  function col(a){return '<div>'+a.map(function(f,i){return '<details><summary>'+f.q+'</summary><p>'+mtok(f.a)+'</p></details>'}).join("")+'</div>'}
+  flist.innerHTML=col(items.slice(0,half))+col(items.slice(half));renderMoney(flist)}
 $("faq-tabs").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(this.children,function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");renderFaq(b.dataset.t)});
 $("faq-all").addEventListener("click",function(){faqAll=true;renderFaq("all");build()});
 renderFaq("all");
@@ -1592,7 +1613,7 @@ Quiz.prototype.result=function(){var a=this.a,self=this,r=this.root,lvl,title,te
   else if(a.pass==="exp"){lvl="mid";title="Сначала нужен новый загранпаспорт";text="С действующим загранпаспортом РФ шансы высокие. Оставьте контакт — подскажем, как подготовиться, и бесплатно проверим новый паспорт.";}
   else{lvl=a.pass==="lt1"?"mid":"ok";title=lvl==="ok"?"Высокие шансы получить карту":"Шансы есть — проверим паспорт";
     text=lvl==="ok"?"Стоп-факторов по вашим ответам нет. Финальный вердикт даёт экспресс-аудит паспорта — бесплатно, до 15 минут в рабочее время.":"Запас по сроку паспорта желателен, но не обязателен. Специалист бесплатно проверит паспорт и скажет точно. Если паспорт закончится раньше карты, перевыпуск — 20 000 ₽.";}
-  plan=a.when==="calm"?"Стандарт · 60 000 ₽":"Приоритет · 90 000 ₽";date=a.when==="calm"?"≈ через 6–8 месяцев":"≈ к "+addDays(75);
+  plan=a.when==="calm"?"Стандарт · "+money(60000):"Приоритет · "+money(90000);date=a.when==="calm"?"≈ через 6–8 месяцев":"≈ к "+addDays(75);
   var n=a.who==="3"?"3+":a.who||"1",start="quiz_"+(lvl)+"_"+(a.when==="calm"?"std":"pri")+"_"+(a.entry||"x")+"_"+String(n).replace("+","p");
   r.innerHTML='<div class="q-head"><small>Результат</small>'+(this.inModal?'<button class="qx" type="button" aria-label="Закрыть">×</button>':'')+'</div><div class="q-prog"><i style="width:100%"></i></div><div class="q-res"><span class="q-badge '+lvl+'">'+(lvl==="ok"?"✓ Подходит":lvl==="mid"?"Нужна проверка":"Не подходит")+'</span><h3>'+title+'</h3><p>'+text+'</p>'+
    (lvl!=="no"?'<div class="q-sum"><div><small>Тариф</small><b>'+plan+'</b></div><div><small>Временная карта</small><b>'+date+'</b></div><div><small>Заявителей</small><b>'+n+'</b></div><div><small>Ближайший реестр</small><b>четверг, 15:00 МСК</b></div></div>'+
@@ -1610,6 +1631,9 @@ Quiz.prototype.result=function(){var a=this.a,self=this,r=this.root,lvl,title,te
 };
 var inline=new Quiz($("quiz-inline"),false);inline.render();
 var modal=$("modal"),mq=new Quiz($("quiz-modal"),true),lastFocus=null;
+function setCur(c){CUR=c;try{localStorage.setItem("apec_cur",c)}catch(e){}[].forEach.call($("cur").children,function(b){b.setAttribute("aria-pressed",b.dataset.c===c?"true":"false")});renderMoney();costIn.value=fmt(rnd(cv(S.cost),c));calc();if(!modal.hidden&&mq.i>=Q.length)mq.result();if(inline.i>=Q.length)inline.result()}
+$("cur").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setCur(b.dataset.c)});
+setCur(CUR);
 function openModal(pre){lastFocus=document.activeElement;mq.a={};mq.i=0;if(pre){mq.a.entry=pre;mq.i=1}mq.render();modal.hidden=false;document.body.style.overflow="hidden"}
 function closeModal(){modal.hidden=true;document.body.style.overflow="";if(lastFocus)lastFocus.focus()}
 modal.addEventListener("click",function(e){if(e.target===modal)closeModal()});

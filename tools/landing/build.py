@@ -11,7 +11,8 @@ dots=open(S+'/dots.json').read()
 em=open(ROOT+'/site/img/emblem.svg').read()
 inner=re.sub(r'^\s*<svg[^>]*>','',em); inner=re.sub(r'</svg>\s*$','',inner).strip()
 faq=[dict(t=t,q=q,a=a) for t,q,a in C.FAQ]
-ld=",".join(json.dumps({"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":f["a"]}},ensure_ascii=False) for f in faq)
+rub=lambda t:re.sub(r"\{R:(\d+)\}",lambda m:"{:,} ₽".format(int(m.group(1))).replace(","," "),t)
+ld=",".join(json.dumps({"@type":"Question","name":f["q"],"acceptedAnswer":{"@type":"Answer","text":rub(f["a"])}},ensure_ascii=False) for f in faq)
 rep={'/*DOTS*/null':dots,'<!--EMBLEM-->':inner,'/*PAINSJSON*/[]':json.dumps(C.PAINS,ensure_ascii=False),'/*FAQJSON*/[]':json.dumps(faq,ensure_ascii=False),'/*FAQLD*/':ld,'<!--DOCS_STD-->':C.DOCS_STD,'<!--DOCS_PRI-->':C.DOCS_PRI,'/*FLAGS*/{}':open(S+'/flags.json').read()}
 for k,v in rep.items():
     assert k in src,k
