@@ -160,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={assets:null,downloads:null,md:{f:{q:"",kind:"",loc:"",speaker:"",rights:"",unused:false},up:{kind:"broll",loc:"",speaker:"",rights:"own",tags:""},prog:"",open:null,ed:{},g:{kind:"image",model:"google/nano-banana",ratio:"3:4",task:"",scene:"",prompt:"",busy:false,pbusy:false,prog:""},c:{piece:"",slides:null,photo:"",busy:false,prog:"",json:null},bal:null,usage:null},cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[],creators:[],tasks:[],assets:[],jobs:[]}};
+const S={cn:{busy:false,err:""},assets:null,downloads:null,md:{f:{q:"",kind:"",loc:"",speaker:"",rights:"",unused:false},up:{kind:"broll",loc:"",speaker:"",rights:"own",tags:""},prog:"",open:null,ed:{},g:{kind:"image",model:"google/nano-banana",ratio:"3:4",task:"",scene:"",prompt:"",busy:false,pbusy:false,prog:""},c:{piece:"",slides:null,photo:"",busy:false,prog:"",json:null},bal:null,usage:null},cr:{me:"",tp:null,sub:{},ret:{},pub:{}},pr:{view:"kanban",open:null,busy:{},prog:"",sel:{},ret:{},preview:{}},mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[],pieces:[],creators:[],tasks:[],assets:[],jobs:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -1355,23 +1355,92 @@ async function downloadSlides(pc){
   catch(e){if(!(e&&e.code==="cancelled"))toast("Сохранение отменено или недоступно")}
 }
 
-/* ---------- 7. Настройки ---------- */
+/* ---------- 7. Настройки: кабинет подключений (данные из CRM, ключи остаются в CRM) ---------- */
+const PURPOSE={telephony_realtime:"Телефония: голос",telephony_llm:"Телефония: ответы",telephony_stt:"Телефония: распознавание",autopilot:"Автопилот",chat:"Чаты",other:"Другое"};
+const ACC_TYPE={instagram:"Instagram",telegram:"Telegram (через Unipile)",telegram_bot:"Telegram-бот",telegram_user:"Telegram-аккаунт",whatsapp:"WhatsApp",max_bot:"MAX-бот"};
+const connSnap=()=>S.data.stats.find(x=>x.id==="connections");
+const stChip=(st,en)=>h("span",{class:"chip "+(en===false?"mute":st==="ok"||st==="active"?"ok":st==="error"?"warn":"mute")},en===false?"Выключено":({ok:"Работает",active:"Работает",error:"Ошибка",warn:"Внимание",unknown:"Не проверялось"})[st]||st||"—");
+const dt=v=>v?new Date(v).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"—";
+async function loadConnections(){
+  const C=S.cn;if(C.busy||!S.mcp)return;C.busy=true;C.err="";render();
+  try{
+    const st=await crm("GET","/api/settings"),s=(st&&st.settings)||{};
+    const ac=await crm("GET","/api/messenger-accounts");
+    const lab=a=>{const l=String(a.label||"");return/\d{6,}/.test(l)?"":l};
+    const snap={at:new Date().toISOString(),
+      providers:(((s.ai||{}).providers)||[]).map(x=>({name:String(x.name||""),provider:String(x.provider||""),model:String(x.model||""),base_url:String(x.base_url||""),enabled:!!x.enabled,status:String(x.last_status||""),checked:x.last_checked_at||"",token_set:!!x.token_set,purposes:Array.isArray(x.purposes)?x.purposes:[]})),
+      unipile:{enabled:!!(s.messengers&&s.messengers.unipile&&s.messengers.unipile.enabled),key:!!(s.messengers&&s.messengers.unipile&&s.messengers.unipile.api_key_set)},
+      yandex:{connected:!!(s.yandex&&s.yandex.connected),host:String((s.yandex&&s.yandex.seo_site_host)||""),search:!!(s.yandex&&s.yandex.search_connected)},
+      accounts:((ac&&ac.items)||[]).map(a=>({type:String(a.type||""),label:lab(a),enabled:!!a.enabled,status:String(a.status||""),via:String(a.provider||""),last:a.last_inbound_at||""}))};
+    await S.db.doc("stats/connections").set(snap);toast("Подключения обновлены");
+  }catch(e){C.err=mcpErr(e)||"Не получилось прочитать настройки CRM"}
+  C.busy=false;render();
+}
 function vSettings(p){
-  p.append(head("Настройки","Подключённые аккаунты и API, роли, словарь меток."));
-  p.append(h("h2",null,"Подключения"));
+  const snap=connSnap();
+  p.append(head("Настройки","Подключённые нейросети и каналы. Ключи и пароли хранятся в CRM, здесь только состояние.",
+    h("div",{class:"row"},h("a",{class:"btn ghost",href:"https://crm.apec.center/",target:"_blank",rel:"noopener"},"Открыть CRM"),
+      S.mcp&&can()&&S.role==="producer"&&h("button",{class:"btn",disabled:S.cn.busy,onclick:loadConnections},S.cn.busy?"Читаю CRM…":"Обновить из CRM"))));
+  if(S.cn.err)p.append(h("div",{class:"empty"},S.cn.err));
+  tabs("settings",[["conn","Подключения"],["utm","Метки"],["roles","Роли"]],(t,pp)=>{
+    if(t==="conn")connTab(pp,snap);
+    if(t==="utm")utmTab(pp);
+    if(t==="roles")rolesTab(pp)},p);
+}
+function connTab(p,snap){
+  if(!snap)p.append(h("div",{class:"empty"},h("b",null,"Состояние подключений ещё не загружено. "),S.mcp?(can()&&S.role==="producer"?"Нажмите «Обновить из CRM»: кабинет прочитает список нейросетей и аккаунтов, ключи не копируются.":"Его загружает продюсер."):"Откройте страницу в Claude с подключённой CRM."));
+  if(snap){
+    p.append(h("p",{class:"muted",style:"margin:0"},"Срез CRM от "+dt(snap.at)+". Чтобы что-то подключить или поменять ключ, откройте CRM: Настройки → нейросети и мессенджеры."));
+    p.append(h("h2",null,"Нейросети в CRM"));
+    p.append(snap.providers.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Название","Тип","Модель","Для чего","Состояние","Проверено"].map(x=>h("th",null,x)))),
+      h("tbody",null,snap.providers.map(x=>h("tr",null,h("td",null,h("b",null,x.name)),h("td",null,x.provider==="anthropic"?"Anthropic":"OpenAI-совместимый"),h("td",null,x.model||"по умолчанию"),
+        h("td",null,h("div",{class:"pill-row"},x.purposes.map(k=>h("span",{class:"chip mute"},PURPOSE[k]||k)))),h("td",null,stChip(x.status,x.enabled),!x.token_set&&h("div",{class:"muted",style:"font-size:12px"},"ключ не задан")),h("td",null,dt(x.checked)))))))
+      :h("div",{class:"empty"},"В CRM нет подключённых нейросетей."));
+    kieCard(p,snap);
+    p.append(h("h2",null,"Каналы и мессенджеры в CRM"));
+    p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Тип","Название","Через","Состояние","Последнее входящее"].map(x=>h("th",null,x)))),
+      h("tbody",null,snap.accounts.map(a=>h("tr",null,h("td",null,ACC_TYPE[a.type]||a.type),h("td",null,a.label||"—"),h("td",null,a.via==="unipile"?"Unipile":"напрямую"),h("td",null,stChip(a.status,a.enabled)),h("td",null,dt(a.last))))))));
+    const ig=snap.accounts.filter(a=>a.type==="instagram");
+    p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:6px"},h("h2",null,"Что это значит для контента"),
+      h("ul",{style:"margin:0;padding-left:18px"},
+        h("li",null,"Instagram: в CRM подключён "+ig.length+" аккаунт"+(ig.length===1?"":"ов")+" через Unipile. У вас три Instagram-канала (@dima.expat, @aleks_rykov, @apec_center), поэтому метрики по каждому пока считаются по заявкам и ChatPlace, а не по охвату."),
+        h("li",null,"Публикация и охват через API Instagram пока недоступны: запрос постов у Unipile вернул ошибку. Публикуем вручную, система отдаёт готовый пакет."),
+        h("li",null,"Telegram: бот @apec_center_bot подключён, публикация в канал идёт через n8n."),
+        h("li",null,"Яндекс: "+(snap.yandex.connected?"подключён":"OAuth не подключён")+(snap.yandex.host?" (сайт "+snap.yandex.host+")":"")+". Метрика и Вебмастер для SEO-статей появятся, когда его подключите в CRM."),
+        h("li",null,"Unipile: "+(snap.unipile.enabled&&snap.unipile.key?"включён, ключ задан":"не настроен")+"."))));
+  }
+  p.append(h("h2",null,"Системы кабинета"));
   const it=S.data.integrations;
   p.append(it.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Система","Для чего","Состояние"].map(x=>h("th",null,x)))),
     h("tbody",null,it.map(i=>h("tr",null,h("td",null,h("b",null,i.name)),h("td",null,i.purpose),h("td",null,h("span",{class:"chip "+(i.state==="ok"?"ok":i.state==="todo"?"warn":"mute")},i.note||i.state))))))):h("div",{class:"empty"},"Подключений пока нет."));
-  p.append(h("h2",null,"Словарь меток"));
+}
+/* Kie.ai: ключ добавляется в CRM; для генерации из кабинета ему нужен ещё доступ в n8n */
+function kieCard(p,snap){
+  const T=M(),b=T.bal||{},kie=snap.providers.find(x=>/kie/i.test(x.name+" "+x.base_url));
+  p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},
+    h("div",{class:"row",style:"justify-content:space-between"},h("h2",null,"Kie.ai: картинки и видео"),h("div",{class:"row"},
+      h("span",{class:"chip "+(kie&&kie.enabled&&kie.token_set?"ok":"warn")},kie?(kie.enabled&&kie.token_set?"В CRM подключена":"В CRM есть, ключ или включение не заданы"):"В CRM пока нет"),
+      h("span",{class:"chip "+(b.credits!=null?"ok":b.err?"warn":"mute")},b.credits!=null?"В n8n работает, баланс "+nf(b.credits):b.err?"В n8n нет доступа":"В n8n не проверялась"))),
+    h("ol",{style:"margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px"},
+      h("li",null,"В CRM добавьте нейросеть Kie.ai: адрес https://api.kie.ai и ваш ключ. Так ключ лежит в одном месте и виден в списке выше."),
+      h("li",null,"Генерацию из кабинета делает n8n, поэтому тот же ключ нужен там как доступ «kie.ai API» (Bearer) в проекте Funnel Demo. Из CRM ключ в n8n не передаётся: CRM отдаёт ключи только скрытыми."),
+      h("li",null,"Нажмите «Проверить доступ в n8n»: кабинет спросит у kie.ai баланс.")),
+    h("div",{class:"row"},S.mcp&&h("button",{class:"btn ghost",disabled:b.busy,onclick:loadBalance},b.busy?"Проверяю…":"Проверить доступ в n8n"),b.err&&h("span",{class:"muted"},b.err))));
+}
+function utmTab(p){
   p.append(h("div",{class:"card"},h("dl",{class:"kv",style:"margin:0"},
-    h("dt",null,"utm_source"),h("dd",null,"instagram, telegram, youtube, site, dzen, vcru"),
+    h("dt",null,"utm_source"),h("dd",null,"instagram, telegram, youtube, site, dzen, vcru, meta, partner"),
     h("dt",null,"utm_medium"),h("dd",null,"social, organic, referral, cpc"),
-    h("dt",null,"utm_campaign"),h("dd",null,"короткое имя темы периода, латиницей"),
-    h("dt",null,"utm_content"),h("dd",null,"код публикации, например T001-TG"),
-    h("dt",null,"utm_term"),h("dd",null,"автор: dima, aleks, код амбассадора"))));
-  p.append(h("h2",null,"Роли"));
+    h("dt",null,"utm_campaign"),h("dd",null,"короткое имя темы латиницей, ставится само"),
+    h("dt",null,"utm_content"),h("dd",null,"код публикации, например T012-IGD"),
+    h("dt",null,"utm_term"),h("dd",null,"автор: dima, aleks, ник амбассадора или team"),
+    h("dt",null,"start (бот)"),h("dd",null,"код публикации, например T012-TG"))));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Метки собираются сами при выдаче заданий. Ссылки в CRM здесь не создаются."));
+}
+function rolesTab(p){
   p.append(h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,h("th",null,"Роль"),h("th",null,"Видит"),h("th",null,"Меняет"))),
     h("tbody",null,Object.values(ROLES).map(r=>h("tr",null,h("td",null,r.name),h("td",null,r.see.map(id=>SECTIONS.find(s=>s.id===id).name).join(", ")),h("td",null,r.edit?"да":"нет")))))));
+  p.append(h("p",{class:"muted",style:"margin:0"},"Переключатель «Смотреть как» меняет только вид. Реальные права дают уровни общего доступа к странице в Claude."));
 }
 
 /* ---------- запуск ---------- */
