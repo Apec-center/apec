@@ -143,7 +143,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 /* ===== HERO ===== */
 .hero{background:radial-gradient(80% 70% at 85% 30%,rgba(40,127,242,.30),transparent 60%),radial-gradient(60% 60% at 10% 100%,rgba(31,73,133,.55),transparent 70%),linear-gradient(180deg,#122338,#1C3449);margin-top:-73px;padding-top:calc(73px + clamp(28px,4vw,56px));padding-bottom:0;overflow:hidden}
 .hero canvas.bgmap{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none;mask-image:radial-gradient(75% 85% at 70% 40%,#000,transparent 80%);-webkit-mask-image:radial-gradient(75% 85% at 70% 40%,#000,transparent 80%)}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:center;padding-bottom:clamp(40px,5vw,64px)}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px);align-items:start;padding-bottom:clamp(40px,5vw,64px)}
 .hero-text{display:grid;gap:22px;min-width:0}
 .alert{display:inline-flex;align-items:center;gap:10px;justify-self:start;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(229,56,59,.12);border:1px solid rgba(229,56,59,.42);font-size:13.5px;font-weight:600;color:#FFD9D9;line-height:1.35}
 .alert i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--route);animation:pulse 1.8s infinite}
@@ -174,7 +174,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 /* kinetic headline */
 .kick{margin:4px 0 4px}
 .hero .alert{margin-bottom:22px}
-.kin{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(16px,2.4vw,34px);align-items:center;margin:0 0 clamp(26px,3.5vw,44px);line-height:1}
+.kin{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(16px,2.4vw,34px);align-items:center;margin:0 0 clamp(14px,1.8vw,22px);line-height:1}
 .sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .kin-num{grid-row:span 2;position:relative;display:flex;align-items:flex-start;font:600 clamp(104px,15vw,220px)/.82 var(--f-head);letter-spacing:-.02em;color:var(--electric-2);padding-bottom:.08em}
 :root[data-skin="light"] .kin-num{color:#287FF2}
@@ -211,7 +211,7 @@ section{position:relative;padding-block:clamp(72px,9vw,120px)}
 .tk em{font-style:normal;font:600 10.5px/1 var(--f-sub);letter-spacing:.06em;text-transform:uppercase;color:#F0C27A;padding:4px 6px;border-radius:6px;background:rgba(240,194,122,.12)}
 .kin-was-m{display:none}
 @media (max-width:560px){
-  .kin{display:block;margin-bottom:22px}
+  .kin{display:block;margin-bottom:14px}
   .kin-num{display:inline-flex;font-size:64px;vertical-align:baseline;margin-right:.12em}
   .kin-num .was{display:none!important}
   .kin-t{display:inline;font-size:30px}
