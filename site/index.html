@@ -354,9 +354,15 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .pf.front{color:var(--ink)}
 .way-n{grid-area:n;font:600 15px/1.3 var(--f-sub)}
 .way-bar{grid-area:bar;height:14px;border-radius:8px;background:var(--pearl);overflow:hidden}
-.way-bar i{display:block;height:100%;width:var(--w);border-radius:8px;background:linear-gradient(90deg,#E5383B,#FF8A8C);transform-origin:left;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.way-bar i{position:relative;display:block;height:100%;width:var(--w);border-radius:8px;background:linear-gradient(90deg,#E5383B,#FF8A8C);transform-origin:left}
+.way-bar i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);opacity:0}
 .js .way-bar i{transform:scaleX(0)}
-.js .ways.in .way-bar i{transform:scaleX(1)}
+.js .ways.play .way-bar i{animation:fillbar 1.6s cubic-bezier(.22,.9,.25,1) forwards;animation-delay:calc(var(--k,0) * .22s)}
+.js .ways.play .way-bar i::after{animation:barshine 1.1s ease-out forwards;animation-delay:calc(var(--k,0) * .22s + 1.2s)}
+@keyframes fillbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes barshine{0%{opacity:1;transform:translateX(-100%)}100%{opacity:0;transform:translateX(100%)}}
+.js .ways .way-p{opacity:.25;transition:opacity .5s}
+.js .ways.play .way-p{opacity:1;transition-delay:calc(var(--k,0) * .22s + .4s)}
 .way-p{grid-area:p;font:600 18px/1 var(--f-sub);text-align:right;white-space:nowrap}
 .way-d{grid-area:d;font-size:13.5px;color:var(--ink-2)}
 .way.best .way-bar i{background:linear-gradient(90deg,#287FF2,#62A4FF)}
@@ -1614,6 +1620,10 @@ document.querySelectorAll("[data-quiz]").forEach(function(b){b.addEventListener(
 var rv=document.querySelectorAll(".rv");
 if("IntersectionObserver" in window&&!RM){var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{rootMargin:"0px 0px -8% 0px"});[].forEach.call(rv,function(el){io.observe(el)})}else [].forEach.call(rv,function(el){el.classList.add("in")});
 
+/* winter-math bars: replay each time the table enters the viewport */
+(function(){var w=$("ways");if(!w)return;[].forEach.call(w.querySelectorAll(".way"),function(r,i){r.style.setProperty("--k",i);r.querySelector(".way-bar i").style.setProperty("--k",i);r.querySelector(".way-p").style.setProperty("--k",i)});
+  if(RM||!("IntersectionObserver" in window)){w.classList.add("play");return}
+  new IntersectionObserver(function(es){es.forEach(function(x){if(x.intersectionRatio>=.45){w.classList.remove("play");void w.offsetWidth;w.classList.add("play")}else if(!x.isIntersecting){w.classList.remove("play")}})},{threshold:[0,.45]}).observe(w)})();
 /* mobile CTA */
 var mbar=$("mbar"),hero=$("hero"),fin=$("start"),vis={h:true,f:false};
 if("IntersectionObserver" in window){var mo=new IntersectionObserver(function(es){es.forEach(function(x){if(x.target===hero)vis.h=x.isIntersecting;else vis.f=x.isIntersecting});mbar.classList.toggle("show",!vis.h&&!vis.f)});mo.observe(hero);mo.observe(fin)}
