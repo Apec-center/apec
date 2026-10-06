@@ -160,7 +160,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[]}};
+const S={mx:{tab:"map",sel:null,draft:{},pf:"",busy:false,sig:{busy:false,prog:"",props:[]},tp:{busy:false,props:[],period:"2 недели",err:""},cellBusy:false},mcp:null,pulse:{days:30,busy:false,prog:"",err:""},sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[],stats:[],cells:[],signals:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -171,7 +171,7 @@ function toast(t){const e=h("div",{class:"toast",role:"status"},t);document.body
 const can=()=>ROLES[S.role].edit&&S.canWrite;
 
 /* ---------- данные (db) ---------- */
-const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats"};
+const COLS={strategy_versions:"strategy_versions",segments:"segments",channels:"channels",products:"products",topics:"topics",integrations:"integrations",stats:"stats",cells:"cells",signals:"signals"};
 function listen(name){
   S.db.collection(COLS[name]).onSnapshot(snap=>{S.data[name]=snap.docs.map(d=>({id:d.id,...d.data()}));render()},e=>console.warn(name,e.code));
 }
@@ -470,15 +470,182 @@ function exactBlock(p){
 function stat(l,v,s){return h("div",{class:"card"},h("div",{class:"muted"},l),h("div",{class:"statnum"},v),h("div",{class:"muted"},s))}
 
 /* ---------- 3. Матрица ---------- */
+const GOALS={reach:"Охват",trust:"Доверие",lead:"Заявка"};
+const goalOf=i=>i<=1?"reach":i===2?"trust":"lead";
+const STAGE_HINT=["Карту не называем: только боль и интрига","Эмпатия, объясняем проблему, в конце мягкий вопрос","Честно сравниваем варианты по срокам и числу выездов","Почему мы: доказательства, метод, возражения","Называем карту, снимаем возражения, прямой призыв"];
+const lastStrategy=()=>[...S.data.strategy_versions].sort((a,b)=>b.n-a.n)[0];
+const cellId=(seg,i)=>seg+"__"+i;
+const cellOf=id=>S.data.cells.find(c=>c.id===id);
+const sigsOf=(seg,i)=>S.data.signals.filter(x=>x.segment===seg&&Number(x.stage)===i);
+const heat=(seg,i)=>sigsOf(seg,i).reduce((a,x)=>a+(Number(x.weight)||1),0);
+const linesOf=t=>String(t||"").split("\n").map(x=>x.trim()).filter(Boolean);
+const stripHtml=t=>String(t||"").replace(/<[^>]+>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim();
+function sampleErr(e){const c=e&&e.code;if(c==="not_granted"||c==="sampling_disabled")S.sample=null;
+  return c==="rate_limited"?"Слишком много запросов, попробуйте позже":c==="cancelled"?"":c==="invalid_json"?"Claude ответил не в том формате, попробуйте ещё раз":"Не получилось, попробуйте ещё раз"}
 function vMatrix(p){
-  const seg=S.data.segments;
-  p.append(head("Матрица","Сегмент × ступень лестницы Ханта. В ячейке будут смысл, углы, триггеры, хуки и доказательства. Темы привязываются к ячейкам."));
-  p.append(h("div",{class:"card scroll"},h("div",{class:"mx",style:`grid-template-columns:150px repeat(${STAGES.length},minmax(110px,1fr))`},
-    h("div"),STAGES.map((s,i)=>h("div",{class:"muted",style:"font-size:12px;font-weight:600"},(i+1)+". "+s)),
-    seg.map(sg=>[h("div",{style:"font-weight:600"},sg.name),STAGES.map((_,i)=>{const n=S.data.topics.filter(t=>t.segment===sg.id&&t.stage_idx===i).length;
-      return h("div",{class:"cellbox"+(n?"":" zero")},n?n+" тем":"пусто")})])
+  const M=S.mx;
+  p.append(head("Матрица","Сегмент × ступень лестницы Ханта. В ячейке смысл, углы, триггеры, хуки и доказательства. Темы привязываются к ячейкам."));
+  const topicsN=S.data.topics.filter(t=>t.stage!==undefined).length;
+  p.append(h("div",{class:"tabs",role:"tablist"},[["map","Карта"],["signals","Сигналы рынка · "+S.data.signals.length],["topics","Темы на период"]].map(([id,n])=>h("button",{role:"tab","aria-selected":M.tab===id,onclick:()=>{M.tab=id;render()}},n))));
+  ({map:mxMap,signals:mxSignals,topics:mxTopics})[M.tab](p);
+}
+/* --- карта --- */
+function mxMap(p){
+  const M=S.mx,seg=S.data.segments,st=lastStrategy(),pil=(st&&st.pillars)||[];
+  p.append(h("div",{class:"row"},
+    h("label",{class:"field",style:"min-width:220px"},h("span",null,"Опора"),h("select",{id:"mx-pf",onchange:e=>{M.pf=e.target.value;render()}},h("option",{value:""},"Все опоры"),pil.map((x,i)=>h("option",{value:String(i),selected:M.pf===String(i)},x.title||"Опора "+(i+1))))),
+    h("span",{class:"chip warn"},"Горячо и пусто: есть сигналы, нет тем"),h("span",{class:"chip ok"},"Есть темы"),h("span",{class:"chip mute"},"Пока пусто")));
+  p.append(h("div",{class:"card scroll"},h("div",{class:"mx",style:`grid-template-columns:150px repeat(5,minmax(120px,1fr))`},
+    h("div"),STAGES.map((n,i)=>h("div",{class:"muted",style:"font-size:12px;font-weight:600"},(i+1)+". "+n+" · "+GOALS[goalOf(i)])),
+    seg.map(sg=>[h("div",{style:"font-weight:600"},sg.name),STAGES.map((_,i)=>{
+      const id=cellId(sg.id,i),tn=S.data.topics.filter(t=>t.segment===sg.id&&t.stage_idx===i&&(M.pf===""||String(t.pillar)===M.pf)).length,hv=heat(sg.id,i),c=cellOf(id);
+      const bg=tn?"var(--success-l)":hv>=3?"var(--warning-l)":"";
+      return h("button",{class:"cellbox"+(tn||hv||c?"":" zero"),"aria-pressed":M.sel===id,style:`text-align:left;cursor:pointer;width:100%;${bg?"background:"+bg+";":""}${M.sel===id?"outline:2px solid var(--primary);":""}`,onclick:()=>{M.sel=M.sel===id?null:id;render()}},
+        h("div",null,tn?tn+" тем":"тем нет"),h("div",{class:"muted",style:"font-size:12px"},(hv?hv+" сигн.":"")+(c&&c.meaning?(hv?" · ":"")+"описана":"")))})])
   )));
-  p.append(later(4,"Сигналы рынка и генерация тем из ячеек"));
+  if(M.sel)p.append(cellEditor(M.sel));
+  else p.append(h("p",{class:"muted",style:"margin:0"},"Нажмите на ячейку, чтобы описать её или посмотреть сигналы и темы."));
+}
+function cellEditor(id){
+  const M=S.mx,[segId,si]=id.split("__"),i=Number(si),sg=S.data.segments.find(x=>x.id===segId);if(!sg)return h("div");
+  const saved=cellOf(id)||{};
+  const d=M.draft[id]||(M.draft[id]={meaning:saved.meaning||"",angles:saved.angles||"",triggers:saved.triggers||"",hooks:saved.hooks||"",proof:saved.proof||"",action:saved.action||"",goal:saved.goal||goalOf(i)});
+  const F=(k,label,hint,rows)=>h("label",{class:"field"},h("span",null,label),h("textarea",{id:"ce-"+k,style:rows?`min-height:${rows}px`:"",disabled:!can(),oninput:e=>{d[k]=e.target.value}},d[k]),hint&&h("small",null,hint));
+  const sigs=sigsOf(segId,i),tps=S.data.topics.filter(t=>t.segment===segId&&t.stage_idx===i);
+  return h("div",{class:"card",style:"display:flex;flex-direction:column;gap:14px"},
+    h("div",{class:"row",style:"justify-content:space-between"},h("div",null,h("h2",null,sg.name+" · "+(i+1)+". "+STAGES[i]),h("p",{class:"muted",style:"margin:2px 0 0"},STAGE_HINT[i])),
+      h("div",{class:"row"},S.sample&&can()&&h("button",{class:"btn ghost",disabled:M.cellBusy,onclick:()=>cellDraftAI(id,sg,i,d)},M.cellBusy?"Claude думает…":"Заполнить с Claude"),
+        can()&&h("button",{class:"btn",onclick:()=>write(()=>S.db.doc("cells/"+id).set({seg:segId,stage:i,...d,at:new Date().toISOString()}),"Ячейка сохранена")},"Сохранить"))),
+    F("meaning","Что человек должен понять","Один смысл. Следующий шаг к покупке.",70),
+    h("div",{class:"grid"},F("angles","Углы подачи","По строке на угол: боль, миф, сравнение, кейс, процесс."),F("triggers","Триггеры","Страх, экономия, статус. По строке."),F("hooks","Банк хуков","До 7 слов, по строке."),F("proof","Доказательства","Цифры, кейсы, документы из книги продаж.")),
+    h("div",{class:"row"},h("label",{class:"field"},h("span",null,"Цель ячейки"),h("select",{id:"ce-goal",disabled:!can(),onchange:e=>{d.goal=e.target.value}},Object.entries(GOALS).map(([k,v])=>h("option",{value:k,selected:d.goal===k},v)))),
+      h("label",{class:"field",style:"flex:1 1 260px"},h("span",null,"К какому действию ведём"),h("input",{type:"text",id:"ce-action",disabled:!can(),value:d.action,oninput:e=>{d.action=e.target.value}}))),
+    h("div",null,h("h2",{style:"margin-bottom:6px"},"Сигналы рынка · "+sigs.length),sigs.length?h("ul",{style:"margin:0;padding-left:18px"},sigs.map(x=>h("li",null,x.text," ",h("span",{class:"muted"},"("+(x.source||"")+", вес "+(x.weight||1)+")")))):h("span",{class:"muted"},"Для этой ячейки сигналов пока нет.")),
+    tps.length>0&&h("div",null,h("h2",{style:"margin-bottom:6px"},"Темы в ячейке"),h("ul",{style:"margin:0;padding-left:18px"},tps.map(t=>h("li",null,t.title," ",h("span",{class:"chip mute"},(FLOW.find(f=>f.id===t.stage)||{}).name))))));
+}
+async function cellDraftAI(id,sg,i,d){
+  const M=S.mx,st=lastStrategy(),sigs=sigsOf(sg.id,i).map(x=>"- "+x.text).join("\n")||"нет";
+  M.cellBusy=true;render();
+  const prompt="Ты редактор контента APEC Center. Опиши ячейку редакционной матрицы. Русский язык, на «вы», просто.\n"+
+   "Бизнес: карта APEC (APEC Business Travel Card) для россиян через МИД РФ; до 90 дней за въезд; ~4 выезда в год вместо ~11.\n"+
+   "Платформа: главное сообщение — "+((st&&st.roof)||"не задано")+"\nПозиционирование — "+((st&&st.positioning)||"не задано")+"\nОпоры: "+((st&&st.pillars)||[]).map(x=>x.title+" — "+x.proof).join("; ")+"\n"+
+   "Сегмент: "+sg.name+". Ступень "+(i+1)+" («"+STAGES[i]+"»): "+STAGE_HINT[i]+".\nСигналы рынка по ячейке:\n"+sigs+"\n"+
+   "Запрещено: слово «АТЭС», «виза» про карту, обещания одобрения, работа по карте, Япония/Австралия/Новая Зеландия, цены чужих виз, скидки, ложная срочность. Не выдумывай цифры и кейсы: используй только то, что есть в платформе и сигналах, иначе оставь поле пустым.\n"+
+   "Хуки до 7 слов (деньги, срок, число, риск). Ответ строго JSON: {\"meaning\":\"...\",\"angles\":[\"...\"],\"triggers\":[\"...\"],\"hooks\":[\"...\"],\"proof\":\"...\",\"action\":\"...\"}. Углов 3–5, триггеров 2–3, хуков 3–5.";
+  try{const r=await S.sample.json(prompt,{cache:false});
+    const j=a=>Array.isArray(a)?a.map(String).join("\n"):String(a||"");
+    d.meaning=String(r.meaning||"");d.angles=j(r.angles);d.triggers=j(r.triggers);d.hooks=j(r.hooks);d.proof=String(r.proof||"");d.action=String(r.action||"");toast("Черновик ячейки готов, проверьте и сохраните")}
+  catch(e){const m=sampleErr(e);if(m)toast(m)}
+  M.cellBusy=false;render();
+}
+/* --- сигналы рынка --- */
+function mxSignals(p){
+  const M=S.mx,G=M.sig,sg=S.data.segments;
+  p.append(h("div",{class:"row",style:"justify-content:space-between"},h("p",{class:"sub",style:"margin:0"},"Вопросы, возражения и инсайты клиентов. Питают ячейки матрицы и генерацию тем. Личные данные в сигналы не попадают."),
+    S.mcp&&S.sample&&can()&&h("button",{class:"btn",disabled:G.busy,onclick:collectSignals},G.busy?"Собираю…":"Собрать из чатов и CRM")));
+  p.append(h("p",{class:"muted",id:"sprog",style:"margin:0"},G.prog));
+  if(G.props.length){
+    p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:10px"},h("h2",null,"Найдено, выберите что сохранить"),
+      G.props.map((x,i)=>h("label",{class:"row",style:"align-items:flex-start;gap:8px"},h("input",{type:"checkbox",id:"sp-"+i,checked:x.keep,onchange:e=>{x.keep=e.target.checked}}),
+        h("span",null,x.text," ",h("span",{class:"chip mute"},({question:"вопрос",objection:"возражение",trend:"тренд",insight:"инсайт"})[x.type]||x.type)," ",x.segment&&h("span",{class:"chip"},(sg.find(s=>s.id===x.segment)||{}).name||""),x.stage!=null&&h("span",{class:"chip vio"},"ступень "+(Number(x.stage)+1)),h("span",{class:"muted"}," вес "+x.weight)))),
+      h("div",{class:"row"},h("button",{class:"btn",onclick:saveSignals},"Сохранить выбранные"),h("button",{class:"btn ghost",onclick:()=>{G.props=[];render()}},"Отклонить все"))));
+  }
+  if(can())p.append(addSignal());
+  const list=[...S.data.signals].sort((a,b)=>(b.weight||1)-(a.weight||1));
+  p.append(list.length?h("div",{class:"card scroll"},h("table",null,h("thead",null,h("tr",null,["Сигнал","Тип","Сегмент","Ступень","Вес","Источник",""].map(x=>h("th",null,x)))),
+    h("tbody",null,list.map(x=>h("tr",null,h("td",null,x.text),h("td",null,({question:"вопрос",objection:"возражение",trend:"тренд",insight:"инсайт"})[x.type]||x.type),h("td",null,(sg.find(s=>s.id===x.segment)||{}).name||"—"),h("td",null,x.stage!=null&&x.stage!==""?String(Number(x.stage)+1):"—"),
+      h("td",{class:"num"},x.weight||1),h("td",null,x.source||""),
+      h("td",null,can()&&h("div",{class:"row"},h("button",{class:"btn ghost sm","aria-label":"Увеличить вес",onclick:()=>write(()=>S.db.doc("signals/"+x.id).update({weight:(x.weight||1)+1}))},"+1"),h("button",{class:"btn ghost sm","aria-label":"Удалить сигнал",onclick:()=>write(()=>S.db.doc("signals/"+x.id).delete(),"Удалено")},"Удалить"))))))))
+    :h("div",{class:"empty"},h("b",null,"Сигналов пока нет. "),"Нажмите «Собрать из чатов и CRM» или добавьте первый вручную."));
+}
+function addSignal(){
+  const sg=S.data.segments;
+  const f=h("form",{class:"card row",onsubmit:e=>{e.preventDefault();const t=f.text.value.trim();if(!t)return;
+    write(()=>S.db.collection("signals").add({text:t,type:f.type.value,segment:f.segment.value,stage:f.stage.value===""?null:Number(f.stage.value),weight:1,source:"вручную",at:new Date().toISOString()}),"Сигнал добавлен");f.reset()}},
+    h("label",{class:"field",style:"flex:2 1 260px"},h("span",null,"Новый сигнал"),h("input",{type:"text",id:"ns-text",name:"text",placeholder:"Например: «Не бизнесмен, мне вообще можно?»"})),
+    h("label",{class:"field"},h("span",null,"Тип"),h("select",{id:"ns-type",name:"type"},[["question","Вопрос"],["objection","Возражение"],["trend","Тренд"],["insight","Инсайт"]].map(([v,n])=>h("option",{value:v},n)))),
+    h("label",{class:"field"},h("span",null,"Сегмент"),h("select",{id:"ns-seg",name:"segment"},h("option",{value:""},"Любой"),sg.map(x=>h("option",{value:x.id},x.name)))),
+    h("label",{class:"field"},h("span",null,"Ступень"),h("select",{id:"ns-stage",name:"stage"},h("option",{value:""},"Любая"),STAGES.map((n,i)=>h("option",{value:i},(i+1)+". "+n)))),
+    h("button",{class:"btn",type:"submit"},"Добавить"));
+  return f;
+}
+function sprog(t){S.mx.sig.prog=t;const e=$("#sprog");if(e)e.textContent=t}
+async function collectSignals(){
+  const G=S.mx.sig;if(G.busy)return;G.busy=true;G.props=[];render();
+  try{
+    const texts=[];
+    sprog("CRM: вопросы без ответа");
+    try{const b=await crm("GET","/api/knowledge/unanswered");((b&&b.questions)||[]).slice(0,40).forEach(q=>texts.push({src:"crm",t:String(q.question||"").slice(0,300)}))}catch(e){}
+    sprog("ChatPlace: список переписок");
+    const l=await cp("chats_list",{limit:30});const chats=((l&&l.items)||[]).slice(0,30);let done=0;
+    const worker=async()=>{while(chats.length){const c=chats.shift();
+      try{const ms=await cp("chats_messages",{chatId:c.id,limit:30});const arr=Array.isArray(ms)?ms:((ms&&ms.items)||[]);
+        arr.filter(m=>m.side==="client").map(m=>stripHtml(m.message)).filter(t=>t.length>=15).slice(0,3).forEach(t=>texts.push({src:"chat",t:t.slice(0,300)}))}catch(e){}
+      done++;sprog("ChatPlace: читаю переписки, готово "+done+" из 30")}};
+    await Promise.all([worker(),worker(),worker(),worker()]);
+    if(!texts.length){toast("Новых сообщений для анализа не нашлось");G.busy=false;sprog("");render();return}
+    sprog("Claude выделяет сигналы из "+texts.length+" сообщений");
+    const sg=S.data.segments.map(x=>x.id+" = "+x.name).join("; "),have=S.data.signals.map(x=>"- "+x.text).join("\n")||"нет";
+    const prompt="Ты аналитик контента APEC Center (карта APEC для россиян, въезд в Таиланд до 90 дней). Ниже реальные сообщения клиентов и вопросы без ответа. Выдели до 15 обобщённых сигналов рынка: частые вопросы, возражения, страхи, инсайты.\n"+
+      "ВАЖНО: перефразируй своими словами, без имён, ников, телефонов, данных паспорта, номеров сделок и подробностей чьей-то личной ситуации. Одинаковые по смыслу объединяй, вес 1–5 = сколько сообщений это выражают. Не повторяй уже сохранённые сигналы.\n"+
+      "Сегменты: "+sg+". Ступени: 0 безразличие, 1 осознание проблемы, 2 выбор решения, 3 выбор поставщика, 4 готов купить. Если неясно, оставь segment пустой строкой, stage null.\n\nУЖЕ СОХРАНЕНО:\n"+have+"\n\nСООБЩЕНИЯ:\n"+texts.map(x=>"["+x.src+"] "+x.t).join("\n")+
+      "\n\nОтвет строго JSON-массив: [{\"text\":\"...\",\"type\":\"question|objection|trend|insight\",\"segment\":\"id или пусто\",\"stage\":0-4 или null,\"weight\":1-5,\"source\":\"чаты|CRM\"}]";
+    const r=await S.sample.json(prompt,{cache:false});
+    G.props=(Array.isArray(r)?r:[]).filter(x=>x&&x.text).slice(0,15).map(x=>({text:String(x.text).slice(0,300),type:["question","objection","trend","insight"].includes(x.type)?x.type:"question",
+      segment:S.data.segments.some(s=>s.id===x.segment)?x.segment:"",stage:Number.isInteger(x.stage)&&x.stage>=0&&x.stage<=4?x.stage:null,weight:Math.min(5,Math.max(1,Number(x.weight)||1)),source:x.source||"чаты",keep:true}));
+    if(!G.props.length)toast("Новых сигналов не нашлось");
+  }catch(e){const m=mcpErr(e)||sampleErr(e);if(m)toast(m)}
+  G.busy=false;sprog("");render();
+}
+async function saveSignals(){
+  const G=S.mx.sig,keep=G.props.filter(x=>x.keep);if(!keep.length){toast("Ничего не выбрано");return}
+  await write(()=>Promise.all(keep.map(x=>S.db.collection("signals").add({text:x.text,type:x.type,segment:x.segment,stage:x.stage,weight:x.weight,source:x.source,at:new Date().toISOString()}))),"Сигналов сохранено: "+keep.length);
+  G.props=[];render();
+}
+/* --- темы на период --- */
+function mxTopics(p){
+  const T=S.mx.tp,sg=S.data.segments;
+  p.append(h("p",{class:"sub",style:"margin:0"},"Claude предлагает большие темы из горячих и пустых ячеек, с обоснованием. Выбранные уходят на ворота 1 в Производстве."));
+  if(!S.sample)return p.append(h("div",{class:"empty"},"Генерация тем недоступна: страница не получила доступ к Claude."));
+  if(!lastStrategy())p.append(h("div",{class:"empty"},h("b",null,"Нет утверждённой стратегии. "),"Темы привязываются к версии стратегии, сначала утвердите её."));
+  p.append(h("div",{class:"row",style:"align-items:flex-end"},
+    h("label",{class:"field",style:"min-width:200px"},h("span",null,"Период"),h("input",{type:"text",id:"tp-period",value:T.period,oninput:e=>{T.period=e.target.value}})),
+    h("button",{class:"btn",disabled:T.busy||!can()||!lastStrategy(),onclick:genTopics},T.busy?"Claude думает…":"Предложить темы")));
+  if(T.err)p.append(h("div",{class:"empty"},T.err));
+  if(T.props.length)p.append(h("div",{class:"card",style:"display:flex;flex-direction:column;gap:12px"},h("h2",null,"Предложено на «"+T.period+"»"),
+    T.props.map((x,i)=>h("label",{class:"item",style:"cursor:pointer"},h("div",{class:"row",style:"align-items:flex-start;gap:8px;flex-wrap:nowrap"},h("input",{type:"checkbox",id:"tpp-"+i,checked:x.keep,onchange:e=>{x.keep=e.target.checked}}),h("b",null,x.title)),
+      h("div",{class:"pill-row"},x.segment&&h("span",{class:"chip"},(sg.find(s=>s.id===x.segment)||{}).name),h("span",{class:"chip vio"},"ступень "+(x.stage+1)),x.pillar_title&&h("span",{class:"chip mute"},x.pillar_title),x.channels.map(c=>h("span",{class:"chip mute"},c))),
+      x.why&&h("span",{class:"muted"},x.why))),
+    h("div",{class:"row"},h("button",{class:"btn",onclick:addProposed},"Добавить выбранные на ворота 1"),h("button",{class:"btn ghost",onclick:()=>{T.props=[];render()}},"Отклонить все"))));
+}
+async function genTopics(){
+  const T=S.mx.tp,st=lastStrategy(),segs=S.data.segments,chs=S.data.channels.filter(c=>c.status==="active").map(c=>c.name);
+  T.busy=true;T.err="";T.props=[];render();
+  const cells=S.data.cells.filter(c=>c.meaning).map(c=>"- "+c.id+": смысл «"+c.meaning+"»; углы: "+linesOf(c.angles).join(", ")+"; триггеры: "+linesOf(c.triggers).join(", ")).join("\n")||"описанных ячеек нет";
+  const hot=[];segs.forEach(sg=>STAGES.forEach((_,i)=>{const hv=heat(sg.id,i),tn=S.data.topics.filter(t=>t.segment===sg.id&&t.stage_idx===i).length;if(hv||!tn)hot.push({id:cellId(sg.id,i),hv,tn})}));
+  hot.sort((a,b)=>(b.hv-a.hv)||(a.tn-b.tn));
+  const sig=[...S.data.signals].sort((a,b)=>(b.weight||1)-(a.weight||1)).slice(0,25).map(x=>"- "+x.text+" (сегмент "+(x.segment||"любой")+", ступень "+(x.stage==null?"любая":Number(x.stage)+1)+", вес "+(x.weight||1)+")").join("\n")||"нет";
+  const prompt="Ты главный редактор контента APEC Center. Предложи 7 больших тем на период «"+T.period+"». Русский, на «вы», просто, без пафоса.\n"+
+   "Бизнес: карта APEC для россиян через МИД РФ, до 90 дней за въезд, ~4 выезда в год вместо ~11.\n"+
+   "Платформа: главное сообщение — "+st.roof+"\nОпоры (индекс с 0): "+(st.pillars||[]).map((x,i)=>i+" "+x.title+" — "+x.proof).join("; ")+"\n"+
+   "Сегменты: "+segs.map(x=>x.id+" = "+x.name).join("; ")+". Ступени 0–4: "+STAGES.join(", ")+". Пропорция недели: 40% охват (ступени 0–1), 35% доверие (2), 25% заявка (3–4).\n"+
+   "Каналы в работе: "+chs.join("; ")+"\n\nЯчейки с описанием:\n"+cells+"\n\nПриоритет ячеек (горячие и пустые, формат id: вес сигналов / тем): "+hot.slice(0,15).map(x=>x.id+": "+x.hv+"/"+x.tn).join(", ")+"\n\nСигналы рынка:\n"+sig+
+   "\n\nУже есть темы (не повторяй): "+(S.data.topics.map(t=>t.title).join("; ")||"нет")+
+   "\nЗапрещено: слово «АТЭС», «виза» про карту, обещания одобрения, работа по карте, Япония/Австралия/Новая Зеландия, цены чужих виз, скидки, ложная срочность. Не выдумывай цифры и кейсы.\n"+
+   "Для каждой темы: title (до 80 знаков, с цифрой/деньгами/сроком, если уместно), segment (id), stage (0–4), pillar (индекс опоры), channels (2–4 из списка каналов), why (1–2 предложения: какой сигнал или пробел закрывает).\n"+
+   "Ответ строго JSON-массив: [{\"title\":\"\",\"segment\":\"\",\"stage\":0,\"pillar\":0,\"channels\":[\"\"],\"why\":\"\"}]";
+  try{const r=await S.sample.json(prompt,{cache:false,modelTier:"default"});
+    T.props=(Array.isArray(r)?r:[]).filter(x=>x&&x.title).slice(0,10).map(x=>{const pi=Number.isInteger(x.pillar)&&st.pillars&&st.pillars[x.pillar]?x.pillar:null;
+      return{title:String(x.title).slice(0,120),segment:segs.some(s=>s.id===x.segment)?x.segment:"",stage:Number.isInteger(x.stage)&&x.stage>=0&&x.stage<=4?x.stage:0,pillar:pi,pillar_title:pi!=null?st.pillars[pi].title:"",
+        channels:(Array.isArray(x.channels)?x.channels:[]).map(String).filter(c=>chs.includes(c)),why:String(x.why||"").slice(0,300),keep:true}});
+    if(!T.props.length)T.err="Claude не предложил тем, попробуйте ещё раз"}
+  catch(e){T.err=sampleErr(e)}
+  T.busy=false;render();
+}
+async function addProposed(){
+  const T=S.mx.tp,st=lastStrategy(),keep=T.props.filter(x=>x.keep);if(!keep.length){toast("Ничего не выбрано");return}
+  await write(()=>Promise.all(keep.map(x=>S.db.collection("topics").add({title:x.title,stage:"idea",channels:x.channels,segment:x.segment,stage_idx:x.stage,pillar:x.pillar,pillar_title:x.pillar_title,why:x.why,cell:x.segment?cellId(x.segment,x.stage):"",strategy_v:st?st.n:0,created_at:new Date().toISOString(),history:[]}))),"На воротах 1: "+keep.length);
+  T.props=[];render();
 }
 
 /* ---------- 4. Производство ---------- */
@@ -498,6 +665,7 @@ function topicRow(x){const f=FLOW.find(y=>y.id===x.stage);return h("div",{class:
 function topicCard(x,f){return h("div",{class:"item"},h("b",null,x.title),
   x.channels&&h("div",{class:"pill-row"},x.channels.map(c=>h("span",{class:"chip mute"},c))),
   f.who&&h("span",{class:"chip vio"},"Ждёт: "+f.who),
+  x.pillar_title&&h("span",{class:"chip mute"},x.pillar_title),x.why&&h("span",{class:"muted",style:"font-size:12px"},x.why),
   x.strategy_v&&h("span",{class:"muted",style:"font-size:12px"},"Стратегия v"+x.strategy_v),
   topicActions(x,f))}
 function topicActions(x,f){
