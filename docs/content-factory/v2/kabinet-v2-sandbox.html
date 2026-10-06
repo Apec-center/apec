@@ -159,7 +159,7 @@ const FLOW=[
 const CRM_RULES={forbid:["АТЭС","виза (про карту)","гарантия одобрения","работа по карте","Япония / Австралия / Новая Зеландия","цены чужих виз","скидки","ложная срочность"]};
 
 /* ---------- состояние ---------- */
-const S={role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[]}};
+const S={sample:null,chat:{open:false,turns:[],msgs:[],busy:false,input:"",ctl:null},role:"producer",section:"strategy",tab:{},db:null,canWrite:false,data:{strategy_versions:[],strategy_draft:null,segments:[],channels:[],products:[],topics:[],integrations:[]}};
 const $=s=>document.querySelector(s);
 function h(tag,attrs,...kids){const e=document.createElement(tag);
   for(const[k,v]of Object.entries(attrs||{})){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
@@ -239,7 +239,53 @@ function platform(p,act){
     h("div",{class:"pill-row"},CRM_RULES.forbid.map(x=>h("span",{class:"chip warn"},x)))));
   p.append(h("div",{class:"row"},
     h("button",{class:"btn",disabled:!can(),onclick:()=>saveVersion(d,act)},"Утвердить как версию "+((act?act.n:0)+1)),
-    h("span",{class:"muted"},"Правки в диалоге с Claude появятся на этапе 2.")));
+    S.sample&&h("button",{class:"btn ghost",disabled:!can(),onclick:()=>{S.chat.open=!S.chat.open;render()}},S.chat.open?"Скрыть диалог":"Пересмотреть в диалоге")));
+  if(S.sample&&S.chat.open)p.append(reviewPanel(d,act));
+}
+/* пересмотр в диалоге: Claude задаёт вопросы и предлагает правки полей, применяются только в черновик */
+const PATCHABLE=["mission","positioning","roof","tov","values"];
+function rules(d){
+  const f=PLATFORM_FIELDS.map(([k,n])=>n+" ("+k+"): "+(d[k]||"пусто")).join("\n");
+  const pl=(d.pillars||[]).map((x,i)=>(i+1)+". "+x.title+" — "+x.proof).join("\n")||"нет";
+  return "Ты помогаешь продюсеру APEC Center раз в месяц пересматривать бренд-платформу контента. Говори по-русски, просто, без канцелярита, на «вы».\n"+
+  "Бизнес: карта APEC (APEC Business Travel Card) для россиян через МИД РФ, въезд в Таиланд до 90 дней, тарифы 60/90/120 тыс. ₽.\n"+
+  "Запрещено писать: слово «АТЭС», «виза» про карту, обещания одобрения, работу по карте, Японию/Австралию/Новую Зеландию, цены чужих виз, скидки, ложную срочность, «визараны умерли».\n"+
+  "Не выдумывай цифры, кейсы и факты. Если данных нет, спроси. Сигналов рынка из чатов пока нет в системе, опирайся на поля и ответы продюсера.\n"+
+  "Задавай не больше двух вопросов за раз. Когда понятна правка, предложи её в patch целым текстом поля.\n\nТЕКУЩАЯ ПЛАТФОРМА:\n"+f+"\nОпоры:\n"+pl+
+  "\n\nОтвет строго JSON: {\"reply\": \"текст продюсеру\", \"patch\": null или {\"mission\"|\"positioning\"|\"roof\"|\"tov\"|\"values\": \"новый текст поля\"}}";
+}
+function reviewPanel(d,act){
+  const c=S.chat;
+  const box=h("div",{class:"card",style:"display:flex;flex-direction:column;gap:12px"},h("h2",null,"Пересмотр стратегии в диалоге"),
+    h("p",{class:"muted",style:"margin:0"},"Claude задаёт вопросы и предлагает правки. Они попадают только в черновик, версию утверждаете вы."));
+  c.msgs.forEach(m=>{
+    box.append(h("div",{class:"item",style:m.role==="user"?"background:var(--primary-08)":""},
+      h("span",{class:"muted",style:"font-size:12px;font-weight:600"},m.role==="user"?"Вы":"Claude"),
+      h("div",{style:"white-space:pre-wrap"},m.text),
+      m.patch&&h("div",{style:"display:flex;flex-direction:column;gap:6px"},
+        Object.entries(m.patch).filter(([k])=>PATCHABLE.includes(k)).map(([k,v])=>h("div",null,h("span",{class:"chip vio"},PLATFORM_FIELDS.find(x=>x[0]===k)[1]),h("div",{style:"white-space:pre-wrap;margin-top:4px"},String(v)))),
+        h("div",null,h("button",{class:"btn sm",disabled:m.applied,onclick:()=>{Object.entries(m.patch).forEach(([k,v])=>{if(PATCHABLE.includes(k))d[k]=String(v)});m.applied=true;toast("Правки в черновике. Проверьте и утвердите версию");render()}},m.applied?"Применено к черновику":"Применить к черновику")))));
+  });
+  if(c.busy)box.append(h("div",{class:"muted"},"Claude думает…"));
+  const ta=h("textarea",{id:"chat-in",placeholder:c.msgs.length?"Ваш ответ":"Например: что изменилось за месяц?",oninput:e=>{c.input=e.target.value}},c.input);
+  box.append(h("div",{class:"row",style:"align-items:flex-end"},h("div",{class:"field",style:"flex:1 1 280px"},ta),
+    h("button",{class:"btn",disabled:c.busy,onclick:()=>chatSend(d,c.input.trim()||(c.msgs.length?"":"Начни пересмотр"))},c.msgs.length?"Отправить":"Начать пересмотр"),
+    c.busy&&h("button",{class:"btn ghost",onclick:()=>c.ctl&&c.ctl.abort()},"Стоп")));
+  return box;
+}
+async function chatSend(d,text){
+  const c=S.chat;if(!text||c.busy)return;
+  c.msgs.push({role:"user",text});c.turns.push({role:"user",content:text});c.input="";c.busy=true;c.ctl=new AbortController();render();
+  try{
+    const r=await S.sample.json([{role:"user",content:rules(d)},...c.turns],{cache:false,signal:c.ctl.signal});
+    const reply=String((r&&r.reply)||"");c.turns.push({role:"assistant",content:reply||"…"});
+    c.msgs.push({role:"assistant",text:reply,patch:r&&r.patch&&typeof r.patch==="object"?r.patch:null});
+  }catch(e){
+    c.turns.pop();c.msgs.pop();c.input=text;
+    const code=e&&e.code;
+    if(code==="not_granted"||code==="sampling_disabled"){S.sample=null;toast("Claude недоступен для этой страницы")}
+    else if(code!=="cancelled")toast(code==="rate_limited"?"Слишком много запросов, попробуйте позже":"Не получилось, попробуйте ещё раз");
+  }finally{c.busy=false;c.ctl=null;render()}
 }
 let _draft=null;
 function draftValue(act){if(!_draft)_draft=JSON.parse(JSON.stringify(act||{pillars:[]}));if(!_draft.pillars)_draft.pillars=[];return _draft}
@@ -408,8 +454,9 @@ function boot(){
   const sc=lsGet("v2.section");if(sc&&SECTIONS.some(s=>s.id===sc))S.section=sc;
   render();
   const c=window.claude;if(!c||!c.use)return;
-  Promise.all([c.use("db"),c.use("user")]).then(([db,user])=>{
-    if(!db)return;S.db=db;
+  Promise.all([c.use("db"),c.use("user"),c.use("sample")]).then(([db,user,sample])=>{
+    S.sample=sample||null;
+    if(!db){render();return}S.db=db;
     S.canWrite=user?(user.can("data.write")!==false):true;
     Object.keys(COLS).forEach(listen);render();
   }).catch(()=>{});
