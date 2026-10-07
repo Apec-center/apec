@@ -1,0 +1,214 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>ТЗ: apec.center на iPhone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, spec numbering = real order of work, code blocks scroll inside themselves */
+:root{
+  --bg:#F5F7FA; --paper:#FFFFFF; --ink:#13233A; --muted:#55657C; --line:#D9E0EA;
+  --accent:#1F6FE0; --old:#FCEDED; --old-ink:#9B2226; --new:#E8F3EA; --new-ink:#1E6B34; --code:#F0F3F7;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1622; --paper:#152131; --ink:#E4EAF2; --muted:#93A3B8; --line:#26364B;
+  --accent:#62A4FF; --old:#3A1E22; --old-ink:#F2A3A6; --new:#16301F; --new-ink:#9BDDAE; --code:#101B29; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1622; --paper:#152131; --ink:#E4EAF2; --muted:#93A3B8; --line:#26364B;
+  --accent:#62A4FF; --old:#3A1E22; --old-ink:#F2A3A6; --new:#16301F; --new-ink:#9BDDAE; --code:#101B29; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans);margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:40px 80px;display:grid;gap:36px}
+header{display:grid;gap:10px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(26px,4.5vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-size:21px;margin:0 0 12px;text-wrap:balance;display:flex;gap:10px;align-items:baseline}
+h2 .n{font:500 14px var(--mono);color:var(--accent)}
+h3{font-size:16px;margin:0}
+p{margin:0;max-width:68ch}
+section{display:grid;gap:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.88em}
+p code,li code,td code{background:var(--code);padding:1px 5px;border-radius:4px}
+.lead{font-size:17.5px}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;gap:10px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+ol.steps,ul.plain{margin:0;padding-left:22px;display:grid;gap:6px}
+.edit{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px;min-width:0}
+.edit-h{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.tag{font:500 11.5px var(--mono);color:var(--muted)}
+.lbl{font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.lbl.o{color:var(--old-ink)} .lbl.n{color:var(--new-ink)}
+pre{margin:0;overflow-x:auto;padding:10px 12px;border-radius:6px;font:13px/1.55 var(--mono);white-space:pre}
+pre.o{background:var(--old);color:var(--old-ink)}
+pre.n{background:var(--new);color:var(--new-ink)}
+button.cp{font:500 11px var(--mono);background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:5px;padding:3px 8px;cursor:pointer}
+button.cp:hover{color:var(--ink);border-color:var(--muted)}
+button.cp:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.check{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.check li{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent)}
+.note{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--muted);font-size:15px}
+a{color:var(--accent)}
+@media (max-width:600px){.wrap{padding-block:24px 60px;gap:28px}.box,.edit{padding:14px}}
+button.cp{display:none}.check input{display:none}.check li{grid-template-columns:22px 1fr}.check li::before{content:"☐";font-size:16px}.edit,.box,tr{break-inside:avoid}pre{white-space:pre-wrap;word-break:break-all}table{min-width:0}.wrap{padding-block:0}pre,code,.mono,.tag,.lbl,.eyebrow,th,h2 .n,b.mono,.meta b.mono{font-weight:400!important}</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Техническое задание · apec.center</span>
+  <h1>Починить мобильную версию apec.center на iPhone</h1>
+  <div class="meta">
+    <span>Дата: <b>7 октября 2026</b></span>
+    <span>Файл: <b class="mono">index.html</b> боевого сайта</span>
+    <span>Объём: <b>8 замен текста</b>, ~15 минут</span>
+    <span>Эталон: коммит <b class="mono">9b95328</b>, ветка <span class="mono">claude/affectionate-keller-cqioa2</span></span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="n">1</span>Итог</h2>
+  <p class="lead">На iPhone страница apec.center показывает только статичную вёрстку: нет цен, анимаций, таймера, карты стран, не работают переключатель валют и кнопка «Сравнить с самостоятельным путём». Всё это одна ошибка. Скрипт страницы падает на рисовании карты и дальше не выполняется. Исправление проверено на эталонной сборке. Осталось перенести его на боевой сайт.</p>
+</section>
+
+<section>
+  <h2><span class="n">2</span>Что сломано на iPhone</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Экран</th><th>Что видит пользователь</th><th>Почему</th></tr></thead>
+    <tbody>
+      <tr><td>Первый экран</td><td>Нет стоимости и цифр</td><td>Цены выводит <code>renderMoney()</code>, она не успевает запуститься</td></tr>
+      <tr><td>Математика визаранов</td><td>Нет цифр и анимации</td><td>Счётчики стартуют после карты</td></tr>
+      <tr><td>Fast Track</td><td>Видео стоит</td><td>Ленивая загрузка видео не подключается</td></tr>
+      <tr><td>Карта стран</td><td>Карта пропала, интерактива нет</td><td>Место ошибки: блок карты высотой 0</td></tr>
+      <tr><td>Мини-приложение</td><td>Трекер не двигается</td><td>Код трекера идёт после карты</td></tr>
+      <tr><td>Таймер реестра</td><td>Все разряды 00</td><td>Обратный отсчёт не запущен</td></tr>
+      <tr><td>Калькулятор зимовки</td><td>Кнопка «Узнать, подойдёт ли мне карта» съехала, вёрстка поплыла</td><td>Отдельная проблема вёрстки, правки 7–8</td></tr>
+      <tr><td>Квиз</td><td>Белая полоса вместо блока</td><td>Анимации появления (<code>.rv</code>) не получают класс <code>.in</code></td></tr>
+      <tr><td>Тарифы</td><td>Переключатель валют ₽ / ฿ / $ не реагирует</td><td>Обработчик клика на <code>#cur</code> не навешан</td></tr>
+      <tr><td>Тарифы</td><td>«Сравнить с самостоятельным путём» не открывает блок</td><td>Обработчик <code>#diy</code> → <code>#plan-self</code> не навешан</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>Причина</h2>
+  <div class="box">
+    <p>На ширине до 980px блок карты <code>.map-box</code> задан через <code>aspect-ratio:16/10</code> внутри строки сетки с растяжением по высоте. Safari на iOS считает его высоту равной нулю. Функция <code>fit()</code> из нулевой высоты получает отрицательный масштаб, и <code>ctx.arc()</code> вызывается с отрицательным радиусом. Браузер бросает исключение:</p>
+    <pre class="o">IndexSizeError: Failed to execute 'arc' on 'CanvasRenderingContext2D':
+The radius provided (-0.0988235) is negative.</pre>
+    <p>Весь JavaScript страницы выполняется одной функцией, поэтому исключение останавливает всё, что объявлено после карты: цены, валюты, тарифы, таймер, трекер, квиз и анимации появления.</p>
+  </div>
+  <p class="note">Исправление в три слоя: блоку карты задаётся реальная высота, масштаб не может стать отрицательным, а любой сбой рисования карты перехватывается и больше не роняет страницу.</p>
+</section>
+
+<section>
+  <h2><span class="n">4</span>Правки в index.html</h2>
+  <p>Каждый фрагмент из колонки «Было» встречается в боевом <code>index.html</code> ровно один раз (проверено по копии сайта). Найдите его поиском и замените целиком на «Стало». Остальное в файле, включая аналитику (GA, Метрика, Facebook Pixel) и переключатель темы, не трогайте.</p>
+
+  <h3>Скрипт: карта больше не роняет страницу</h3>
+  <div id="edits-js" style="display:grid;gap:12px"></div>
+
+  <h3>Стили: высота блока карты</h3>
+  <div id="edits-css" style="display:grid;gap:12px"></div>
+
+  <h3>Калькулятор: кнопка на мобильном</h3>
+  <div id="edits-calc" style="display:grid;gap:12px"></div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>Порядок внедрения</h2>
+  <ol class="steps">
+    <li>Сохранить копию текущего <code>index.html</code> с сервера.</li>
+    <li>Внести 8 замен из раздела 4. После каждой убедиться, что поиск по старому фрагменту больше ничего не находит.</li>
+    <li>Проверить, что в файле есть ровно одно объявление <code>function safe(</code>.</li>
+    <li>Открыть страницу в десктопном браузере: консоль без ошибок, карта и цены на месте.</li>
+    <li>Загрузить файл на хостинг и сбросить кэш CDN, если он есть.</li>
+    <li>Пройти чек-лист из раздела 6 на настоящем iPhone.</li>
+  </ol>
+  <p class="note">Откат: вернуть сохранённую копию. Правки не меняют тексты, ссылки, цены и счётчики аналитики.</p>
+</section>
+
+<section>
+  <h2><span class="n">6</span>Проверка на iPhone</h2>
+  <p>Safari и Chrome на iOS, портретная ориентация. Перед проверкой закрыть вкладку и открыть сайт заново, чтобы не попасть на кэш.</p>
+  <ul class="check" id="qa"></ul>
+</section>
+
+<section>
+  <h2><span class="n">7</span>Вне этого ТЗ: замена тарифа Split на «Семейный»</h2>
+  <p>Сайт, база знаний CRM и шаблоны чатов уже переведены на тариф «Семейный». Остались места, где нужен доступ или решение владельца:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Где</th><th>Что сделать</th><th>Что мешает</th></tr></thead>
+    <tbody>
+      <tr><td>n8n, движок «2 Движок сценариев» и сценарии 4, 7, 9, 12, 15</td><td>Заменить упоминания Split на «Семейный», расчёт: «Приоритет», второй заявитель −10%</td><td>Нужен API-ключ n8n и разрешение на правку движка</td></tr>
+      <tr><td>CRM, справочник продуктов, продукт 6</td><td>Переименовать и обновить описание и цену</td><td>Нужно подтверждение итоговой цены</td></tr>
+      <tr><td>Телефония, инструкция ассистента «Виктор»</td><td>Обновить текст про тарифы</td><td>Не сделано, нужен доступ к настройкам</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+
+<script>
+var EDITS={
+ js:[
+  {t:"1. Масштаб карты не может стать отрицательным",
+   o:'function fit(w,h,pad){var sc=Math.min((w-pad*2)/DOTS.cols,(h-pad*2)/DOTS.rows);',
+   n:'function fit(w,h,pad){var sc=Math.max(.1,Math.min((w-pad*2)/DOTS.cols,(h-pad*2)/DOTS.rows));'},
+  {t:"2. Защищённая отрисовка + функция safe()",
+   o:'function mapResize(){if(!DOTS)return;cx2=setup(mc);mf=fit(cx2.w,cx2.h,14);mapDraw(0)}',
+   n:'function mapResize(){if(!DOTS)return;cx2=setup(mc);mf=fit(cx2.w,cx2.h,14);safe(mapDraw,0)}\n/* a canvas failure (zero-size box, old WebKit) must never stop the rest of the page */\nfunction safe(fn,a){try{fn(a)}catch(e){if(window.console)console.warn(e)}}'},
+  {t:"3. Кадр анимации карты",
+   o:'mapDraw(now)}requestAnimationFrame(loop)}',
+   n:'safe(mapDraw,now)}requestAnimationFrame(loop)}'},
+  {t:"4. Первый запуск карты и фона",
+   o:'mapResize();drawBg();requestAnimationFrame(loop);',
+   n:'safe(mapResize);safe(drawBg);requestAnimationFrame(loop);'},
+  {t:"5. Перерисовка при повороте экрана",
+   o:'build();mapResize();drawBg()},150)',
+   n:'build();safe(mapResize);safe(drawBg)},150)'}
+ ],
+ css:[
+  {t:"6. Блок карты получает высоту через padding-top",
+   o:'.map-box{min-height:0;aspect-ratio:16/10}',
+   n:'.map-box{min-height:0;aspect-ratio:auto;height:0;padding-top:62.5%;align-self:start}'}
+ ],
+ calc:[
+  {t:"7. Стиль кнопки калькулятора",
+   o:'@media (max-width:600px){.verdict{min-height:176px!important}}',
+   n:'.calc-cta{justify-self:start}\n@media (max-width:600px){.verdict{min-height:128px!important}.calc-cta{justify-self:stretch;width:100%}}'},
+  {t:"8. Кнопка калькулятора без inline-стиля",
+   o:'<button class="btn btn-primary" type="button" data-quiz style="justify-self:start">',
+   n:'<button class="btn btn-primary calc-cta" type="button" data-quiz>'}
+ ]};
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function block(kind,cls,label,txt){return '<div style="display:grid;gap:4px;min-width:0"><div class="lbl '+cls+'"><span>'+label+'</span><button class="cp" type="button" data-t="'+kind+'">Копировать</button></div><pre class="'+cls+'">'+esc(txt)+'</pre></div>'}
+var ALL=[];
+["js","css","calc"].forEach(function(k){var box=document.getElementById("edits-"+k);
+ EDITS[k].forEach(function(e){var i=ALL.length;ALL.push(e);
+  box.insertAdjacentHTML("beforeend",'<div class="edit"><div class="edit-h"><b>'+esc(e.t)+'</b><span class="tag">1 вхождение</span></div>'+block("o"+i,"o","Было",e.o)+block("n"+i,"n","Стало",e.n)+'</div>')})});
+document.addEventListener("click",function(ev){var b=ev.target.closest("button.cp");if(!b)return;
+ var d=b.dataset.t,e=ALL[+d.slice(1)],txt=d[0]==="o"?e.o:e.n,pre=b.parentNode.nextElementSibling;
+ function ok(){b.textContent="Скопировано";setTimeout(function(){b.textContent="Копировать"},1400)}
+ function sel(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Выделено"}
+ try{navigator.clipboard.writeText(txt).then(ok,sel)}catch(x){sel()}});
+var QA=[
+ "Первый экран: под заголовком видны цена карты и цифры экономии",
+ "Математика визаранов: цифры появляются и досчитываются анимацией",
+ "Fast Track: видео в карточке играет",
+ "Карта стран видна, точки пульсируют, по тапу на страну меняется карточка справа/снизу",
+ "Мини-приложение: трекер статуса двигается при прокрутке ползунка",
+ "Таймер реестра идёт, секунды меняются, нет «00 : 00 : 00»",
+ "Калькулятор зимовки: кнопка «Узнать, подойдёт ли мне карта» на всю ширину, текст вердикта её не перекрывает",
+ "Квиз виден целиком, белой полосы нет",
+ "Тарифы: переключатель ₽ / ฿ / $ меняет все цены, включая расчёт «Семейного»",
+ "Тарифы: «Сравнить с самостоятельным путём» раскрывает блок с расчётом",
+ "Кнопки тарифов открывают бота @apec_center_bot с текстом «Хочу оформить тариф…»",
+ "После поворота телефона в альбомную ориентацию и обратно карта перерисовывается, страница не ломается",
+ "Десктоп: консоль браузера без ошибок, вид страницы не изменился"];
+var qa=document.getElementById("qa");
+QA.forEach(function(t,i){qa.insertAdjacentHTML("beforeend",'<li><input type="checkbox" id="qa'+i+'"><label for="qa'+i+'">'+esc(t)+'</label></li>')});
+</script>
+</body></html>
