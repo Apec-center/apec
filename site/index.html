@@ -376,7 +376,8 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .res.hl{background:var(--midnight);border-color:var(--midnight);color:#fff}
 .res.hl small,.res.hl span{color:var(--on-dark-2)}
 .res.hl b{color:var(--electric-2)}
-@media (max-width:600px){.verdict{min-height:176px!important}}
+.calc-cta{justify-self:start}
+@media (max-width:600px){.verdict{min-height:128px!important}.calc-cta{justify-self:stretch;width:100%}}
 .verdict{min-height:96px;border-radius:16px;padding:18px 20px;font-size:15.5px;line-height:1.5;background:rgba(40,127,242,.08);border:1px solid rgba(40,127,242,.25)}
 .verdict.warn{background:rgba(229,56,59,.06);border-color:rgba(229,56,59,.3)}
 @media (max-width:980px){.wm{grid-template-columns:1fr}.wm-in{position:static}}
@@ -597,7 +598,7 @@ input[type=range]{width:100%;accent-color:var(--electric);height:28px}
 .map-note{margin-top:14px;font-size:13.5px;color:var(--on-dark-2);max-width:90ch}
 #cf button{flex:1 1 auto;text-align:center}
 @media (max-width:640px){.clist button{flex-basis:46px}}
-@media (max-width:980px){.map-wrap{grid-template-columns:1fr}.map-box{min-height:0;aspect-ratio:16/10}.summit{grid-template-columns:auto 1fr}.summit .codes{grid-column:1/-1;max-width:none}}
+@media (max-width:980px){.map-wrap{grid-template-columns:1fr}.map-box{min-height:0;aspect-ratio:auto;height:0;padding-top:62.5%;align-self:start}.summit{grid-template-columns:auto 1fr}.summit .codes{grid-column:1/-1;max-width:none}}
 @media (max-width:600px){.summit{grid-template-columns:1fr;padding:20px}.summit-date{justify-self:start;display:flex;gap:8px;align-items:baseline}.summit-date br{display:none}}
 
 /* ===== TRACK + CABINET ===== */
@@ -1297,7 +1298,7 @@ footer{background:#0D1A2B;color:var(--on-dark-2);padding-block:48px 120px;font-s
           <div class="res hl rv"><small>Вы сохраните</small><b class="num" id="r-save">240 000 ₽</b><span id="r-save-s">с учётом цены карты</span></div>
         </div>
         <p class="verdict rv" id="verdict"></p>
-        <button class="btn btn-primary" type="button" data-quiz style="justify-self:start">Узнать, подойдёт ли мне карта</button>
+        <button class="btn btn-primary calc-cta" type="button" data-quiz>Узнать, подойдёт ли мне карта</button>
       </div>
     </div>
   </div>
@@ -1636,7 +1637,7 @@ renderFaq("all");
 var dots=[];if(DOTS){var s=DOTS.d;for(var i=0;i<s.length;i+=4)dots.push([(s.charCodeAt(i)-48)*64+(s.charCodeAt(i+1)-48),s.charCodeAt(i+2)-48,s.charCodeAt(i+3)-48])}
 function proj(lon,lat){var L=lon<DOTS.LON0?lon+360:lon;return [(L-DOTS.LON0)/DOTS.STEP,(DOTS.LAT0-lat)/DOTS.STEP]}
 function setup(cv){var r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);cv.width=Math.max(1,r.width*dpr);cv.height=Math.max(1,r.height*dpr);var x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);return {ctx:x,w:r.width,h:r.height}}
-function fit(w,h,pad){var sc=Math.min((w-pad*2)/DOTS.cols,(h-pad*2)/DOTS.rows);return {s:sc,ox:(w-DOTS.cols*sc)/2,oy:(h-DOTS.rows*sc)/2}}
+function fit(w,h,pad){var sc=Math.max(.1,Math.min((w-pad*2)/DOTS.cols,(h-pad*2)/DOTS.rows));return {s:sc,ox:(w-DOTS.cols*sc)/2,oy:(h-DOTS.rows*sc)/2}}
 function drawBg(){if(!DOTS)return;var c=setup($("bgmap")),f=fit(c.w*1.15,c.h*1.15,0),x=c.ctx,ox=f.ox+c.w*.06,oy=f.oy-c.h*.06;x.clearRect(0,0,c.w,c.h);
   var L=SKIN==="light";dots.forEach(function(d){x.fillStyle=d[2]===1?(L?"rgba(40,127,242,.45)":"rgba(98,164,255,.6)"):d[2]===2?(L?"rgba(31,73,133,.22)":"rgba(216,221,228,.35)"):(L?"rgba(31,73,133,.12)":"rgba(216,221,228,.15)");x.beginPath();x.arc(ox+(d[0]+.5)*f.s,oy+(d[1]+.5)*f.s,f.s*.26,0,7);x.fill()})}
 var COL={open:"#62A4FF",soon:"#F0C27A",closed:"rgba(216,221,228,.55)"};
@@ -1652,7 +1653,9 @@ function mapDraw(now){if(!DOTS||!cx2)return;var x=cx2.ctx,w=cx2.w,h=cx2.h,f=mf;x
     if(on){x.beginPath();x.arc(q[0],q[1],10+5*Math.sin((now||0)/300),0,7);x.strokeStyle="rgba(229,56,59,.65)";x.lineWidth=1.5;x.stroke()}
     if(on||w>520){x.font=(on?"600 13px ":"500 10px ")+"'IBM Plex Mono', monospace";x.fillStyle=on?"#fff":"rgba(169,183,203,.85)";x.fillText(cc.cc,q[0]+7,q[1]-7)}});
   x.beginPath();x.arc(hub[0],hub[1],5,0,7);x.fillStyle="#E5383B";x.fill()}
-function mapResize(){if(!DOTS)return;cx2=setup(mc);mf=fit(cx2.w,cx2.h,14);mapDraw(0)}
+function mapResize(){if(!DOTS)return;cx2=setup(mc);mf=fit(cx2.w,cx2.h,14);safe(mapDraw,0)}
+/* a canvas failure (zero-size box, old WebKit) must never stop the rest of the page */
+function safe(fn,a){try{fn(a)}catch(e){if(window.console)console.warn(e)}}
 var clist=$("clist"),filter="all";
 function pick(i,user){sel=i;arcT=0;if(user)auto=false;var c=C[i];
   $("ccard").innerHTML='<span class="cc"><span>'+c.cc+'</span><span class="st '+c.st+'">'+STL[c.st]+'</span></span><h3>'+c.n+'</h3><div class="cmp2"><div class="nocard"><small>Без карты</small><span>'+c.w+'</span></div><div><small>Сегодня</small><b>'+c.a+'</b></div><div class="plan'+(c.st==="soon"?"":" none")+'"><small>В планах</small><b>'+(c.st==="soon"?"90 дней":"—")+'</b></div></div><p>'+c.note+'</p>';
@@ -1662,8 +1665,8 @@ $("cf").addEventListener("click",function(e){var b=e.target.closest("button");if
 renderList();pick(0);
 var mapVis=false;if("IntersectionObserver" in window)new IntersectionObserver(function(es){mapVis=es[0].isIntersecting},{threshold:.1}).observe(mc);else mapVis=true;
 var lastSw=0;
-function loop(now){if(mapVis){arcT+=RM?1:.022;if(auto&&!RM&&now-lastSw>3200){lastSw=now;var pool=[];C.forEach(function(c,i){if(c.st!=="closed"&&i!==sel)pool.push(i)});pick(pool[Math.floor(Math.random()*pool.length)])}mapDraw(now)}requestAnimationFrame(loop)}
-mapResize();drawBg();requestAnimationFrame(loop);
+function loop(now){if(mapVis){arcT+=RM?1:.022;if(auto&&!RM&&now-lastSw>3200){lastSw=now;var pool=[];C.forEach(function(c,i){if(c.st!=="closed"&&i!==sel)pool.push(i)});pick(pool[Math.floor(Math.random()*pool.length)])}safe(mapDraw,now)}requestAnimationFrame(loop)}
+safe(mapResize);safe(drawBg);requestAnimationFrame(loop);
 
 /* ===== tracker + cabinet ===== */
 var tr=$("t-range"),lkcc=$("lk-cc");
@@ -1787,7 +1790,7 @@ function update(){if(!total)return;var target=RM?total:introDone?Math.max(heroEn
   plane.style.transform="translate("+p[0]+"px,"+p[1]+"px) rotate("+(p[2]*180/Math.PI)+"deg)"+(target>=total-2?" scale(.85)":"");plane.style.opacity=RM?0:1}
 function intro(t){if(startT===null)startT=t;var k=Math.min(1,(t-startT)/2600),e=1-Math.pow(1-k,3);introLen=heroEnd*e;update();if(k<1)requestAnimationFrame(intro);else{introDone=true;update()}}
 var raf=0;addEventListener("scroll",function(){if(!raf)raf=requestAnimationFrame(function(){raf=0;update()})},{passive:true});
-var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){build();mapResize();drawBg()},150)});
+var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){build();safe(mapResize);safe(drawBg)},150)});
 /* Kie-generated motion loops: load only near the viewport, never with reduced motion or data saver */
 (function(){var saver=navigator.connection&&navigator.connection.saveData;if(RM||saver||!("IntersectionObserver" in window))return;
   var vio=new IntersectionObserver(function(es){es.forEach(function(x){var v=x.target;if(x.isIntersecting){if(!v.src){v.src=v.dataset.src;v.addEventListener("playing",function(){v.classList.add("on")},{once:true})}var p=v.play();if(p&&p.catch)p.catch(function(){})}else if(v.src){v.pause()}})},{rootMargin:"200px 0px"});
