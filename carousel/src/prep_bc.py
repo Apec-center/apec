@@ -9,7 +9,8 @@ A = Path(__file__).resolve().parent.parent / "assets"
 # B cover: vertical 4:5 crop of the wide scene, centred on the bottle
 b = Image.open(A / "b_cover.png").convert("RGB")
 w = round(b.height * 4 / 5)
-b.crop((b.width - w, 0, b.width, b.height)).save(A / "B1.png")
+x0 = 2273 - round(w * 0.75)                    # bottle centre (x≈2273 in the wide scene) at 75% of the slide
+b.crop((x0, 0, x0 + w, b.height)).save(A / "B1.png")
 
 # C4: the client's photo with document number and birth date blurred
 photo = Image.open(A / "real_card_photo.jpg").convert("RGB")
