@@ -9,3 +9,9 @@ __pycache__/
 
 # Photo of a personal document — never commit
 assets/real_card_*
+!assets/b_*_trim.png
+!assets/c_*_trim.png
+!assets/b_cover.png
+!assets/c_cover.png
+!assets/b_end.png
+!assets/c_end.png

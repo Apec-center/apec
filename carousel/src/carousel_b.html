@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>APEC Center — карусель «Математика зимовки»</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .canvas {
+    background:
+      radial-gradient(800px 650px at 2070px 1050px, rgba(40,127,242,.22), transparent 70%),
+      radial-gradient(800px 650px at 3020px 1050px, rgba(40,127,242,.26), transparent 70%),
+      radial-gradient(800px 650px at 4140px 1000px, rgba(40,127,242,.24), transparent 70%),
+      radial-gradient(900px 700px at 5100px 1080px, rgba(40,127,242,.34), transparent 70%),
+      radial-gradient(900px 600px at 5950px 700px,  rgba(40,127,242,.20), transparent 70%),
+      radial-gradient(900px 750px at 7250px 950px,  rgba(40,127,242,.32), transparent 70%),
+      linear-gradient(90deg, var(--midnight) 0, var(--navy) 35%, #1a3a5c 55%, var(--navy) 75%, var(--midnight) 100%);
+  }
+  .cover-photo {
+    left: -1060px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 2150px, transparent 2419px);
+            mask-image: linear-gradient(90deg, #000 0, #000 2150px, transparent 2419px);
+  }
+  /* comparison bars */
+  .bars { display: flex; flex-direction: column; gap: 26px; width: 900px; }
+  .bar-row { display: grid; grid-template-columns: 270px 1fr; align-items: center; gap: 20px; }
+  .bar-label { font: 600 30px/1.15 'Montserrat'; opacity: .9; }
+  .bar-track { display: flex; align-items: center; gap: 18px; }
+  .bar { height: 64px; border-radius: 16px; background: linear-gradient(90deg, #4b5d73, #6b7f97); }
+  .bar.win { background: linear-gradient(90deg, var(--electric), var(--electric-2)); box-shadow: 0 0 40px rgba(40,127,242,.6); }
+  .bar-val { font: 600 34px/1 'Unbounded'; white-space: nowrap; }
+  .bar-row.win .bar-label, .bar-row.win .bar-val { color: var(--electric-2); opacity: 1; }
+  .foot { font: 500 24px/1.3 'Montserrat'; opacity: .6; }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+
+  <!-- ===== Backgrounds ===== -->
+  <img class="layer cover-photo" src="../assets/b_cover.png" alt="">
+  <div class="layer s2-shade"></div>
+  <img class="layer end-photo" src="../assets/b_end.png" alt="">
+  <div class="layer end-shade"></div>
+
+  <svg class="layer" style="left:0;top:0" width="8640" height="1350" viewBox="0 0 8640 1350">
+    <defs>
+      <linearGradient id="route" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#62A4FF" stop-opacity="0"/>
+        <stop offset=".1" stop-color="#62A4FF" stop-opacity=".8"/>
+        <stop offset="1" stop-color="#62A4FF" stop-opacity=".8"/>
+      </linearGradient>
+    </defs>
+    <path d="M 1500 1250
+             C 1800 1290, 1950 1180, 2100 1120
+             S 2700 1250, 3020 1120
+             S 3700 960, 4140 1090
+             S 4700 1260, 5100 1180
+             S 5800 1260, 6250 1200
+             S 6900 1250, 7300 1120
+             S 7700 1050, 8000 950"
+          fill="none" stroke="url(#route)" stroke-width="5" stroke-dasharray="4 22" stroke-linecap="round"/>
+  </svg>
+
+  <!-- ===== 3D objects (kie.ai · nano-banana-pro) ===== -->
+  <img class="layer obj" src="../assets/b_money_trim.png"      style="left:1790px; top:780px; width:560px; transform:rotate(-4deg)">
+  <img class="layer obj" src="../assets/b_study_trim.png"      style="left:2680px; top:770px; width:680px;">
+  <img class="layer obj" src="../assets/b_paperwork_trim.png"  style="left:3880px; top:690px; width:540px; transform:rotate(3deg)">
+  <div class="layer card-wrap" style="left:4680px; top:820px">
+    <div class="card3d"><div class="edge"></div><div class="face"></div><div class="gloss"></div></div>
+  </div>
+  <img class="layer obj" src="../assets/b_globe_trim.png"      style="left:6960px; top:770px; width:700px;">
+  <img class="layer obj" src="../assets/plumeria_trim.png"     style="left:6330px; top:1110px; width:290px; transform:rotate(-12deg)">
+  <div class="layer card-wrap" style="left:7650px; top:800px">
+    <div class="card3d" style="width:540px; height:340px; transform: perspective(1500px) rotateY(18deg) rotateX(12deg) rotateZ(6deg)">
+      <div class="edge" style="border-radius:22px"></div><div class="face" style="border-radius:22px"></div><div class="gloss" style="border-radius:22px"></div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 1 — cover ===== -->
+  <div class="layer head" style="left:80px"><img class="logo" src="../assets/logo_navy.png" alt="APEC Center"></div>
+  <div class="layer txt" style="left:80px; top:200px; width:640px; color:var(--midnight)">
+    <div class="pill">Математика зимовки</div>
+    <div class="h mt32" style="font-size:62px; line-height:1.1">Сколько стоит<br>год в&nbsp;Таиланде<br>легально?</div>
+    <div class="lead mt24" style="font-size:38px">4 варианта.<br>Только цифры.</div>
+  </div>
+  <div class="layer" style="left:80px; top:1160px"><div class="swipe">Листай <span>→</span></div></div>
+
+  <!-- ===== Slide 2 — border runs ===== -->
+  <div class="layer head" style="left:1160px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:2000px">2/8</div>
+  <div class="layer txt" style="left:1160px">
+    <div class="num">01 · Визараны</div>
+    <div class="big mt24" style="font-size:132px">42 000 <span class="blue">฿</span></div>
+    <div class="lead mt16">в год</div>
+    <div class="glass mt32" style="width:720px">12 поездок × 3&nbsp;500&nbsp;฿<br><b>+ минивэн каждые 30 дней</b></div>
+  </div>
+
+  <!-- ===== Slide 3 — student visa ===== -->
+  <div class="layer head" style="left:2240px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:3080px">3/8</div>
+  <div class="layer txt" style="left:2240px">
+    <div class="num">02 · Студенческая виза</div>
+    <div class="big mt24" style="font-size:132px">45 000 <span class="blue">฿</span></div>
+    <div class="lead mt16">в год</div>
+    <div class="glass mt32" style="width:720px">Учёба обязательна.<br><b>Вылетел из страны — виза сгорает</b></div>
+  </div>
+
+  <!-- ===== Slide 4 — DTV ===== -->
+  <div class="layer head" style="left:3320px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:4160px">4/8</div>
+  <div class="layer txt" style="left:3320px">
+    <div class="num">03 · DTV</div>
+    <div class="big mt24" style="font-size:132px">95 000 <span class="blue">฿</span></div>
+    <div class="lead mt16">за оформление</div>
+    <div class="glass mt32" style="width:720px">Только из страны гражданства.<br><b>Получить сложно</b></div>
+  </div>
+
+  <!-- ===== Slide 5 — APEC card ===== -->
+  <div class="layer head" style="left:4400px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:5240px">5/8</div>
+  <div class="layer txt" style="left:4400px">
+    <div class="num">04 · Карта АТЭС</div>
+    <div class="big mt24" style="font-size:132px">6 000 <span class="blue">฿</span></div>
+    <div class="lead mt16">в год*</div>
+    <div class="glass mt32" style="width:760px">30 000 ฿ на 5 лет. <b>3 вылета в год —<br>и ты весь год в Таиланде</b></div>
+  </div>
+  <div class="layer foot" style="left:4400px; top:1270px">* без учёта перелётов</div>
+
+  <!-- ===== Slide 6 — summary ===== -->
+  <div class="layer head" style="left:5480px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:6320px">6/8</div>
+  <div class="layer txt" style="left:5480px">
+    <div class="pill">Итог</div>
+    <div class="h mt32" style="font-size:66px; line-height:1.1">Год в Таиланде<br>стоит:</div>
+    <div class="bars mt40">
+      <div class="bar-row"><div class="bar-label">Визараны</div><div class="bar-track"><div class="bar" style="width:265px"></div><div class="bar-val">42 000</div></div></div>
+      <div class="bar-row"><div class="bar-label">Студенческая</div><div class="bar-track"><div class="bar" style="width:284px"></div><div class="bar-val">45 000</div></div></div>
+      <div class="bar-row"><div class="bar-label">DTV</div><div class="bar-track"><div class="bar" style="width:400px"></div><div class="bar-val">95 000</div></div></div>
+      <div class="bar-row win"><div class="bar-label">Карта АТЭС</div><div class="bar-track"><div class="bar win" style="width:38px"></div><div class="bar-val">6 000</div></div></div>
+    </div>
+    <div class="glass mt40" style="width:700px">В <b>7 раз дешевле</b> визаранов</div>
+  </div>
+
+  <!-- ===== Slide 7 — bonus ===== -->
+  <div class="layer head" style="left:6560px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:7400px">7/8</div>
+  <div class="layer txt" style="left:6560px">
+    <div class="pill">Бонусом</div>
+    <div class="h mt32" style="font-size:72px; line-height:1.1">Fast Track<br>и <span class="blue">18 стран</span></div>
+    <div class="glass mt32" style="width:720px"><b>2 минуты</b> на паспортном контроле в Бангкоке и Пхукете</div>
+    <div class="glass mt16" style="width:720px"><b>18 стран Азии</b> без виз: Сингапур, Япония, Корея, Вьетнам…</div>
+  </div>
+
+  <!-- ===== Slide 8 — CTA ===== -->
+  <div class="layer counter" style="left:8480px">8/8</div>
+  <div class="layer txt" style="left:7640px; top:200px; width:920px">
+    <div class="h" style="font-size:76px; line-height:1.08">Хочешь так же?</div>
+    <div class="lead mt32" style="font-weight:500; font-size:40px">Напиши в комментариях</div>
+    <div class="mt24" style="display:flex; align-items:center; gap:22px">
+      <div style="padding:26px 44px; border-radius:100px; background:linear-gradient(90deg,var(--electric),var(--electric-2)); font:700 64px/1 'Unbounded'; letter-spacing:.02em; box-shadow:0 20px 50px rgba(40,127,242,.45)">КАРТА</div>
+      <div style="font-size:70px">💬</div>
+    </div>
+    <div class="glass mt32" style="width:820px; font-size:34px; background:rgba(18,35,56,.62)">Пришлю <b>бесплатный гайд</b> по оформлению карты АТЭС</div>
+  </div>
+  <div class="layer" style="left:8180px; top:1210px; display:flex; align-items:center; gap:16px; padding:14px 24px; border-radius:100px; background:rgba(18,35,56,.72); backdrop-filter:blur(10px)">
+    <img class="logo" style="height:44px" src="../assets/logo_white.png" alt="">
+    <div style="font:600 26px/1 'Montserrat'">@aleks_rykov</div>
+  </div>
+
+</div>
+</body>
+</html>
