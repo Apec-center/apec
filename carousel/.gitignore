@@ -15,3 +15,5 @@ assets/real_card_*
 !assets/c_cover.png
 !assets/b_end.png
 !assets/c_end.png
+!assets/B[0-9].png
+!assets/C[0-9].png
