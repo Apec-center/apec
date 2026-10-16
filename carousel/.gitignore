@@ -6,3 +6,6 @@ assets/*.png
 !assets/logo_*.png
 assets/urls.json
 __pycache__/
+
+# Photo of a personal document — never commit
+assets/real_card_*
