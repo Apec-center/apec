@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>APEC Center — карусель «90 дней»</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Brand palette (APEC Center brandbook) */
+  :root {
+    --navy: #1C3449;      /* Тёмно-синий */
+    --midnight: #122338;  /* Полночный */
+    --pearl: #EBEAEC;     /* Жемчужный */
+    --steel: #D8DDE4;     /* Стальной */
+    --electric: #287FF2;  /* Электрик */
+    --electric-2: #62A4FF;
+    --cobalt: #1F4985;    /* Кобальт */
+    --W: 1080px;
+    --H: 1350px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--midnight); }
+  /* Header font: Grtsk Tera → substitute Unbounded; content font: Montserrat */
+  .canvas {
+    position: relative; width: calc(var(--W) * 8); height: var(--H); overflow: hidden;
+    font-family: 'Montserrat', sans-serif; color: #fff;
+    background:
+      radial-gradient(900px 700px at 3000px 950px, rgba(40,127,242,.30), transparent 70%),
+      radial-gradient(800px 650px at 4100px 980px, rgba(40,127,242,.26), transparent 70%),
+      radial-gradient(800px 650px at 5300px 980px, rgba(40,127,242,.24), transparent 70%),
+      radial-gradient(800px 650px at 6250px 1000px, rgba(40,127,242,.26), transparent 70%),
+      radial-gradient(900px 750px at 7250px 950px, rgba(40,127,242,.32), transparent 70%),
+      linear-gradient(90deg, var(--midnight) 0, var(--navy) 35%, #1a3a5c 55%, var(--navy) 75%, var(--midnight) 100%);
+  }
+  .layer { position: absolute; }
+  img.layer { display: block; }
+
+  /* --- Photo scenes (Thailand vibe) --- */
+  .cover-photo {
+    left: -40px; top: 0; height: var(--H); width: auto;
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 1500px, transparent 2200px);
+            mask-image: linear-gradient(90deg, #000 0, #000 1500px, transparent 2200px);
+  }
+  /* Slide 2: dream fades into reality — darken towards the right */
+  .s2-shade {
+    left: 1080px; top: 0; width: 1300px; height: var(--H);
+    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,.35) 0, #000 260px);
+            mask-image: linear-gradient(90deg, rgba(0,0,0,.35) 0, #000 260px);
+    background:
+      linear-gradient(180deg, rgba(18,35,56,.88) 0, rgba(18,35,56,.55) 45%, rgba(18,35,56,.35) 70%, rgba(18,35,56,.75) 100%),
+      linear-gradient(90deg, rgba(18,35,56,0) 0, rgba(18,35,56,.6) 40%, rgba(18,35,56,.95) 85%);
+  }
+  .s2-shade::before { /* soft start of the shade at the seam */
+    content: ""; position: absolute; left: -200px; top: 0; width: 200px; height: 100%;
+    background: linear-gradient(90deg, rgba(18,35,56,0), rgba(18,35,56,.3));
+  }
+  .end-photo {
+    left: 7560px; top: 0; width: var(--W); height: var(--H); object-fit: cover;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 220px);
+            mask-image: linear-gradient(90deg, transparent 0, #000 220px);
+  }
+  .end-shade {
+    left: 7560px; top: 0; width: var(--W); height: 980px;
+    background: linear-gradient(180deg, rgba(18,35,56,.85) 0, rgba(18,35,56,.7) 60%, rgba(18,35,56,0) 100%);
+  }
+
+  /* --- 3D objects crossing the seams --- */
+  .obj { filter: drop-shadow(0 40px 60px rgba(5,12,25,.55)); }
+
+  /* --- Chrome: logo + counter --- */
+  .logo { height: 77px; width: auto; display: block; }
+  .head { top: 64px; height: 77px; display: flex; align-items: center; gap: 18px; }
+  .counter {
+    top: 86px; font: 600 26px/1 'Montserrat'; letter-spacing: .08em; opacity: .75;
+  }
+
+  /* --- Typography modules --- */
+  .txt { top: 200px; width: 900px; }
+  .pill {
+    display: inline-block; padding: 14px 26px; border-radius: 100px;
+    font: 700 26px/1 'Montserrat'; letter-spacing: .06em; text-transform: uppercase;
+    background: linear-gradient(90deg, var(--electric), var(--electric-2)); color: #fff;
+  }
+  .pill.ghost { background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.28); }
+  .h { font-family: 'Unbounded', sans-serif; font-weight: 600; letter-spacing: -.01em; }
+  .big { font: 700 150px/0.95 'Unbounded'; letter-spacing: -.03em; }
+  .blue { color: var(--electric-2); }
+  .lead { font: 600 44px/1.2 'Montserrat'; }
+  .glass {
+    display: inline-block; padding: 30px 36px; border-radius: 30px;
+    background: rgba(255,255,255,.09); border: 1.5px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    font: 500 36px/1.3 'Montserrat';
+  }
+  .glass b { font-weight: 700; }
+  .num { font: 600 30px/1 'Unbounded'; color: var(--electric-2); letter-spacing: .04em; }
+  .mt16 { margin-top: 16px; } .mt24 { margin-top: 24px; } .mt32 { margin-top: 32px; } .mt40 { margin-top: 40px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 14px; }
+  .chip {
+    padding: 14px 24px; border-radius: 100px; font: 600 30px/1 'Montserrat';
+    background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.22);
+  }
+  .swipe {
+    display: inline-flex; align-items: center; gap: 14px; padding: 22px 34px; border-radius: 100px;
+    background: var(--midnight); color: #fff; font: 700 30px/1 'Montserrat'; letter-spacing: .04em;
+    box-shadow: 0 16px 40px rgba(18,35,56,.35);
+  }
+  .swipe span { color: var(--electric-2); font-size: 36px; }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+
+  <!-- ===== Backgrounds ===== -->
+  <img class="layer cover-photo" src="../assets/cover3.png" alt="">
+  <div class="layer s2-shade"></div>
+  <img class="layer end-photo" src="../assets/end2.png" alt="">
+  <div class="layer end-shade"></div>
+
+  <!-- Continuous flight route through all slides -->
+  <svg class="layer" style="left:0;top:0" width="8640" height="1350" viewBox="0 0 8640 1350">
+    <defs>
+      <linearGradient id="route" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#62A4FF" stop-opacity="0"/>
+        <stop offset=".08" stop-color="#62A4FF" stop-opacity=".8"/>
+        <stop offset="1" stop-color="#62A4FF" stop-opacity=".8"/>
+      </linearGradient>
+    </defs>
+    <path d="M 1500 1230
+             C 1900 1300, 2350 1240, 2900 1080
+             S 3700 900, 4080 1060
+             S 4800 1250, 5250 1080
+             S 5900 900, 6260 1100
+             S 6900 1250, 7250 1000
+             S 7380 560, 7440 300"
+          fill="none" stroke="url(#route)" stroke-width="5" stroke-dasharray="4 22" stroke-linecap="round"/>
+  </svg>
+
+  <!-- ===== 3D objects (kie.ai · nano-banana-pro) ===== -->
+  <img class="layer obj" src="../assets/minivan_trim.png"   style="left:1720px; top:930px;  width:700px; transform:rotate(-3deg)">
+  <img class="layer obj" src="../assets/card_trim.png"      style="left:2560px; top:690px;  width:820px;">
+  <img class="layer obj" src="../assets/passport_trim.png"  style="left:3700px; top:700px;  width:760px; transform:rotate(4deg)">
+  <img class="layer obj" src="../assets/hourglass_trim.png" style="left:5130px; top:640px;  width:440px; transform:rotate(8deg)">
+  <img class="layer obj" src="../assets/stopwatch_trim.png" style="left:6080px; top:720px;  width:580px;">
+  <img class="layer obj" src="../assets/globe_trim.png"     style="left:6960px; top:660px;  width:740px;">
+  <img class="layer obj" src="../assets/plane_trim.png"     style="left:7330px; top:40px;   width:470px; transform:rotate(-12deg)">
+  <img class="layer obj" src="../assets/plumeria_trim.png"  style="left:4140px; top:1150px; width:300px; transform:rotate(-12deg)">
+  <img class="layer obj" src="../assets/palm_trim.png"      style="left:6420px; top:1090px; width:340px; transform:rotate(-35deg)">
+
+  <!-- ===== Slide 1 — cover ===== -->
+  <div class="layer head" style="left:80px"><img class="logo" src="../assets/logo_navy.png" alt="APEC Center"></div>
+  <div class="layer txt" style="left:80px; top:220px; width:660px; color:var(--midnight)">
+    <div class="lead" style="font-size:46px">Россиянам снова дают</div>
+    <div class="big" style="font-size:250px; line-height:.9; margin-top:14px">90</div>
+    <div class="h" style="font-size:96px; line-height:1; margin-top:-6px">дней</div>
+    <div class="h" style="font-size:52px; line-height:1.15; margin-top:22px">в&nbsp;Таиланде</div>
+    <div class="pill mt24" style="font-size:30px">Без визаранов</div>
+  </div>
+  <div class="layer" style="left:80px; top:1160px"><div class="swipe">Листай <span>→</span></div></div>
+
+  <!-- ===== Slide 2 — pain ===== -->
+  <div class="layer head" style="left:1160px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:2000px">2/8</div>
+  <div class="layer txt" style="left:1160px">
+    <div class="pill ghost">Что изменилось</div>
+    <div class="h mt32" style="font-size:72px; line-height:1.1">Штамп теперь —<br><span class="blue">30 дней</span></div>
+    <div class="lead mt24" style="font-weight:500; opacity:.9">С 15 сентября. Раньше давали 60.</div>
+    <div class="glass mt40" style="display:flex; align-items:center; gap:28px; width:760px">
+      <span class="h blue" style="font-size:110px; line-height:1">12</span>
+      <span>визаранов —&nbsp;цена<br>одного года в&nbsp;Таиланде</span>
+    </div>
+  </div>
+
+  <!-- ===== Slide 3 — solution ===== -->
+  <div class="layer head" style="left:2240px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:3080px">3/8</div>
+  <div class="layer txt" style="left:2240px">
+    <div class="pill">Решение</div>
+    <div class="h mt32" style="font-size:104px; line-height:1">Карта АТЭС</div>
+    <div class="lead mt16 blue" style="font-size:36px">APEC Business Travel Card</div>
+    <div class="lead mt32" style="font-weight:500; font-size:40px">Законный способ въезжать надолго.<br><b style="font-weight:700">4 преимущества</b> →</div>
+  </div>
+
+  <!-- ===== Slide 4 — 90 days ===== -->
+  <div class="layer head" style="left:3320px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:4160px">4/8</div>
+  <div class="layer txt" style="left:3320px">
+    <div class="num">01</div>
+    <div class="big mt24">90 <span class="blue">дней</span></div>
+    <div class="lead mt24">при каждом въезде в Таиланд</div>
+    <div class="glass mt32">Вылетел → вернулся → <b>снова 90</b></div>
+  </div>
+
+  <!-- ===== Slide 5 — 5 years ===== -->
+  <div class="layer head" style="left:4400px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:5240px">5/8</div>
+  <div class="layer txt" style="left:4400px">
+    <div class="num">02</div>
+    <div class="big mt24">5 <span class="blue">лет</span></div>
+    <div class="lead mt24">действует карта</div>
+    <div class="glass mt32">Оформил один раз —<br>и <b>забыл про визараны</b></div>
+  </div>
+
+  <!-- ===== Slide 6 — Fast Track ===== -->
+  <div class="layer head" style="left:5480px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:6320px">6/8</div>
+  <div class="layer txt" style="left:5480px">
+    <div class="num">03</div>
+    <div class="big mt24">2 <span class="blue">мин</span></div>
+    <div class="lead mt24">на паспортном контроле</div>
+    <div class="glass mt32" style="width:640px"><b>Fast Track</b> — отдельный коридор без общей очереди. Бангкок и Пхукет</div>
+  </div>
+
+  <!-- ===== Slide 7 — 18 countries ===== -->
+  <div class="layer head" style="left:6560px"><img class="logo" src="../assets/logo_white.png" alt="APEC Center"></div>
+  <div class="layer counter" style="left:7400px">7/8</div>
+  <div class="layer txt" style="left:6560px">
+    <div class="num">04</div>
+    <div class="big mt24">+18 <span class="blue" style="font-size:110px">стран</span></div>
+    <div class="lead mt24">Азии — без виз</div>
+    <div class="chips mt32" style="width:660px">
+      <div class="chip">Сингапур</div><div class="chip">Япония</div><div class="chip">Корея</div>
+      <div class="chip">Индонезия</div><div class="chip">Вьетнам</div><div class="chip">и другие</div>
+    </div>
+  </div>
+
+  <!-- ===== Slide 8 — CTA ===== -->
+  <div class="layer counter" style="left:8480px">8/8</div>
+  <div class="layer txt" style="left:7640px; top:330px; width:920px">
+    <div class="h" style="font-size:76px; line-height:1.08">Хочешь такую<br>карту?</div>
+    <div class="lead mt32" style="font-weight:500; font-size:40px">Напиши в комментариях</div>
+    <div class="mt24" style="display:flex; align-items:center; gap:22px">
+      <div style="padding:26px 44px; border-radius:100px; background:linear-gradient(90deg,var(--electric),var(--electric-2)); font:700 64px/1 'Unbounded'; letter-spacing:.02em; box-shadow:0 20px 50px rgba(40,127,242,.45)">КАРТА</div>
+      <div style="font-size:70px">💬</div>
+    </div>
+    <div class="glass mt32" style="width:820px; font-size:34px; background:rgba(18,35,56,.62)">Пришлю разбор: как оформить <b>самому</b> или <b>с нашей помощью</b></div>
+  </div>
+  <div class="layer" style="left:8180px; top:1210px; display:flex; align-items:center; gap:16px; padding:14px 24px; border-radius:100px; background:rgba(18,35,56,.72); backdrop-filter:blur(10px)">
+    <img class="logo" style="height:44px" src="../assets/logo_white.png" alt="">
+    <div style="font:600 26px/1 'Montserrat'">@aleks_rykov</div>
+  </div>
+
+</div>
+</body>
+</html>

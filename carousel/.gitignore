@@ -1,0 +1,8 @@
+# Raw kie.ai generations and intermediate cutouts — only final assets are tracked
+assets/*.png
+!assets/*_trim.png
+!assets/cover3.png
+!assets/end2.png
+!assets/logo_*.png
+assets/urls.json
+__pycache__/
